@@ -1,4 +1,4 @@
-import SginInScreen from './auth/SginInScreen';
+import SignInScreen from './auth/SignInScreen';
 import HomePageScreen from './public/HomePageScreen';
 
-export {HomePageScreen, SginInScreen};
+export {HomePageScreen, SignInScreen};
