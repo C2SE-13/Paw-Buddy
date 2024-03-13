@@ -1,6 +1,7 @@
+/* eslint-disable react-native/no-inline-styles */
 import {Image, View} from 'react-native';
 import React, {useState} from 'react';
-import {InputComponent, TextComponent} from '../../components';
+import {ButtonComponent, InputComponent} from '../../components';
 import SpaceComponent from '../../components/common/SpaceComponent';
 
 const SignInScreen = () => {
@@ -44,12 +45,9 @@ const SignInScreen = () => {
         isPassword
       />
 
-      <TextComponent
-        text="abcasd;askjdljkasdjlkajsdlkjasldjladjlajsdlkajsdljaskldjkldklsjadlkjasdklj"
-        title
-        numOfLine={2}
-      />
-      <TextComponent text="abcasdas" />
+      <SpaceComponent height={16} />
+
+      <ButtonComponent text="text" type="primary" size={'large'} />
     </View>
   );
 };
