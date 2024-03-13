@@ -10,6 +10,7 @@ export const globalStyles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'flex-start',
     alignItems: 'flex-start',
+    flexWrap: 'wrap',
   },
   input: {
     width: '100%',
@@ -19,6 +20,10 @@ export const globalStyles = StyleSheet.create({
     borderRadius: 16,
     backgroundColor: colors.form,
     flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  center: {
     alignItems: 'center',
     justifyContent: 'center',
   },
