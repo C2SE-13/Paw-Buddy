@@ -21,7 +21,6 @@ interface Props {
   isPassword?: boolean;
   allowClear?: boolean;
   type?: KeyboardType;
-  onEnd?: () => void;
   multiline?: boolean;
   numberOfLine?: number;
   styles?: StyleProp<ViewStyle>;

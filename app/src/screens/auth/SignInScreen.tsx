@@ -1,6 +1,6 @@
 import {Image, View} from 'react-native';
 import React, {useState} from 'react';
-import {InputComponent} from '../../components';
+import {InputComponent, TextComponent} from '../../components';
 import SpaceComponent from '../../components/common/SpaceComponent';
 
 const SignInScreen = () => {
@@ -38,11 +38,18 @@ const SignInScreen = () => {
 
       <InputComponent
         value={data.password}
-        onChange={val => setData((prev: any) => ({...prev, email: val}))}
+        onChange={val => setData((prev: any) => ({...prev, password: val}))}
         placeholder="Password"
         allowClear
         isPassword
       />
+
+      <TextComponent
+        text="abcasd;askjdljkasdjlkajsdlkjasldjladjlajsdlkajsdljaskldjkldklsjadlkjasdklj"
+        title
+        numOfLine={2}
+      />
+      <TextComponent text="abcasdas" />
     </View>
   );
 };
