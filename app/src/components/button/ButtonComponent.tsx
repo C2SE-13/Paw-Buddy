@@ -6,7 +6,7 @@ import {
   TextStyle,
   TouchableOpacity,
 } from 'react-native';
-import React, {ReactNode} from 'react';
+import React from 'react';
 import {TextComponent} from '..';
 import {colors} from '../../constants/colors';
 import {textStyles} from '../../styles/textStyles';
@@ -16,8 +16,6 @@ interface Props {
   type: 'primary' | 'secondary' | 'disabled';
   size: 'large' | 'medium' | 'small' | 'tiny' | number;
   radius?: number;
-  icon?: ReactNode;
-  iconFlex?: 'right' | 'left';
   color?: string;
   styles?: StyleProp<ViewStyle>;
   textColor?: string;
@@ -28,14 +26,12 @@ interface Props {
 
 const ButtonComponent = (props: Props) => {
   const {
-    icon,
     text,
     textColor,
     textFont,
     color,
     styles,
     onPress,
-    iconFlex,
     type,
     textStyle,
     size,
@@ -106,7 +102,6 @@ const ButtonComponent = (props: Props) => {
           },
           styles,
         ]}>
-        {icon && iconFlex === 'left' && icon}
         <TextComponent
           text={text}
           color={
@@ -117,7 +112,6 @@ const ButtonComponent = (props: Props) => {
           styles={[textStyles['semibold-16'], {textAlign: 'center'}, textStyle]}
           font={textFont ?? buttonDefault.fontFamily}
         />
-        {icon && iconFlex === 'right' && icon}
       </TouchableOpacity>
     </View>
   );
