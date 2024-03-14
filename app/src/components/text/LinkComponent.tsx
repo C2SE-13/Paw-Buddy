@@ -39,7 +39,7 @@ const LinkComponent = (props: Props) => {
   const textDefault = textStyles['regular-14'];
 
   return type === 'text' ? (
-    <TouchableOpacity onPress={onPress} style={styles}>
+    <TouchableOpacity activeOpacity={1} onPress={onPress} style={styles}>
       <TextComponent
         text={text}
         styles={[

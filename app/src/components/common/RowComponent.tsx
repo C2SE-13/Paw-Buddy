@@ -20,16 +20,18 @@ interface Props {
     | undefined;
   styles?: StyleProp<ViewStyle>;
   children: ReactNode;
+  gap?: number;
 }
 
 const RowComponent = (props: Props) => {
-  const {styles, justify, alignItems, children} = props;
+  const {styles, justify, alignItems, children, gap} = props;
 
   const localStyle = [
     globalStyles.row,
     {
       justifyContent: justify ?? 'center',
       alignItems: alignItems ?? 'center',
+      gap: gap ?? 0,
     },
     styles,
   ];
