@@ -2,5 +2,14 @@ import AddIcon from './add.svg';
 import EyeIcon from './eye.svg';
 import EyeCloseIcon from './eye-close.svg';
 import ChevronRightIcon from './Chevron-left.svg';
+import LogoFacebookIcon from './LogoFacebook.svg';
+import LogoGoogleIcon from './LogoGoogle.svg';
 
-export {AddIcon, EyeIcon, EyeCloseIcon, ChevronRightIcon};
+export {
+  AddIcon,
+  EyeIcon,
+  EyeCloseIcon,
+  ChevronRightIcon,
+  LogoFacebookIcon,
+  LogoGoogleIcon,
+};

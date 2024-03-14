@@ -6,6 +6,12 @@ export const globalStyles = StyleSheet.create({
     flex: 1,
     backgroundColor: colors['background-white'],
   },
+  'w-100': {
+    width: '100%',
+  },
+  'h-100': {
+    height: '100%',
+  },
   row: {
     flexDirection: 'row',
     justifyContent: 'flex-start',
@@ -26,5 +32,11 @@ export const globalStyles = StyleSheet.create({
   center: {
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  logoIconAuth: {
+    width: 46,
+    height: 46,
+    backgroundColor: colors['text-20'],
+    borderRadius: 50,
   },
 });
