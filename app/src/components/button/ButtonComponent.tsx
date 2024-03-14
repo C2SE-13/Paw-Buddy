@@ -21,7 +21,7 @@ interface Props {
   textColor?: string;
   textStyle?: StyleProp<TextStyle>;
   textFont?: string;
-  onPress?: () => void;
+  onPress: () => void;
 }
 
 const ButtonComponent = (props: Props) => {
