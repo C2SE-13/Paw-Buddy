@@ -1,5 +1,5 @@
 /* eslint-disable react-native/no-inline-styles */
-import {Switch, View} from 'react-native';
+import {View} from 'react-native';
 import React, {useState} from 'react';
 import {
   ButtonComponent,
@@ -17,28 +17,26 @@ import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../../navigators/AuthNavigator';
 
 interface IPageProps {
-  navigation: NativeStackNavigationProp<RootStackParamList, 'SignIn'>;
+  navigation: NativeStackNavigationProp<RootStackParamList, 'SignUp'>;
 }
 
-const SignInScreen = ({navigation}: IPageProps) => {
+const SignUpScreen = ({navigation}: IPageProps) => {
   const [data, setData] = useState<any>({
     email: '',
     password: '',
   });
 
-  const [isRemember, setIsRemember] = useState(true);
-
   return (
     <View style={[globalStyles.container, globalStyles.center, {padding: 30}]}>
       <View style={{gap: 8}}>
         <TextComponent
-          text="Welcome Back"
+          text="Create Account"
           title
           color={colors['primary-100']}
           font={fontFamilies['inter-bold']}
           size={34}
         />
-        <TextComponent text="We're excited to have you back, can't wait to see what you've been up to since you last logged in." />
+        <TextComponent text="Sign up now and start exploring all that our app has to offer. We're excited to welcome you to our community!" />
       </View>
       <SpaceComponent height={61} />
       <View style={{gap: 16}}>
@@ -55,32 +53,11 @@ const SignInScreen = ({navigation}: IPageProps) => {
           allowClear
           isPassword
         />
-        <RowComponent justify="space-between">
-          <RowComponent gap={9}>
-            <Switch
-              value={isRemember}
-              onChange={() => setIsRemember(prev => !prev)}
-              trackColor={{true: colors['primary-40']}}
-              thumbColor={colors['primary-80']}
-            />
-            <LinkComponent
-              textSize={12}
-              textColor={colors['text-60']}
-              type="text"
-              text="Remember me"
-              onPress={() => setIsRemember(prev => !prev)}
-            />
-          </RowComponent>
-          <TextComponent
-            text="Forgot Password?"
-            color={colors['primary-100']}
-          />
-        </RowComponent>
       </View>
-      <SpaceComponent height={32} />
+      <SpaceComponent height={32 + 36} />
       <ButtonComponent
-        onPress={() => console.log('Sign In')}
-        text="Login"
+        onPress={() => console.log('Sign Up')}
+        text="Create Account"
         type="primary"
         size={'large'}
       />
@@ -112,7 +89,7 @@ const SignInScreen = ({navigation}: IPageProps) => {
         <RowComponent>
           <TextComponent
             color={colors['text-100']}
-            text="Already have an account yet? "
+            text="Already have an account? "
             size={13}
           />
           <LinkComponent
@@ -120,8 +97,8 @@ const SignInScreen = ({navigation}: IPageProps) => {
             textFont={fontFamilies['inter-semibold']}
             textColor={colors['primary-100']}
             type="text"
-            text="Sign Up"
-            onPress={() => navigation.navigate('SignUp')}
+            text="Sign In here!"
+            onPress={() => navigation.navigate('SignIn')}
           />
         </RowComponent>
       </View>
@@ -129,4 +106,4 @@ const SignInScreen = ({navigation}: IPageProps) => {
   );
 };
 
-export default SignInScreen;
+export default SignUpScreen;

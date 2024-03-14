@@ -10,6 +10,7 @@ import React from 'react';
 import {TextComponent} from '..';
 import {colors} from '../../constants/colors';
 import {textStyles} from '../../styles/textStyles';
+import {globalStyles} from '../../styles/globalStyles';
 
 interface Props {
   text: string;
@@ -21,7 +22,7 @@ interface Props {
   textColor?: string;
   textStyle?: StyleProp<TextStyle>;
   textFont?: string;
-  onPress?: () => void;
+  onPress: () => void;
 }
 
 const ButtonComponent = (props: Props) => {
@@ -87,7 +88,7 @@ const ButtonComponent = (props: Props) => {
       : {color: colors['primary-100']};
 
   return (
-    <View style={{width: '100%', alignItems: 'center'}}>
+    <View style={[globalStyles['w-100'], {alignItems: 'center'}]}>
       <TouchableOpacity
         disabled={type === 'disabled' ? true : false}
         onPress={onPress}
