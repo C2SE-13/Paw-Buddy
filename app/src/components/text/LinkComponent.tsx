@@ -18,6 +18,7 @@ interface Props {
   styles?: StyleProp<ViewProps>;
   icon?: ReactNode;
   iconLink?: boolean;
+  type: 'text' | 'button';
 }
 
 const LinkComponent = (props: Props) => {
@@ -32,11 +33,27 @@ const LinkComponent = (props: Props) => {
     styles,
     icon,
     iconLink,
+    type,
   } = props;
 
   const textDefault = textStyles['regular-14'];
 
-  return (
+  return type === 'text' ? (
+    <TouchableOpacity onPress={onPress} style={styles}>
+      <TextComponent
+        text={text}
+        styles={[
+          {
+            fontSize: textSize ?? textDefault.fontSize,
+            fontFamily: textFont ?? textDefault.fontFamily,
+            color: textColor ?? colors['text-100'],
+          },
+          textStyle,
+        ]}
+        flex={0}
+      />
+    </TouchableOpacity>
+  ) : (
     <TouchableOpacity
       onPress={onPress}
       style={[
