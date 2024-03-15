@@ -1,6 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 import {View} from 'react-native';
-import React, {useState} from 'react';
+import React from 'react';
 import {
   ButtonComponent,
   InputComponent,
@@ -15,16 +15,27 @@ import {colors} from '../../constants/colors';
 import {fontFamilies} from '../../constants/fontFamilies';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../../navigators/AuthNavigator';
+import {useForm, Controller, SubmitHandler} from 'react-hook-form';
+import {EMAIL_REGEX} from '../../constants/regex';
 
 interface IPageProps {
   navigation: NativeStackNavigationProp<RootStackParamList, 'SignUp'>;
 }
 
+interface FormData {
+  email: string;
+  password: string;
+}
+
 const SignUpScreen = ({navigation}: IPageProps) => {
-  const [data, setData] = useState<any>({
-    email: '',
-    password: '',
-  });
+  const {
+    control,
+    handleSubmit,
+    formState: {errors},
+    reset,
+  } = useForm<FormData>();
+
+  const onSubmit: SubmitHandler<FormData> = data => console.log(data);
 
   return (
     <View style={[globalStyles.container, globalStyles.center, {padding: 30}]}>
@@ -40,23 +51,47 @@ const SignUpScreen = ({navigation}: IPageProps) => {
       </View>
       <SpaceComponent height={61} />
       <View style={{gap: 16}}>
-        <InputComponent
-          value={data.email}
-          onChange={val => setData((prev: any) => ({...prev, email: val}))}
-          placeholder="Email"
-          allowClear
+        <Controller
+          control={control}
+          rules={{
+            required: {value: true, message: 'This field cannot empty.'},
+            pattern: {
+              value: EMAIL_REGEX,
+              message: 'Not a valid email',
+            },
+          }}
+          render={({field: {onChange, value, name}}) => (
+            <InputComponent
+              value={value}
+              onChange={onChange}
+              placeholder="Email"
+              allowClear
+              error={errors[name]?.message}
+            />
+          )}
+          name="email"
         />
-        <InputComponent
-          value={data.password}
-          onChange={val => setData((prev: any) => ({...prev, password: val}))}
-          placeholder="Password"
-          allowClear
-          isPassword
+        <Controller
+          control={control}
+          rules={{
+            required: {value: true, message: 'This field cannot empty.'},
+          }}
+          render={({field: {onChange, value, name}}) => (
+            <InputComponent
+              value={value}
+              onChange={onChange}
+              placeholder="Password"
+              allowClear
+              isPassword
+              error={errors[name]?.message}
+            />
+          )}
+          name="password"
         />
       </View>
       <SpaceComponent height={32 + 36} />
       <ButtonComponent
-        onPress={() => console.log('Sign Up')}
+        onPress={handleSubmit(onSubmit)}
         text="Create Account"
         type="primary"
         size={'large'}
@@ -98,7 +133,10 @@ const SignUpScreen = ({navigation}: IPageProps) => {
             textColor={colors['primary-100']}
             type="text"
             text="Sign In here!"
-            onPress={() => navigation.navigate('SignIn')}
+            onPress={() => {
+              reset();
+              navigation.navigate('SignIn');
+            }}
           />
         </RowComponent>
       </View>
