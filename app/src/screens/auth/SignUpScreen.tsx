@@ -17,12 +17,15 @@ import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../../navigators/AuthNavigator';
 import {useForm, Controller, SubmitHandler} from 'react-hook-form';
 import {EMAIL_REGEX} from '../../constants/regex';
+import {apiRegister} from '../../apis';
+import {useDispatch} from 'react-redux';
+import {login} from '../../redux/user/userSlice';
 
 interface IPageProps {
   navigation: NativeStackNavigationProp<RootStackParamList, 'SignUp'>;
 }
 
-interface FormData {
+export interface FormData {
   email: string;
   password: string;
 }
@@ -34,8 +37,15 @@ const SignUpScreen = ({navigation}: IPageProps) => {
     formState: {errors},
     reset,
   } = useForm<FormData>();
+  const dispatch = useDispatch();
 
-  const onSubmit: SubmitHandler<FormData> = data => console.log(data);
+  const onSubmit: SubmitHandler<FormData> = async data => {
+    const response: any = await apiRegister(data);
+    if (response?.success) {
+      dispatch(login({isLoggedIn: true, accessToken: response.accessToken}));
+      reset();
+    }
+  };
 
   return (
     <View style={[globalStyles.container, globalStyles.center, {padding: 30}]}>
