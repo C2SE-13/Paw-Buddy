@@ -2,6 +2,7 @@ import InputComponent from './inputs/InputComponent';
 import RowComponent from './common/RowComponent';
 import SpaceComponent from './common/SpaceComponent';
 import LoginWithComponent from './common/LoginWithComponent';
+import CircleComponent from './common/CircleComponent';
 import TextComponent from './text/TextComponent';
 import LinkComponent from './text/LinkComponent';
 import ButtonComponent from './button/ButtonComponent';
@@ -14,4 +15,5 @@ export {
   ButtonComponent,
   LinkComponent,
   LoginWithComponent,
+  CircleComponent,
 };
