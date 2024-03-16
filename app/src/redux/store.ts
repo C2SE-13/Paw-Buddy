@@ -25,13 +25,11 @@ const userConfig = {
 
 const rootReducer = combineReducers({
   app: appSlice,
-  user: userSlice,
+  user: persistReducer(userConfig, userSlice),
 });
 
-const persistedReducer = persistReducer(userConfig, rootReducer);
-
 export const store = configureStore({
-  reducer: persistedReducer,
+  reducer: rootReducer,
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware({
       serializableCheck: {

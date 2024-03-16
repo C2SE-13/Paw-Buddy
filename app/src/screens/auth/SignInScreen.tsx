@@ -17,6 +17,9 @@ import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../../navigators/AuthNavigator';
 import {useForm, Controller, SubmitHandler} from 'react-hook-form';
 import {EMAIL_REGEX} from '../../constants/regex';
+import {apiLogin} from '../../apis';
+import {useDispatch} from 'react-redux';
+import {login} from '../../redux/user/userSlice';
 
 interface IPageProps {
   navigation: NativeStackNavigationProp<RootStackParamList, 'SignIn'>;
@@ -35,8 +38,15 @@ const SignInScreen = ({navigation}: IPageProps) => {
     reset,
   } = useForm<FormData>();
   const [isRemember, setIsRemember] = useState(false);
+  const dispatch = useDispatch();
 
-  const onSubmit: SubmitHandler<FormData> = data => console.log(data);
+  const onSubmit: SubmitHandler<FormData> = async data => {
+    const response: any = await apiLogin(data);
+    if (response?.success) {
+      dispatch(login({isLoggedIn: true, accessToken: response.accessToken}));
+      reset();
+    }
+  };
 
   return (
     <View style={[globalStyles.container, globalStyles.center, {padding: 30}]}>

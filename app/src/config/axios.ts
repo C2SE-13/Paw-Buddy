@@ -1,8 +1,9 @@
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {API_URL} from '../constants/env';
 
 const instance = axios.create({
-  baseURL: process.env.API_URL,
+  baseURL: API_URL,
 });
 
 instance.interceptors.request.use(
@@ -12,6 +13,7 @@ instance.interceptors.request.use(
       const accessToken = JSON.parse(localStorageData)?.token;
       config.headers.Authorization = `Bearer ${accessToken}`;
     }
+    config.headers.Accept = 'application/json';
     return config;
   },
   async function (error) {
@@ -24,7 +26,7 @@ instance.interceptors.response.use(
     return response.data;
   },
   function (error) {
-    return error.response.data;
+    return error.response;
   },
 );
 
