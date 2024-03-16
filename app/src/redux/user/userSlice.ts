@@ -1,12 +1,12 @@
 import {createSlice} from '@reduxjs/toolkit';
 
 export interface UserState {
-  token: string;
+  token: string | null;
   isLoggedIn: boolean;
 }
 
 const initialState: UserState = {
-  token: '',
+  token: null,
   isLoggedIn: false,
 };
 
