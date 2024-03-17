@@ -14,20 +14,16 @@ import {globalStyles} from '../../styles/globalStyles';
 import {colors} from '../../constants/colors';
 import {fontFamilies} from '../../constants/fontFamilies';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import {RootStackParamList} from '../../navigators/AuthNavigator';
+import {AuthStackParamList} from '../../navigators/AuthNavigator';
 import {useForm, Controller, SubmitHandler} from 'react-hook-form';
 import {EMAIL_REGEX} from '../../constants/regex';
 import {apiLogin} from '../../apis';
 import {useDispatch} from 'react-redux';
 import {login} from '../../redux/user/userSlice';
+import {FormData} from './SignUpScreen';
 
 interface IPageProps {
-  navigation: NativeStackNavigationProp<RootStackParamList, 'SignIn'>;
-}
-
-interface FormData {
-  email: string;
-  password: string;
+  navigation: NativeStackNavigationProp<AuthStackParamList, 'SignIn'>;
 }
 
 const SignInScreen = ({navigation}: IPageProps) => {

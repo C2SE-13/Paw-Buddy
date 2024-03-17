@@ -12,6 +12,8 @@ import CalendarFocusedIcon from './calendarFocused.svg';
 import ChatIcon from './message-text.svg';
 import ChatFocusedIcon from './message-textFocused.svg';
 import SearchIcon from './search-normal.svg';
+import SearchProfileIcon from './search.svg';
+import MenuIcon from './menu.svg';
 
 export {
   AddIcon,
@@ -28,4 +30,6 @@ export {
   CalendarFocusedIcon,
   ChatFocusedIcon,
   HomeFocusedIcon,
+  SearchProfileIcon,
+  MenuIcon,
 };
