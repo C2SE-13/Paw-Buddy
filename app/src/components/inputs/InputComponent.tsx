@@ -11,7 +11,7 @@ import React, {ReactNode, useState} from 'react';
 import {colors} from '../../constants/colors';
 import {globalStyles} from '../../styles/globalStyles';
 import {textStyles} from '../../styles/textStyles';
-import {AddIcon, EyeIcon, EyeCloseIcon, ErrorIcon} from '../../assets/icons';
+import {CloseIcon, EyeIcon, EyeCloseIcon, ErrorIcon} from '../../assets/icons';
 import {RowComponent, TextComponent} from '..';
 import {fontFamilies} from '../../constants/fontFamilies';
 
@@ -85,7 +85,7 @@ const InputComponent = (props: Props) => {
         )}
         {value && value.length > 0 && allowClear && (
           <TouchableOpacity onPress={() => onChange('')}>
-            <AddIcon />
+            <CloseIcon />
           </TouchableOpacity>
         )}
       </View>

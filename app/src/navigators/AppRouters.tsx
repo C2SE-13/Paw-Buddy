@@ -19,13 +19,14 @@ const AppRouters = () => {
 
   return (
     <>
-      {isShowSplash ? (
+      {/* {isShowSplash ? (
         <SplashScreen />
       ) : token ? (
         <MainNavigator />
       ) : (
         <AuthNavigator />
-      )}
+      )} */}
+      <MainNavigator />
     </>
   );
 };

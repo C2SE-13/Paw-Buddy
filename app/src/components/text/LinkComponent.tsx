@@ -63,8 +63,6 @@ const LinkComponent = (props: Props) => {
           backgroundColor: bgColor ?? 'transparent',
           paddingVertical: 14,
           gap: icon ? 13 : 0,
-          borderBottomWidth: 1,
-          borderColor: colors['text-30'],
         },
         styles,
       ]}>

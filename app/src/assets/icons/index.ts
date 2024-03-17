@@ -1,4 +1,5 @@
-import AddIcon from './add.svg';
+import CloseIcon from './add.svg';
+import AddIcon from './AddIcon.svg';
 import EyeIcon from './eye.svg';
 import EyeCloseIcon from './eye-close.svg';
 import ChevronRightIcon from './Chevron-left.svg';
@@ -14,6 +15,7 @@ import ChatFocusedIcon from './message-textFocused.svg';
 import SearchIcon from './search-normal.svg';
 import SearchProfileIcon from './search.svg';
 import MenuIcon from './menu.svg';
+import LogoutIcon from './logout.svg';
 
 export {
   AddIcon,
@@ -32,4 +34,6 @@ export {
   HomeFocusedIcon,
   SearchProfileIcon,
   MenuIcon,
+  LogoutIcon,
+  CloseIcon,
 };
