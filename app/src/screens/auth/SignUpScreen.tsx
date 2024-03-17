@@ -14,7 +14,7 @@ import {globalStyles} from '../../styles/globalStyles';
 import {colors} from '../../constants/colors';
 import {fontFamilies} from '../../constants/fontFamilies';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import {RootStackParamList} from '../../navigators/AuthNavigator';
+import {AuthStackParamList} from '../../navigators/AuthNavigator';
 import {useForm, Controller, SubmitHandler} from 'react-hook-form';
 import {EMAIL_REGEX} from '../../constants/regex';
 import {apiRegister} from '../../apis';
@@ -22,7 +22,7 @@ import {useDispatch} from 'react-redux';
 import {login} from '../../redux/user/userSlice';
 
 interface IPageProps {
-  navigation: NativeStackNavigationProp<RootStackParamList, 'SignUp'>;
+  navigation: NativeStackNavigationProp<AuthStackParamList, 'SignUp'>;
 }
 
 export interface FormData {

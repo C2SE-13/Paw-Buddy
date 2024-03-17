@@ -15,10 +15,10 @@ import {
   HomeIcon,
   SearchIcon,
 } from '../assets/icons';
-import ProfileNavigator from './ProfileNavigator';
 import CalendarNavigator from './CalendarNavigator';
 import SearchNavigator from './SearchNavigator';
 import ChatNavigator from './ChatNavigator';
+import ProfileNavigator from './ProfileNavigator';
 
 const TabNavigator = () => {
   const Tab = createBottomTabNavigator();
