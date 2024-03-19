@@ -1,11 +1,11 @@
 /* eslint-disable react-native/no-inline-styles */
 import {
   View,
-  StyleSheet,
   TouchableOpacity,
   Alert,
   FlatList,
   Image,
+  StyleSheet,
 } from 'react-native';
 import React, {useState} from 'react';
 import {
@@ -15,7 +15,15 @@ import {
   RowComponent,
   TextComponent,
 } from '..';
-import {AddIcon, CloseIcon, LogoutIcon} from '../../assets/icons';
+import {
+  AccountIcon,
+  AddIcon,
+  AppsIcon,
+  CloseIcon,
+  ContactsIcon,
+  LogoutIcon,
+  SettingIcon,
+} from '../../assets/icons';
 import withBaseComponent from '../../hocs/withBaseComponent';
 import {logout} from '../../redux/user/userSlice';
 import {colors} from '../../constants/colors';
@@ -27,6 +35,32 @@ interface YourPets {
   image: string;
   name: string;
 }
+
+const constantApp = [
+  {
+    name: 'Dashboard',
+    path: 'DashboardScreen',
+    icon: <AppsIcon />,
+  },
+  {
+    name: 'Contacts',
+    path: 'ContactsScreen',
+    icon: <ContactsIcon />,
+  },
+];
+
+const constantUser = [
+  {
+    name: 'Account',
+    path: 'AccountScreen',
+    icon: <AccountIcon />,
+  },
+  {
+    name: 'Settings',
+    path: 'SettingsScreen',
+    icon: <SettingIcon />,
+  },
+];
 
 const YourPetsItem = (props: any) => {
   const {type, item} = props;
@@ -81,18 +115,13 @@ const DrawerCustom = ({navigation, dispatch}: any) => {
   };
 
   return (
-    <View style={[localStyles.container]}>
+    <View style={{flex: 1, paddingHorizontal: 24}}>
       <HeaderProfile>
         <TouchableOpacity onPress={() => navigation.closeDrawer()}>
           <CloseIcon />
         </TouchableOpacity>
       </HeaderProfile>
-      <View
-        style={{
-          paddingVertical: 24,
-          borderBottomWidth: 1,
-          borderColor: '#D9DFE6',
-        }}>
+      <View style={[localStyles.item, {paddingVertical: 24}]}>
         <TextComponent
           color={colors['text-100']}
           text="Your Pets"
@@ -112,12 +141,42 @@ const DrawerCustom = ({navigation, dispatch}: any) => {
           />
         </RowComponent>
       </View>
-      <LinkComponent
-        icon={<LogoutIcon />}
-        type="button"
-        text="Logout"
-        onPress={handleLogout}
-      />
+      <View style={[localStyles.itemSize, localStyles.item]}>
+        <FlatList
+          data={constantApp}
+          keyExtractor={item => item.name}
+          renderItem={({item}) => (
+            <LinkComponent
+              icon={item.icon}
+              onPress={() => navigation.navigate(item.path)}
+              text={item.name}
+              type="button"
+            />
+          )}
+        />
+      </View>
+      <View style={[localStyles.itemSize, localStyles.item]}>
+        <FlatList
+          data={constantUser}
+          keyExtractor={item => item.name}
+          renderItem={({item}) => (
+            <LinkComponent
+              icon={item.icon}
+              onPress={() => navigation.navigate(item.path)}
+              text={item.name}
+              type="button"
+            />
+          )}
+        />
+      </View>
+      <View style={localStyles.itemSize}>
+        <LinkComponent
+          icon={<LogoutIcon />}
+          type="button"
+          text="Logout"
+          onPress={handleLogout}
+        />
+      </View>
     </View>
   );
 };
@@ -125,8 +184,12 @@ const DrawerCustom = ({navigation, dispatch}: any) => {
 export default withBaseComponent(DrawerCustom);
 
 const localStyles = StyleSheet.create({
-  container: {
-    flex: 1,
-    paddingHorizontal: 24,
+  itemSize: {
+    paddingVertical: 24,
+    paddingHorizontal: 12,
+  },
+  item: {
+    borderBottomWidth: 1,
+    borderColor: '#D9DFE6',
   },
 });
