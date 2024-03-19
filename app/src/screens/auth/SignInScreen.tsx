@@ -20,10 +20,14 @@ import {EMAIL_REGEX} from '../../constants/regex';
 import {apiLogin} from '../../apis';
 import {useDispatch} from 'react-redux';
 import {login} from '../../redux/user/userSlice';
-import {FormData} from './SignUpScreen';
 
 interface IPageProps {
   navigation: NativeStackNavigationProp<AuthStackParamList, 'SignIn'>;
+}
+
+interface FormData {
+  email: string;
+  password: string;
 }
 
 const SignInScreen = ({navigation}: IPageProps) => {
