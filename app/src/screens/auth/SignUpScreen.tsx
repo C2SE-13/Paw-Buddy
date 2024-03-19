@@ -25,9 +25,10 @@ interface IPageProps {
   navigation: NativeStackNavigationProp<AuthStackParamList, 'SignUp'>;
 }
 
-export interface FormData {
+interface FormData {
   email: string;
   password: string;
+  fullname: string;
 }
 
 const SignUpScreen = ({navigation}: IPageProps) => {
@@ -59,7 +60,7 @@ const SignUpScreen = ({navigation}: IPageProps) => {
         />
         <TextComponent text="Sign up now and start exploring all that our app has to offer. We're excited to welcome you to our community!" />
       </View>
-      <SpaceComponent height={61} />
+      <SpaceComponent height={30} />
       <View style={{gap: 16}}>
         <Controller
           control={control}
@@ -98,8 +99,24 @@ const SignUpScreen = ({navigation}: IPageProps) => {
           )}
           name="password"
         />
+        <Controller
+          control={control}
+          rules={{
+            required: {value: true, message: 'This field cannot empty.'},
+          }}
+          render={({field: {onChange, value, name}}) => (
+            <InputComponent
+              value={value}
+              onChange={onChange}
+              placeholder="Full name"
+              allowClear
+              error={errors[name]?.message}
+            />
+          )}
+          name="fullname"
+        />
       </View>
-      <SpaceComponent height={32 + 36} />
+      <SpaceComponent height={30} />
       <ButtonComponent
         onPress={handleSubmit(onSubmit)}
         text="Create Account"
