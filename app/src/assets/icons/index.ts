@@ -16,6 +16,10 @@ import SearchIcon from './search-normal.svg';
 import SearchProfileIcon from './search.svg';
 import MenuIcon from './menu.svg';
 import LogoutIcon from './logout.svg';
+import AccountIcon from './account.svg';
+import AppsIcon from './apps.svg';
+import ContactsIcon from './chart-bubble.svg';
+import SettingIcon from './setting.svg';
 
 export {
   AddIcon,
@@ -36,4 +40,8 @@ export {
   MenuIcon,
   LogoutIcon,
   CloseIcon,
+  AccountIcon,
+  AppsIcon,
+  ContactsIcon,
+  SettingIcon,
 };
