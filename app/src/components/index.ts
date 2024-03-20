@@ -8,6 +8,7 @@ import TextComponent from './text/TextComponent';
 import LinkComponent from './text/LinkComponent';
 import ButtonComponent from './button/ButtonComponent';
 import HeaderProfile from './header/HeaderProfile';
+import HeaderTitle from './header/HeaderTitle';
 
 export {
   InputComponent,
@@ -20,4 +21,5 @@ export {
   CircleComponent,
   DrawerCustom,
   HeaderProfile,
+  HeaderTitle
 };
