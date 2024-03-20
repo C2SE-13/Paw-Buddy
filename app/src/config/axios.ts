@@ -10,7 +10,10 @@ instance.interceptors.request.use(
   async function (config) {
     let localStorageData = await AsyncStorage.getItem('persist:app/user');
     if (localStorageData && typeof localStorageData === 'string') {
-      const accessToken = JSON.parse(localStorageData)?.token;
+      const accessToken = JSON.parse(localStorageData)?.token.replaceAll(
+        '"',
+        '',
+      );
       config.headers.Authorization = `Bearer ${accessToken}`;
     }
     config.headers.Accept = 'application/json';

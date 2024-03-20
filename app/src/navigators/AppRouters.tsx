@@ -1,12 +1,19 @@
 import React, {useEffect, useState} from 'react';
 import SplashScreen from '../screens/SplashScreen';
-import {useSelector} from 'react-redux';
+import {TypedUseSelectorHook} from 'react-redux';
 import MainNavigator from './MainNavigator';
 import AuthNavigator from './AuthNavigator';
-import {RootState} from '../redux/store';
+import {AppDispatch, RootState} from '../redux/store';
+import {getCurrent} from '../redux/user/asyncActions';
+import withBaseComponent from '../hocs/withBaseComponent';
 
-const AppRouters = () => {
-  const {token} = useSelector((state: RootState) => state.user);
+interface Props {
+  dispatch: AppDispatch;
+  useSelector: TypedUseSelectorHook<RootState>;
+}
+
+const AppRouters = ({dispatch, useSelector}: Props) => {
+  const {token} = useSelector(state => state.user);
   const [isShowSplash, setIsShowSplash] = useState(true);
 
   useEffect(() => {
@@ -16,6 +23,18 @@ const AppRouters = () => {
 
     return () => clearTimeout(timeout);
   }, []);
+
+  useEffect(() => {
+    let timeout: NodeJS.Timeout | undefined;
+
+    if (token) {
+      timeout = setTimeout(() => {
+        dispatch(getCurrent());
+      }, 500);
+    }
+
+    return () => clearTimeout(timeout);
+  }, [dispatch, token]);
 
   return (
     <>
@@ -30,4 +49,4 @@ const AppRouters = () => {
   );
 };
 
-export default AppRouters;
+export default withBaseComponent(AppRouters);

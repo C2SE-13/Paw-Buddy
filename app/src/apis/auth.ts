@@ -1,14 +1,15 @@
 import axios from '../config/axios';
-import {FormData} from '../screens/auth/SignUpScreen';
+import {FormData as loginProps} from '../screens/auth/SignInScreen';
+import {FormData as registerProps} from '../screens/auth/SignUpScreen';
 
-export const apiRegister = (data: FormData) =>
+export const apiRegister = (data: registerProps) =>
   axios({
     url: '/auth/register',
     method: 'post',
     data,
   });
 
-export const apiLogin = (data: FormData) =>
+export const apiLogin = (data: loginProps) =>
   axios({
     url: '/auth/login',
     method: 'post',

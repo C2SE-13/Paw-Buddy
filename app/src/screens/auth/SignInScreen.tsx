@@ -25,7 +25,7 @@ interface IPageProps {
   navigation: NativeStackNavigationProp<AuthStackParamList, 'SignIn'>;
 }
 
-interface FormData {
+export interface FormData {
   email: string;
   password: string;
 }

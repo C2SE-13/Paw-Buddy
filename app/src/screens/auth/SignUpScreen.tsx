@@ -25,10 +25,10 @@ interface IPageProps {
   navigation: NativeStackNavigationProp<AuthStackParamList, 'SignUp'>;
 }
 
-interface FormData {
+export interface FormData {
   email: string;
   password: string;
-  fullname: string;
+  fullName: string;
 }
 
 const SignUpScreen = ({navigation}: IPageProps) => {
@@ -113,7 +113,7 @@ const SignUpScreen = ({navigation}: IPageProps) => {
               error={errors[name]?.message}
             />
           )}
-          name="fullname"
+          name="fullName"
         />
       </View>
       <SpaceComponent height={30} />
