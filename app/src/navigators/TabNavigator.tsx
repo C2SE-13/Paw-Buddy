@@ -1,6 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 /* eslint-disable react/no-unstable-nested-components */
-import React, {ReactNode} from 'react';
+import React, {ReactNode, useState} from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {HomePageScreen} from '../screens';
 import {Image, Platform} from 'react-native';
@@ -19,9 +19,20 @@ import CalendarNavigator from './CalendarNavigator';
 import SearchNavigator from './SearchNavigator';
 import ChatNavigator from './ChatNavigator';
 import ProfileNavigator from './ProfileNavigator';
+import withBaseComponent from '../hocs/withBaseComponent';
+import {TypedUseSelectorHook} from 'react-redux';
+import {RootState} from '../redux/store';
 
-const TabNavigator = () => {
+interface Props {
+  useSelector: TypedUseSelectorHook<RootState>;
+}
+
+const TabNavigator = ({useSelector}: Props) => {
   const Tab = createBottomTabNavigator();
+  const {current} = useSelector(state => state.user);
+
+  const [avatar, setAvatar] = useState(null);
+
   return (
     <Tab.Navigator
       screenOptions={({route}) => ({
@@ -83,7 +94,7 @@ const TabNavigator = () => {
                 <CircleComponent
                   size={72}
                   radius={28}
-                  styles={[{marginTop: Platform.OS === 'ios' ? -50 : -60}]}>
+                  styles={[{marginTop: Platform.OS === 'ios' ? -32 : -42}]}>
                   <SearchIcon />
                 </CircleComponent>
               );
@@ -101,4 +112,4 @@ const TabNavigator = () => {
   );
 };
 
-export default TabNavigator;
+export default withBaseComponent(TabNavigator);

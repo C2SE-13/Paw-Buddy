@@ -1,4 +1,9 @@
-import {combineReducers, configureStore} from '@reduxjs/toolkit';
+import {
+  Action,
+  ThunkAction,
+  combineReducers,
+  configureStore,
+} from '@reduxjs/toolkit';
 import appSlice from './app/appSlice';
 import userSlice from './user/userSlice';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -44,3 +49,9 @@ export const persistor = persistStore(store);
 export type RootState = ReturnType<typeof store.getState>;
 // Inferred type: {posts: PostsState, comments: CommentsState, users: UsersState}
 export type AppDispatch = typeof store.dispatch;
+export type AppThunk<ReturnType = void> = ThunkAction<
+  ReturnType,
+  RootState,
+  unknown,
+  Action<string>
+>;
