@@ -5,6 +5,7 @@ import {RowComponent, TextComponent} from '..';
 import withBaseComponent from '../../hocs/withBaseComponent';
 import {TypedUseSelectorHook} from 'react-redux';
 import {RootState} from '../../redux/store';
+import {colors} from '../../constants/colors';
 
 interface Props {
   children?: ReactNode;
@@ -51,7 +52,7 @@ const HeaderProfile = (props: Props) => {
         height: 88,
         paddingVertical: 24,
         borderBottomWidth: 1,
-        borderColor: '#D9DFE6',
+        borderColor: colors['grey-200'],
       }}>
       <RowComponent justify="flex-start" gap={12} styles={{flex: 1}}>
         <Image

@@ -1,11 +1,11 @@
 import React, {useEffect, useState} from 'react';
-import SplashScreen from '../screens/SplashScreen';
 import {TypedUseSelectorHook} from 'react-redux';
 import MainNavigator from './MainNavigator';
 import AuthNavigator from './AuthNavigator';
 import {AppDispatch, RootState} from '../redux/store';
 import {getCurrent} from '../redux/user/asyncActions';
 import withBaseComponent from '../hocs/withBaseComponent';
+import {SplashScreen} from '../screens';
 
 interface Props {
   dispatch: AppDispatch;
@@ -30,7 +30,7 @@ const AppRouters = ({dispatch, useSelector}: Props) => {
     if (token) {
       timeout = setTimeout(() => {
         dispatch(getCurrent());
-      }, 500);
+      }, 1000);
     }
 
     return () => clearTimeout(timeout);

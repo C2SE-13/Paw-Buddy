@@ -11,8 +11,13 @@ import {
 } from '../../components';
 import {MenuIcon, SearchProfileIcon} from '../../assets/icons';
 import {fontFamilies} from '../../constants/fontFamilies';
+import {colors} from '../../constants/colors';
 
-const EmptySpace = () => {
+interface IPageProps {
+  navigation: any;
+}
+
+const EmptySpace = ({navigation}: IPageProps) => {
   return (
     <View
       style={[
@@ -35,11 +40,11 @@ const EmptySpace = () => {
         text="UH Oh!"
         font={fontFamilies['inter-bold']}
         size={26}
-        color="#39434F"
+        color={colors['grey-800']}
       />
       <SpaceComponent height={10} />
       <TextComponent
-        color="#808B9A"
+        color={colors['grey-600']}
         size={16}
         title
         styles={{textAlign: 'center'}}
@@ -49,7 +54,7 @@ const EmptySpace = () => {
       <SpaceComponent height={32} />
       <ButtonComponent
         size="large"
-        onPress={() => console.log('first')}
+        onPress={() => navigation.navigate('AddPetProfileScreen')}
         text="Continue"
         type="primary"
       />
@@ -57,7 +62,7 @@ const EmptySpace = () => {
   );
 };
 
-const ProfileScreen = ({navigation}: any) => {
+const ProfileScreen = ({navigation}: IPageProps) => {
   return (
     <View
       style={[
@@ -73,7 +78,7 @@ const ProfileScreen = ({navigation}: any) => {
           <View
             style={{
               height: 19,
-              backgroundColor: '#D9DFE6',
+              backgroundColor: colors['grey-200'],
               width: 1,
             }}
           />
@@ -82,7 +87,7 @@ const ProfileScreen = ({navigation}: any) => {
           </TouchableOpacity>
         </RowComponent>
       </HeaderProfile>
-      <EmptySpace />
+      <EmptySpace navigation={navigation} />
     </View>
   );
 };

@@ -1,3 +1,5 @@
+/* eslint-disable react-native/no-inline-styles */
+/* eslint-disable react/react-in-jsx-scope */
 import {View, StyleSheet, TouchableOpacity, Image} from 'react-native';
 import {Calendar} from 'react-native-calendars';
 import {HeaderTitle, SpaceComponent, TextComponent} from '../../components';
@@ -155,14 +157,15 @@ const CalendarScreen = () => {
   };
 
   return (
-    <View style={{height: '100%', flexDirection: 'column'}}>
+    <View style={{height: '100%'}}>
+      <HeaderTitle
+        styles={{backgroundColor: 'white'}}
+        text="Calender"
+        font={fontFamilies['inter-bold']}
+        size={20}
+        color={colors['text-100']}
+      />
       <View style={styles.calendarContainer}>
-        <HeaderTitle
-          title="Calender"
-          font={fontFamilies['inter-bold']}
-          size={20}
-          color={colors['text-100']}
-        />
         <Calendar
           onDayPress={day => setSelected(day.dateString)}
           markingType="multi-dot"
