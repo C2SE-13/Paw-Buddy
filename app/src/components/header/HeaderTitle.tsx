@@ -1,9 +1,8 @@
 import {StyleProp, View, ViewStyle} from 'react-native';
 import {TextComponent} from '..';
-import {fontFamilies} from '../../constants/fontFamilies';
-import {colors} from '../../constants/colors';
 import {ReactNode} from 'react';
 import {globalStyles} from '../../styles/globalStyles';
+import { fontFamilies } from '../../constants/fontFamilies';
 
 interface IProps {
   title: string;
@@ -34,8 +33,8 @@ const HeaderTitle = ({
       {leftButton && leftButton}
       <TextComponent
         text={title}
-        size={size}
-        font={font}
+        size={size||20}
+        font={font||fontFamilies['inter-bold']}
         styles={{textAlign: 'center'}}
         color={color}
         flex={1}
