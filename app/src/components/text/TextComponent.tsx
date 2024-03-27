@@ -12,10 +12,12 @@ interface Props {
   styles?: StyleProp<TextStyle>;
   title?: boolean;
   numOfLine?: number;
+  align?: 'auto' | 'center' | 'left' | 'right' | 'justify' | undefined;
 }
 
 const TextComponent = (props: Props) => {
-  const {text, size, flex, font, color, styles, title, numOfLine} = props;
+  const {text, size, flex, font, color, styles, title, numOfLine, align} =
+    props;
 
   const fontSizeDefault = title
     ? textStyles['semibold-18']
@@ -31,6 +33,7 @@ const TextComponent = (props: Props) => {
           fontSize: size ? size : fontSizeDefault.fontSize,
           fontFamily: font ? font : fontSizeDefault.fontFamily,
           letterSpacing: fontSizeDefault.letterSpacing,
+          textAlign: align ?? 'auto',
         },
         styles,
       ]}>
