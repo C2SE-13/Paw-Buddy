@@ -29,6 +29,7 @@ import {logout} from '../../redux/user/userSlice';
 import {colors} from '../../constants/colors';
 import {fontFamilies} from '../../constants/fontFamilies';
 import {globalStyles} from '../../styles/globalStyles';
+import {useNavigation} from '@react-navigation/native';
 
 interface YourPets {
   id: number;
@@ -64,8 +65,14 @@ const constantUser = [
 
 const YourPetsItem = (props: any) => {
   const {type, item} = props;
+  const navigation = useNavigation<any>();
+
+  const handleNavigateAddNew = () => {
+    navigation.navigate('AddPetProfileScreen');
+  };
+
   return type === 'addNew' ? (
-    <TouchableOpacity style={{gap: 8}}>
+    <TouchableOpacity style={{gap: 8}} onPress={handleNavigateAddNew}>
       <CircleComponent
         size={60}
         color="transparent "
@@ -85,7 +92,7 @@ const YourPetsItem = (props: any) => {
           borderRadius: 100,
         }}
       />
-      <TextComponent text={item.name} color="#D9DFE6" size={14} />
+      <TextComponent text={item.name} color={colors['grey-200']} size={14} />
     </TouchableOpacity>
   );
 };
@@ -190,6 +197,6 @@ const localStyles = StyleSheet.create({
   },
   item: {
     borderBottomWidth: 1,
-    borderColor: '#D9DFE6',
+    borderColor: colors['grey-200'],
   },
 });

@@ -7,6 +7,8 @@ import EditProfileScreen from './profile/EditProfileScreen';
 import CalendarScreen from './calendar/CalendarScreen';
 import SearchScreen from './search/SearchScreen';
 import ChatScreen from './chat/ChatScreen';
+import SplashScreen from './SplashScreen';
+import AddPetProfileScreen from './pet/AddPetProfileScreen';
 
 export {
   HomePageScreen,
@@ -18,4 +20,6 @@ export {
   ChatScreen,
   AccountScreen,
   EditProfileScreen
+  SplashScreen,
+  AddPetProfileScreen,
 };

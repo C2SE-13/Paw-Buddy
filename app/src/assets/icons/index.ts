@@ -20,6 +20,18 @@ import AccountIcon from './account.svg';
 import AppsIcon from './apps.svg';
 import ContactsIcon from './chart-bubble.svg';
 import SettingIcon from './setting.svg';
+import BackIcon from './back.svg';
+import PhotoIcon from './photo.svg';
+import SizeSmallPetActive from './sizeSmallPetActive.svg';
+import SizeSmallPet from './sizeSmallPet.svg';
+import SizeMediumPetActive from './sizeMediumPetActive.svg';
+import SizeMediumPet from './sizeMediumPet.svg';
+import SizeLargePetActive from './sizeLargePetActive.svg';
+import SizeLargePet from './sizeLargePet.svg';
+import BrithdayIcon from './birthday.svg';
+import AdoptionIcon from './adoption.svg';
+import ChevronLeft from './chevronLeft.svg';
+import ChevronRight from './chevronRight.svg';
 
 export {
   AddIcon,
@@ -44,4 +56,16 @@ export {
   AppsIcon,
   ContactsIcon,
   SettingIcon,
+  BackIcon,
+  PhotoIcon,
+  SizeSmallPetActive,
+  SizeSmallPet,
+  SizeMediumPetActive,
+  SizeMediumPet,
+  SizeLargePetActive,
+  SizeLargePet,
+  BrithdayIcon,
+  AdoptionIcon,
+  ChevronLeft,
+  ChevronRight,
 };
