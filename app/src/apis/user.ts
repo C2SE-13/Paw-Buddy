@@ -6,9 +6,9 @@ export const apiGetCurrent = () =>
     method: 'get',
   });
 
-  export const apiUpdateCurrent = (data:any) =>
+export const apiUpdateCurrent = (data: any) =>
   axios({
     url: '/users/update-me',
     method: 'put',
-    data
+    data,
   });
