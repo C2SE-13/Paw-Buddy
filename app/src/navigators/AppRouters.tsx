@@ -31,7 +31,7 @@ const AppRouters = ({dispatch, useSelector}: Props) => {
     if (token) {
       timeout = setTimeout(() => {
         dispatch(getCurrent());
-      }, 1000);
+      }, 2000);
     }
 
     return () => clearTimeout(timeout);

@@ -1,35 +1,57 @@
+/* eslint-disable curly */
 /* eslint-disable react-native/no-inline-styles */
 import {View, FlatList, Image, TouchableOpacity} from 'react-native';
-import React, {memo, useState} from 'react';
+import React, {memo, useEffect, useState} from 'react';
 import {globalStyles} from '../../../styles/globalStyles';
-import {breeds} from '../constants/breeds';
 import {TextComponent} from '../../../components';
 import {colors} from '../../../constants/colors';
 import {shadowStyle, shadowStyle2} from '../../../styles/boxShadow';
 import {fontFamilies} from '../../../constants/fontFamilies';
 import {Props} from '../constants/interface';
+import {apiGetBreeds} from '../../../apis/pet';
+import Toast from 'react-native-toast-message';
+import {toastConfig} from '../../../utils/toast';
 
 const Breed = ({setValue, setstatusButton}: Props) => {
-  const [dataBreeds, setDataBreeds] = useState([
+  const [dataBreeds, setDataBreeds] = useState<any[]>([
     {
-      breed: 'Custom',
+      name: 'Custom',
       image: require('../../../assets/imgs/EmptySpaceIllustrations.png'),
     },
-    ...breeds,
   ]);
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    getBreeds();
+  }, []);
+
+  const getBreeds = async () => {
+    setIsLoading(true);
+    const {data, success, message}: any = await apiGetBreeds({
+      limit: 9,
+      page: 0,
+    });
+    setIsLoading(false);
+    if (success) {
+      setDataBreeds(prev => [...prev, ...data]);
+    } else
+      Toast.show(
+        toastConfig({textMain: message, type: 'error', visibilityTime: 200}),
+      );
+  };
 
   const [active, setActive] = useState<{
-    breed: string | null;
-    image: string | null;
+    name: string;
+    image: string;
   }>({
-    breed: null,
-    image: null,
+    name: dataBreeds[0].name,
+    image: dataBreeds[0].image,
   });
 
-  const handleSelect = (breed: string, image: string) => {
-    setValue('breed', breed);
+  const handleSelect = (name: string, image: string) => {
+    setValue('breed', name);
     setValue('photo', image);
-    setActive({breed, image});
+    setActive({name, image});
     setstatusButton('primary');
   };
 
@@ -49,50 +71,56 @@ const Breed = ({setValue, setstatusButton}: Props) => {
         contentContainerStyle={{gap: 16}}
         columnWrapperStyle={{gap: 16}}
         numColumns={2}
-        renderItem={({item}) => (
-          <TouchableOpacity
-            onPress={() => handleSelect(item.breed, item.image)}
-            style={[
-              globalStyles.center,
-              shadowStyle,
-              shadowStyle2,
-              {
-                width: 155,
-                height: 155,
-                backgroundColor: colors['background-white'],
-                borderRadius: 14,
-                borderWidth: 1,
-                borderColor: colors['grey-150'],
-                gap: 20,
-                justifyContent: 'flex-end',
-                padding: 4,
-              },
-              active.breed === item.breed &&
-                active.image === item.image && {
-                  backgroundColor: colors['blue-500'],
-                  borderWidth: 0,
+        renderItem={({item}) => {
+          return (
+            <TouchableOpacity
+              onPress={() => handleSelect(item?.name, item?.image)}
+              style={[
+                globalStyles.center,
+                shadowStyle,
+                shadowStyle2,
+                {
+                  width: 155,
+                  height: 155,
+                  backgroundColor: colors['background-white'],
+                  borderRadius: 14,
+                  borderWidth: 1,
+                  borderColor: colors['grey-150'],
+                  gap: 20,
+                  justifyContent: 'flex-end',
+                  padding: 4,
                 },
-            ]}>
-            <TextComponent
-              text={item.breed}
-              color={
-                active.breed === item.breed && active.image === item.image
-                  ? colors['background-white']
-                  : colors['grey-800']
-              }
-              font={fontFamilies['inter-semibold']}
-            />
-            <Image
-              source={item.image}
-              style={{
-                width: 87,
-                height: 87,
-                objectFit: 'cover',
-                borderRadius: 4,
-              }}
-            />
-          </TouchableOpacity>
-        )}
+                active.name === item?.name &&
+                  active.image === item?.image && {
+                    backgroundColor: colors['blue-500'],
+                    borderWidth: 0,
+                  },
+              ]}>
+              <TextComponent
+                text={item?.name}
+                color={
+                  active.name === item?.name && active.image === item?.image
+                    ? colors['background-white']
+                    : colors['grey-800']
+                }
+                font={fontFamilies['inter-semibold']}
+              />
+              <Image
+                source={
+                  typeof item.image === 'string'
+                    ? {uri: item?.image}
+                    : item.image
+                }
+                style={{
+                  width: 87,
+                  height: 87,
+                  objectFit: 'cover',
+                  borderRadius: 4,
+                }}
+              />
+            </TouchableOpacity>
+          );
+        }}
       />
     </View>
   );
