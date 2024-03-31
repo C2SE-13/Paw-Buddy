@@ -1,4 +1,3 @@
-
 /* eslint-disable react-native/no-inline-styles */
 /* eslint-disable react/react-in-jsx-scope */
 import {StyleProp, TextStyle, View, ViewStyle} from 'react-native';
@@ -7,7 +6,6 @@ import {fontFamilies} from '../../constants/fontFamilies';
 import {colors} from '../../constants/colors';
 import {ReactNode} from 'react';
 import {globalStyles} from '../../styles/globalStyles';
-import { fontFamilies } from '../../constants/fontFamilies';
 
 interface IProps {
   text: string;

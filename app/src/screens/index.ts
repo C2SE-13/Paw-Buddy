@@ -19,7 +19,7 @@ export {
   SearchScreen,
   ChatScreen,
   AccountScreen,
-  EditProfileScreen
+  EditProfileScreen,
   SplashScreen,
   AddPetProfileScreen,
 };
