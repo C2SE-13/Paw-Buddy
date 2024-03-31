@@ -1,3 +1,4 @@
+/* eslint-disable curly */
 /* eslint-disable react-native/no-inline-styles */
 import {Switch, View} from 'react-native';
 import React, {useState} from 'react';
@@ -20,6 +21,8 @@ import {EMAIL_REGEX} from '../../constants/regex';
 import {apiLogin} from '../../apis';
 import {useDispatch} from 'react-redux';
 import {login} from '../../redux/user/userSlice';
+import Toast from 'react-native-toast-message';
+import {toastConfig} from '../../utils/toast';
 
 interface IPageProps {
   navigation: NativeStackNavigationProp<AuthStackParamList, 'SignIn'>;
@@ -39,13 +42,26 @@ const SignInScreen = ({navigation}: IPageProps) => {
   } = useForm<FormData>();
   const [isRemember, setIsRemember] = useState(false);
   const dispatch = useDispatch();
+  const [isLoading, setIsLoading] = useState(false);
 
   const onSubmit: SubmitHandler<FormData> = async data => {
+    setIsLoading(true);
     const response: any = await apiLogin(data);
+    setIsLoading(false);
     if (response?.success) {
       dispatch(login({isLoggedIn: true, accessToken: response.accessToken}));
       reset();
-    }
+      Toast.show(
+        toastConfig({textMain: response.message, visibilityTime: 2000}),
+      );
+    } else
+      Toast.show(
+        toastConfig({
+          type: 'error',
+          textMain: response.message,
+          visibilityTime: 2000,
+        }),
+      );
   };
 
   return (

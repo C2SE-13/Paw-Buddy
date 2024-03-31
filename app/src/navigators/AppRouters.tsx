@@ -6,6 +6,7 @@ import {AppDispatch, RootState} from '../redux/store';
 import {getCurrent} from '../redux/user/asyncActions';
 import withBaseComponent from '../hocs/withBaseComponent';
 import {SplashScreen} from '../screens';
+import Toast from 'react-native-toast-message';
 
 interface Props {
   dispatch: AppDispatch;
@@ -45,6 +46,7 @@ const AppRouters = ({dispatch, useSelector}: Props) => {
       ) : (
         <AuthNavigator />
       )}
+      <Toast />
     </>
   );
 };

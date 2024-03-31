@@ -1,3 +1,5 @@
+/* eslint-disable react-native/no-inline-styles */
+/* eslint-disable react/react-in-jsx-scope */
 import {useState} from 'react';
 import {StyleSheet, View} from 'react-native';
 import {
@@ -54,7 +56,7 @@ const EditProfileScreen: React.FC<IPageProps> = ({navigation, route}) => {
   return (
     <View style={{height: '100%'}}>
       <HeaderTitle
-        title={placeholder}
+        text={placeholder}
         color={colors['text-100']}
         styles={{padding: 20}}
       />
