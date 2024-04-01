@@ -1,7 +1,7 @@
 /* eslint-disable curly */
 /* eslint-disable react-native/no-inline-styles */
 import {Switch, View} from 'react-native';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   ButtonComponent,
   InputComponent,
@@ -23,6 +23,7 @@ import {useDispatch} from 'react-redux';
 import {login} from '../../redux/user/userSlice';
 import Toast from 'react-native-toast-message';
 import {toastConfig} from '../../utils/toast';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 interface IPageProps {
   navigation: NativeStackNavigationProp<AuthStackParamList, 'SignIn'>;
@@ -37,6 +38,7 @@ const SignInScreen = ({navigation}: IPageProps) => {
   const {
     control,
     handleSubmit,
+    setValue,
     formState: {errors},
     reset,
   } = useForm<FormData>();
@@ -44,11 +46,48 @@ const SignInScreen = ({navigation}: IPageProps) => {
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(false);
 
+  useEffect(() => {
+    const storeData = async () => {
+      try {
+        const response = await AsyncStorage.getItem('dataUser');
+        // console.log(response);
+        if (response) {
+          const jsonValue = JSON.parse(response);
+          if (jsonValue.isRemember) {
+            setValue('email', jsonValue.email);
+            setValue('password', jsonValue.password);
+            setIsRemember(jsonValue.isRemember);
+          }
+        }
+      } catch (e) {
+        // saving error
+      }
+    };
+    storeData();
+  }, [setValue]);
+
   const onSubmit: SubmitHandler<FormData> = async data => {
     setIsLoading(true);
     const response: any = await apiLogin(data);
     setIsLoading(false);
     if (response?.success) {
+      if (isRemember) {
+        AsyncStorage.setItem(
+          'dataUser',
+          JSON.stringify({
+            isRemember,
+            email: data.email,
+            password: data.password,
+          }),
+        );
+      } else {
+        AsyncStorage.setItem(
+          'dataUser',
+          JSON.stringify({
+            isRemember,
+          }),
+        );
+      }
       dispatch(login({isLoggedIn: true, accessToken: response.accessToken}));
       reset();
       Toast.show(
