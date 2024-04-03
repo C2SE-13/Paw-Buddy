@@ -16,7 +16,6 @@ instance.interceptors.request.use(
       );
       config.headers.Authorization = `Bearer ${accessToken}`;
     }
-    config.headers.Accept = 'application/json';
     return config;
   },
   async function (error) {

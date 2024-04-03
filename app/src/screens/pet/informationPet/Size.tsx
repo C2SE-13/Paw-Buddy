@@ -26,14 +26,14 @@ const Size = ({getValues, setValue, setstatusButton, nameStep}: Props) => {
 
   useEffect(() => {
     if (nameStep === 'Size') {
-      setValue('size', sizes[index].value);
+      setValue('size', sizes[index].name);
       setstatusButton('primary');
     }
   }, [index, nameStep, setValue, setstatusButton]);
 
   const handleSelect = (index: number) => {
     setIndex(index);
-    setValue('size', sizes[index].value);
+    setValue('size', sizes[index].name);
     setstatusButton('primary');
   };
 
