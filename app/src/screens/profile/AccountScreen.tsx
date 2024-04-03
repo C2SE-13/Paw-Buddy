@@ -18,7 +18,7 @@ import Toast from 'react-native-toast-message';
 interface State {
   user: {
     current: {
-      id:string
+      id: string;
       email: string;
       fullName?: string;
       avatar?: string;
@@ -129,7 +129,7 @@ const AccountScreen = ({navigation}: IPageProps) => {
         </View>
         <SpaceComponent height={20} />
         {/*editable profile info */}
-        <ScrollView style={{height:'30%'}}>
+        <ScrollView style={{height: '30%'}}>
           <TouchableOpacity
             style={styles.infoRow}
             onPress={() =>

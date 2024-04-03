@@ -3,7 +3,6 @@ import {View, StyleSheet, Image, TouchableOpacity} from 'react-native';
 import React from 'react';
 import {colors} from '../../../constants/colors';
 import {globalStyles} from '../../../styles/globalStyles';
-import {ImageProps} from 'react-native-svg';
 import {PhotoIcon} from '../../../assets/icons';
 import {shadowStyle, shadowStyle2} from '../../../styles/boxShadow';
 
@@ -13,14 +12,16 @@ const ImagePet = ({
   iconChange,
   onChangeImage,
 }: {
-  photo: ImageProps | Readonly<ImageProps> | string;
+  photo: string;
   size: 'large' | 'small';
   iconChange?: boolean;
   onChangeImage?: () => void;
 }) => {
-  const photoCurrent = photo
+  const photoCurrent: any = !photo
+    ? require('../../../assets/imgs/EmptySpaceIllustrations.png')
+    : typeof photo === 'number'
     ? photo
-    : require('../../../assets/imgs/Default.png');
+    : {uri: typeof photo === 'string' ? photo : photo.uri};
 
   return (
     <View

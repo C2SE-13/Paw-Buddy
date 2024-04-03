@@ -11,6 +11,7 @@ import {Props} from '../constants/interface';
 import {apiGetBreeds} from '../../../apis/pet';
 import Toast from 'react-native-toast-message';
 import {toastConfig} from '../../../utils/toast';
+import {ImagePickerResponse} from 'react-native-image-picker';
 
 const Breed = ({setValue, setstatusButton}: Props) => {
   const [dataBreeds, setDataBreeds] = useState<any[]>([
@@ -20,6 +21,13 @@ const Breed = ({setValue, setstatusButton}: Props) => {
     },
   ]);
   const [isLoading, setIsLoading] = useState(false);
+  const [active, setActive] = useState<{
+    name: string;
+    image: string | ImagePickerResponse;
+  }>({
+    name: dataBreeds[0].name,
+    image: dataBreeds[0].image,
+  });
 
   useEffect(() => {
     getBreeds();
@@ -40,15 +48,7 @@ const Breed = ({setValue, setstatusButton}: Props) => {
       );
   };
 
-  const [active, setActive] = useState<{
-    name: string;
-    image: string;
-  }>({
-    name: dataBreeds[0].name,
-    image: dataBreeds[0].image,
-  });
-
-  const handleSelect = (name: string, image: string) => {
+  const handleSelect = (name: string, image: string | ImagePickerResponse) => {
     setValue('breed', name);
     setValue('photo', image);
     setActive({name, image});

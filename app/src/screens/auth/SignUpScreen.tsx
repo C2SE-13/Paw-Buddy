@@ -48,7 +48,6 @@ const SignUpScreen = ({navigation}: IPageProps) => {
     setIsLoading(true);
     const response: any = await apiRegister(data);
     setIsLoading(false);
-    Toast.show(toastConfig({textMain: 'acb'}));
     if (response?.success) {
       dispatch(login({isLoggedIn: true, accessToken: response.accessToken}));
       reset();

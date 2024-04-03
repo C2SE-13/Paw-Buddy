@@ -7,7 +7,7 @@ import {
   Image,
   StyleSheet,
 } from 'react-native';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   CircleComponent,
   HeaderProfile,
@@ -30,6 +30,7 @@ import {colors} from '../../constants/colors';
 import {fontFamilies} from '../../constants/fontFamilies';
 import {globalStyles} from '../../styles/globalStyles';
 import {useNavigation} from '@react-navigation/native';
+import {RootState} from '../../redux/store';
 
 interface YourPets {
   id: number;
@@ -84,7 +85,7 @@ const YourPetsItem = (props: any) => {
   ) : (
     <TouchableOpacity style={[globalStyles.center, {gap: 8}]}>
       <Image
-        source={item.image}
+        source={{uri: item.image}}
         style={{
           width: 60,
           height: 60,
@@ -97,19 +98,36 @@ const YourPetsItem = (props: any) => {
   );
 };
 
-const DrawerCustom = ({navigation, dispatch}: any) => {
-  const [yourPets, setyourPets] = useState<YourPets[]>([
-    {
-      id: 1,
-      image: require('../../assets/imgs/Default.png'),
-      name: 'Maxi',
-    },
-    {
-      id: 2,
-      image: require('../../assets/imgs/Default.png'),
-      name: 'Fiona',
-    },
-  ]);
+const DrawerCustom = ({navigation, dispatch, useSelector}: any) => {
+  const {current} = useSelector((state: RootState) => state.user);
+  const [yourPets, setyourPets] = useState<YourPets[]>([]);
+
+  useEffect(() => {
+    if (current) {
+      const petData = current[0].petData;
+
+      petData.length >= 2
+        ? setyourPets([
+            {
+              id: petData[0].id,
+              name: petData[0].name_pet,
+              image: petData[0].photo,
+            },
+            {
+              id: petData[1].id,
+              name: petData[1].name_pet,
+              image: petData[1].photo,
+            },
+          ])
+        : setyourPets([
+            {
+              id: petData[0].id,
+              name: petData[0].name_pet,
+              image: petData[0].photo,
+            },
+          ]);
+    }
+  }, [current]);
 
   const handleLogout = () => {
     Alert.alert('Log out', 'You will be returned to the login screen.', [

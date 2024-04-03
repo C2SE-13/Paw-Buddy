@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 /* eslint-disable react-native/no-inline-styles */
-import {TouchableOpacity, View, Dimensions} from 'react-native';
+import {TouchableOpacity, View, Dimensions, Alert} from 'react-native';
 import React, {Fragment, useState} from 'react';
 import {globalStyles} from '../../styles/globalStyles';
 import {
@@ -21,9 +21,16 @@ import Dates from './informationPet/Dates';
 import Caretakes from './informationPet/Caretakes';
 import {SubmitHandler, useForm} from 'react-hook-form';
 import * as Progress from 'react-native-progress';
+import {apiCreatePet} from '../../apis/pet';
+import Toast from 'react-native-toast-message';
+import {toastConfig} from '../../utils/toast';
+import {AppDispatch} from '../../redux/store';
+import withBaseComponent from '../../hocs/withBaseComponent';
+import {getCurrent} from '../../redux/user/asyncActions';
 
 interface Props {
   navigation: any;
+  dispatch: AppDispatch;
 }
 
 interface Steps {
@@ -37,8 +44,8 @@ export interface FormData {
   breed: string;
   gender: boolean;
   date_of_birth: string;
-  weight: number;
-  photo: string;
+  weight: string;
+  photo: string | {} | undefined;
   size: string;
   adoption: string;
 }
@@ -70,7 +77,7 @@ const constants = [
   },
 ];
 
-const AddPetProfileScreen = ({navigation}: Props) => {
+const AddPetProfileScreen = ({navigation, dispatch}: Props) => {
   const {
     control,
     setValue,
@@ -101,7 +108,35 @@ const AddPetProfileScreen = ({navigation}: Props) => {
   };
 
   const onSubmit: SubmitHandler<FormData> = async data => {
-    console.log(data);
+    Alert.alert('Are you sure?', `My name pet is ${data.name_pet}`, [
+      {
+        text: 'Cancel',
+        style: 'cancel',
+      },
+      {
+        text: 'Create',
+        onPress: async () => {
+          const formData: any = new FormData();
+          for (let [key, value] of Object.entries(data)) {
+            formData.append(key, value);
+          }
+
+          const response: any = await apiCreatePet(formData);
+
+          if (response.success) {
+            Toast.show(
+              toastConfig({textMain: response.message, visibilityTime: 2000}),
+            );
+            dispatch(getCurrent());
+            navigation.navigate('ProfileScreen');
+          } else {
+            Toast.show(
+              toastConfig({textMain: response.message, type: 'error'}),
+            );
+          }
+        },
+      },
+    ]);
   };
 
   const iconLeft =
@@ -222,4 +257,4 @@ const Step = ({step, maxStep}: Steps) => {
   );
 };
 
-export default AddPetProfileScreen;
+export default withBaseComponent(AddPetProfileScreen);

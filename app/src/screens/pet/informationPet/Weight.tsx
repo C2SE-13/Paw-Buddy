@@ -78,7 +78,7 @@ const Weight = ({
         }}
         render={({field: {onChange, value, name}}) => (
           <InputComponent
-            value={value?.toString()}
+            value={value}
             onChange={onChange}
             placeholder="Your pet’s weight (kg)"
             allowClear
