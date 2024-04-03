@@ -1,7 +1,7 @@
 /* eslint-disable react-native/no-inline-styles */
 /* eslint-disable react/react-in-jsx-scope */
 import {useState} from 'react';
-import {StyleSheet, View} from 'react-native';
+import {Image, StyleSheet, TouchableOpacity, View} from 'react-native';
 import {
   ButtonComponent,
   HeaderTitle,
@@ -20,6 +20,7 @@ import Toast from 'react-native-toast-message';
 import SelectDropdown from 'react-native-select-dropdown';
 import {fontFamilies} from '../../constants/fontFamilies';
 import MESSAGE from '../../constants/message';
+import ModalComponent from '../../components/modal/ModalComponent';
 
 interface IPageProps {
   navigation: NavigationProp<ProfileStackParamList>;
@@ -29,6 +30,7 @@ interface IPageProps {
 const EditProfileScreen: React.FC<IPageProps> = ({navigation, route}) => {
   const {key, type, placeholder} = route.params;
   const [value, setValue] = useState(route.params.value || '');
+  const [modalVisible, setModalVisible] = useState(false);
   const dispatch = useDispatch<AppDispatch>();
 
   const handleSubmit = async () => {
@@ -55,11 +57,32 @@ const EditProfileScreen: React.FC<IPageProps> = ({navigation, route}) => {
 
   return (
     <View style={{height: '100%'}}>
+      <ModalComponent
+        handleSubmit={handleSubmit}
+        setVisible={setModalVisible}
+        text="Confirm Update?"
+        visible={modalVisible}
+      />
       <HeaderTitle
         text={placeholder}
-        color={colors['text-100']}
-        styles={{padding: 20}}
+        color={colors['text-10']}
+        styles={{padding: 20, backgroundColor: colors['primary-100']}}
+        leftButton={
+          <TouchableOpacity
+            style={styles.titleBtn}
+            onPress={() => navigation.goBack()}>
+            <Image
+              style={{
+                width: 15,
+                height: 15,
+              }}
+              source={require('../../assets/imgs/arrow-left-white.png')}
+            />
+          </TouchableOpacity>
+        }
+        rightButton={<SpaceComponent width={20} />}
       />
+      <SpaceComponent height={10} />
       <View style={{flexDirection: 'row', paddingHorizontal: 10}}>
         <View style={{flex: 1}}>
           {route.params.value === false || route.params.value === true ? (
@@ -112,7 +135,7 @@ const EditProfileScreen: React.FC<IPageProps> = ({navigation, route}) => {
           <SpaceComponent height={10} />
           <ButtonComponent
             text="Update"
-            onPress={handleSubmit}
+            onPress={() => setModalVisible(true)}
             type="primary"
             size={'large'}
           />
@@ -124,6 +147,12 @@ const EditProfileScreen: React.FC<IPageProps> = ({navigation, route}) => {
 };
 
 const styles = StyleSheet.create({
+  titleBtn: {
+    width: 20,
+    height: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   dropdownBtn: {
     padding: 20,
     backgroundColor: colors['background-white'],

@@ -74,7 +74,7 @@ const AccountScreen = ({navigation}: IPageProps) => {
             />
           </TouchableOpacity>
         }
-        title={'Profile'}
+        text={'Profile'}
         color={colors['text-10']}
         styles={{padding: 20}}
       />
@@ -146,22 +146,6 @@ const AccountScreen = ({navigation}: IPageProps) => {
               styles={[styles.valueText, styles.labelText]}
             />
           </TouchableOpacity>
-          {/* <TouchableOpacity
-            style={styles.infoRow}
-            onPress={() =>
-              handleOpenEditScreen(
-                'password',
-                user.id,
-                'default',
-                'Change your password',
-              )
-            }>
-            <TextComponent text="Password" styles={styles.labelText} />
-            <TextComponent
-              text={'*********'}
-              styles={[styles.valueText, styles.labelText]}
-            />
-          </TouchableOpacity> */}
           <TouchableOpacity
             style={styles.infoRow}
             onPress={() =>
