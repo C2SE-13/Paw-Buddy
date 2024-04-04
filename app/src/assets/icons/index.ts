@@ -32,6 +32,7 @@ import BrithdayIcon from './birthday.svg';
 import AdoptionIcon from './adoption.svg';
 import ChevronLeft from './chevronLeft.svg';
 import ChevronRight from './chevronRight.svg';
+import ArrowRight from './arrow-right.svg';
 
 export {
   AddIcon,
@@ -68,4 +69,5 @@ export {
   AdoptionIcon,
   ChevronLeft,
   ChevronRight,
+  ArrowRight,
 };

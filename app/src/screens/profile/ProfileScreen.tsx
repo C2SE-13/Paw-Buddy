@@ -1,6 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 import {View, StatusBar, Image, TouchableOpacity} from 'react-native';
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {globalStyles} from '../../styles/globalStyles';
 import {
   ButtonComponent,
@@ -12,9 +12,14 @@ import {
 import {MenuIcon, SearchProfileIcon} from '../../assets/icons';
 import {fontFamilies} from '../../constants/fontFamilies';
 import {colors} from '../../constants/colors';
+import withBaseComponent from '../../hocs/withBaseComponent';
+import {RootState} from '../../redux/store';
+import {IPet} from '../../utils/interface';
+import Profile from './petOfUser/Profile';
 
 interface IPageProps {
-  navigation: any;
+  navigation?: any;
+  useSelector?: any;
 }
 
 const EmptySpace = ({navigation}: IPageProps) => {
@@ -24,6 +29,7 @@ const EmptySpace = ({navigation}: IPageProps) => {
         globalStyles.center,
         {
           flex: 1,
+          paddingHorizontal: 24,
         },
       ]}>
       <Image
@@ -62,34 +68,43 @@ const EmptySpace = ({navigation}: IPageProps) => {
   );
 };
 
-const ProfileScreen = ({navigation}: IPageProps) => {
+const ProfileScreen = ({navigation, useSelector}: IPageProps) => {
+  const {current} = useSelector((state: RootState) => state.user);
+  const [petData, setPetData] = useState<IPet[]>([]);
+
+  useEffect(() => {
+    current && setPetData([...current[0].petData]);
+  }, [current]);
+
   return (
-    <View
-      style={[
-        globalStyles.container,
-        {backgroundColor: 'white', paddingHorizontal: 24},
-      ]}>
+    <View style={[globalStyles.container, {backgroundColor: 'white'}]}>
       <StatusBar barStyle={'light-content'} />
-      <HeaderProfile>
-        <RowComponent gap={12}>
-          <TouchableOpacity>
-            <SearchProfileIcon />
-          </TouchableOpacity>
-          <View
-            style={{
-              height: 19,
-              backgroundColor: colors['grey-200'],
-              width: 1,
-            }}
-          />
-          <TouchableOpacity onPress={() => navigation.openDrawer()}>
-            <MenuIcon />
-          </TouchableOpacity>
-        </RowComponent>
-      </HeaderProfile>
-      <EmptySpace navigation={navigation} />
+      <View style={{paddingHorizontal: 24}}>
+        <HeaderProfile>
+          <RowComponent gap={12}>
+            <TouchableOpacity>
+              <SearchProfileIcon />
+            </TouchableOpacity>
+            <View
+              style={{
+                height: 19,
+                backgroundColor: colors['grey-200'],
+                width: 1,
+              }}
+            />
+            <TouchableOpacity onPress={() => navigation.openDrawer()}>
+              <MenuIcon />
+            </TouchableOpacity>
+          </RowComponent>
+        </HeaderProfile>
+      </View>
+      {petData.length > 0 ? (
+        <Profile petData={petData} navigation={navigation} />
+      ) : (
+        <EmptySpace navigation={navigation} />
+      )}
     </View>
   );
 };
 
-export default ProfileScreen;
+export default withBaseComponent(ProfileScreen);

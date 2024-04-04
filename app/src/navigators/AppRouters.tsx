@@ -14,7 +14,7 @@ interface Props {
 }
 
 const AppRouters = ({dispatch, useSelector}: Props) => {
-  const {token} = useSelector(state => state.user);
+  const {token, petActive} = useSelector(state => state.user);
   const [isShowSplash, setIsShowSplash] = useState(true);
 
   useEffect(() => {
@@ -36,6 +36,8 @@ const AppRouters = ({dispatch, useSelector}: Props) => {
 
     return () => clearTimeout(timeout);
   }, [dispatch, token]);
+
+  console.log(petActive);
 
   return (
     <>
