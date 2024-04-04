@@ -14,7 +14,7 @@ interface Props {
 
 interface User {
   avatar: string | null;
-  name: string;
+  name: string | null;
   id: number;
 }
 
@@ -48,12 +48,14 @@ const HeaderProfile = (props: Props) => {
   return (
     <RowComponent
       justify="space-between"
-      styles={{
-        height: 88,
-        paddingVertical: 24,
-        borderBottomWidth: 1,
-        borderColor: colors['grey-200'],
-      }}>
+      styles={[
+        {
+          height: 88,
+          paddingVertical: 24,
+          borderBottomWidth: 1,
+          borderColor: colors['grey-200'],
+        },
+      ]}>
       <RowComponent justify="flex-start" gap={12} styles={{flex: 1}}>
         <Image
           source={avatarUser}
@@ -61,7 +63,7 @@ const HeaderProfile = (props: Props) => {
         />
         <View>
           <TextComponent text="Hello," size={14} />
-          <TextComponent text={dataUser.name} title size={16} />
+          <TextComponent text={dataUser.name ?? ''} title size={16} />
         </View>
       </RowComponent>
       {children && children}
