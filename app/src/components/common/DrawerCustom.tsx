@@ -119,7 +119,8 @@ const DrawerCustom = ({navigation, dispatch, useSelector}: any) => {
               image: petData[1].photo,
             },
           ])
-        : setyourPets([
+        : petData.length >= 1 &&
+          setyourPets([
             {
               id: petData[0].id,
               name: petData[0].name_pet,
