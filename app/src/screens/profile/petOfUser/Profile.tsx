@@ -272,6 +272,10 @@ const Profile = ({navigation, dispatch, petData}: IPageProps) => {
     petData.length > 0 && dispatch(setPet({petActive: dataPet[currentIndex]}));
   }, [currentIndex, dataPet, dispatch, petData]);
 
+  useEffect(() => {
+    petData.length > 0 && setDataPet([...petData]);
+  }, [petData]);
+
   return (
     <ScrollView
       style={[globalStyles.container]}
