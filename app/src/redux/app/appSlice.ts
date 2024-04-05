@@ -12,7 +12,7 @@ export const appSlice = createSlice({
   name: 'app',
   initialState,
   reducers: {
-    loading: (state, action) => {
+    updateLoading: (state, action) => {
       state.isLoading = action.payload;
     },
   },
@@ -20,6 +20,6 @@ export const appSlice = createSlice({
 
 // Action creators are generated for each case reducer function;
 
-export const {loading} = appSlice.actions;
+export const {updateLoading} = appSlice.actions;
 
 export default appSlice.reducer;
