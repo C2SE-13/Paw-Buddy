@@ -1,7 +1,7 @@
 /* eslint-disable curly */
 /* eslint-disable react-native/no-inline-styles */
 import {View} from 'react-native';
-import React, {useState} from 'react';
+import React from 'react';
 import {
   ButtonComponent,
   InputComponent,
@@ -23,6 +23,7 @@ import {useDispatch} from 'react-redux';
 import {login} from '../../redux/user/userSlice';
 import Toast from 'react-native-toast-message';
 import {toastConfig} from '../../utils/toast';
+import useUpdateStatusLoading from '../../hooks/useUpdateStatusLoading';
 
 interface IPageProps {
   navigation: NativeStackNavigationProp<AuthStackParamList, 'SignUp'>;
@@ -42,12 +43,12 @@ const SignUpScreen = ({navigation}: IPageProps) => {
     reset,
   } = useForm<FormData>();
   const dispatch = useDispatch();
-  const [isLoading, setIsLoading] = useState(false);
+  const {updateStatusLoading} = useUpdateStatusLoading();
 
   const onSubmit: SubmitHandler<FormData> = async data => {
-    setIsLoading(true);
+    updateStatusLoading(true);
     const response: any = await apiRegister(data);
-    setIsLoading(false);
+    updateStatusLoading(false);
     if (response?.success) {
       dispatch(login({isLoggedIn: true, accessToken: response.accessToken}));
       reset();
