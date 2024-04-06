@@ -9,6 +9,7 @@ import LinkComponent from './text/LinkComponent';
 import ButtonComponent from './button/ButtonComponent';
 import HeaderProfile from './header/HeaderProfile';
 import HeaderTitle from './header/HeaderTitle';
+import HeaderPet from './header/HeaderPet';
 
 export {
   InputComponent,
@@ -21,5 +22,6 @@ export {
   CircleComponent,
   DrawerCustom,
   HeaderProfile,
-  HeaderTitle
+  HeaderTitle,
+  HeaderPet,
 };
