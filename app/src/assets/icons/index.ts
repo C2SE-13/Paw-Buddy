@@ -33,6 +33,7 @@ import AdoptionIcon from './adoption.svg';
 import ChevronLeft from './chevronLeft.svg';
 import ChevronRight from './chevronRight.svg';
 import ArrowRight from './arrow-right.svg';
+import AlertIcon from './Alert.svg';
 
 export {
   AddIcon,
@@ -70,4 +71,5 @@ export {
   ChevronLeft,
   ChevronRight,
   ArrowRight,
+  AlertIcon,
 };

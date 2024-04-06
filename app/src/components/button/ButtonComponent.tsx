@@ -88,7 +88,7 @@ const ButtonComponent = (props: Props) => {
       : {color: colors['primary-100']};
 
   return (
-    <View style={[globalStyles['w-100'], {alignItems: 'center'}]}>
+    <View style={[globalStyles['w-100']]}>
       <TouchableOpacity
         disabled={type === 'disabled' ? true : false}
         onPress={onPress}
