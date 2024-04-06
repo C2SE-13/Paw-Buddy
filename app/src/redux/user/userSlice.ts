@@ -8,6 +8,7 @@ export interface UserState {
   isLoggedIn: boolean;
   current: IUser[] | null;
   petActive: IPet | null;
+  isLoading: boolean;
 }
 
 const initialState: UserState = {
@@ -15,9 +16,10 @@ const initialState: UserState = {
   isLoggedIn: false,
   current: null,
   petActive: null,
+  isLoading: false,
 };
 
-export const appSlice = createSlice({
+export const userSlice = createSlice({
   name: 'user',
   initialState,
   reducers: {
@@ -35,14 +37,18 @@ export const appSlice = createSlice({
     },
   },
   extraReducers: builder => {
-    builder.addCase(actions.getCurrent.pending, state => {});
+    builder.addCase(actions.getCurrent.pending, state => {
+      state.isLoading = true;
+    });
 
     builder.addCase(actions.getCurrent.fulfilled, (state, action) => {
+      state.isLoading = false;
       state.current = action.payload.rows;
       state.petActive = action.payload.rows[0].petData[0];
     });
 
     builder.addCase(actions.getCurrent.rejected, (state, action) => {
+      state.isLoading = false;
       state.isLoggedIn = false;
       state.token = null;
       state.current = null;
@@ -51,6 +57,6 @@ export const appSlice = createSlice({
 });
 
 // Action creators are generated for each case reducer function
-export const {login, logout, setPet} = appSlice.actions;
+export const {login, logout, setPet} = userSlice.actions;
 
-export default appSlice.reducer;
+export default userSlice.reducer;

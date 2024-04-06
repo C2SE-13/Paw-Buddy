@@ -24,7 +24,7 @@ import {login} from '../../redux/user/userSlice';
 import Toast from 'react-native-toast-message';
 import {toastConfig} from '../../utils/toast';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import useUpdateLoading from '../../hooks/useUpdateLoading';
+import useUpdateStatusLoading from '../../hooks/useUpdateStatusLoading';
 
 interface IPageProps {
   navigation: NativeStackNavigationProp<AuthStackParamList, 'SignIn'>;
@@ -45,13 +45,12 @@ const SignInScreen = ({navigation}: IPageProps) => {
   } = useForm<FormData>();
   const [isRemember, setIsRemember] = useState(false);
   const dispatch = useDispatch();
-  const {isLoading} = useUpdateLoading();
+  const {updateStatusLoading} = useUpdateStatusLoading();
 
   useEffect(() => {
     const storeData = async () => {
       try {
         const response = await AsyncStorage.getItem('dataUser');
-        // console.log(response);
         if (response) {
           const jsonValue = JSON.parse(response);
           if (jsonValue.isRemember) {
@@ -68,9 +67,9 @@ const SignInScreen = ({navigation}: IPageProps) => {
   }, [setValue]);
 
   const onSubmit: SubmitHandler<FormData> = async data => {
-    isLoading(true);
+    updateStatusLoading(true);
     const response: any = await apiLogin(data);
-    isLoading(false);
+    updateStatusLoading(false);
     if (response?.success) {
       if (isRemember) {
         AsyncStorage.setItem(
