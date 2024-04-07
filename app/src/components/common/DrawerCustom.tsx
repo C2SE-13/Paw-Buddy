@@ -104,7 +104,7 @@ const DrawerCustom = ({navigation, dispatch, useSelector}: any) => {
 
   useEffect(() => {
     if (current) {
-      const petData = current[0].petData;
+      const petData = current.petData;
 
       petData.length >= 2
         ? setyourPets([

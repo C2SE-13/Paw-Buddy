@@ -9,6 +9,7 @@ import SearchScreen from './search/SearchScreen';
 import ChatScreen from './chat/ChatScreen';
 import SplashScreen from './SplashScreen';
 import AddPetProfileScreen from './pet/AddPetProfileScreen';
+import PetServicesScreen from './pet/PetServicesScreen';
 
 export {
   HomePageScreen,
@@ -22,4 +23,5 @@ export {
   EditProfileScreen,
   SplashScreen,
   AddPetProfileScreen,
+  PetServicesScreen,
 };

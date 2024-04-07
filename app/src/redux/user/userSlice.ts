@@ -6,7 +6,7 @@ import {IPet, IUser} from '../../utils/interface';
 export interface UserState {
   token: string | null;
   isLoggedIn: boolean;
-  current: IUser[] | null;
+  current: IUser | null;
   petActive: IPet | null;
   isLoading: boolean;
 }
@@ -43,7 +43,7 @@ export const userSlice = createSlice({
 
     builder.addCase(actions.getCurrent.fulfilled, (state, action) => {
       state.isLoading = false;
-      state.current = action.payload.rows;
+      state.current = action.payload.rows[0];
       state.petActive = action.payload.rows[0].petData[0];
     });
 

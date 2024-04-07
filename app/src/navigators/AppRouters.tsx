@@ -11,6 +11,7 @@ import Toast from 'react-native-toast-message';
 import {ActivityIndicator, StyleSheet, View} from 'react-native';
 import {globalStyles} from '../styles/globalStyles';
 import {colors} from '../constants/colors';
+import {getPetServices} from '../redux/app/asyncActions';
 
 interface Props {
   dispatch: AppDispatch;
@@ -21,6 +22,11 @@ const AppRouters = ({dispatch, useSelector}: Props) => {
   const {token, isLoading: loading} = useSelector(state => state.user);
   const [isShowSplash, setIsShowSplash] = useState(true);
   const {isLoading} = useSelector(state => state.app);
+
+  useEffect(() => {
+    dispatch(getPetServices());
+  }, [dispatch]);
+
   useEffect(() => {
     const timeout = setTimeout(() => {
       setIsShowSplash(false);

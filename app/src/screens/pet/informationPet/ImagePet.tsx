@@ -12,7 +12,7 @@ const ImagePet = ({
   iconChange,
   onChangeImage,
 }: {
-  photo: string;
+  photo: string | any;
   size: 'large' | 'small';
   iconChange?: boolean;
   onChangeImage?: () => void;

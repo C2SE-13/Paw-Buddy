@@ -22,14 +22,14 @@ const Caretakes = ({getValues}: Props) => {
   useEffect(() => {
     current &&
       setDataUser({
-        email: current[0]?.email,
-        avatar: current[0]?.avatar,
-        fullName: current[0]?.fullName,
+        email: current.email || '',
+        avatar: current.avatar || '',
+        fullName: current.fullName || '',
       });
   }, [current]);
 
-  const avatarUser = dataUser?.avatar
-    ? {uri: dataUser?.avatar}
+  const avatarUser = dataUser.avatar
+    ? {uri: dataUser.avatar}
     : require('../../../assets/imgs/Default.png');
 
   return (

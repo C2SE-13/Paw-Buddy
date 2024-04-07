@@ -1,3 +1,5 @@
+/* eslint-disable react-native/no-inline-styles */
+/* eslint-disable react/react-in-jsx-scope */
 import {
   Image,
   KeyboardType,
@@ -14,27 +16,14 @@ import {globalStyles} from '../../styles/globalStyles';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {ProfileStackParamList} from '../../navigators/ProfileNavigator';
 import Toast from 'react-native-toast-message';
-
-interface State {
-  user: {
-    current: {
-      id: string;
-      email: string;
-      fullName?: string;
-      avatar?: string;
-      gender: boolean;
-      address?: string;
-      phone?: string;
-    }[];
-  };
-}
+import {RootState} from '../../redux/store';
 
 interface IPageProps {
   navigation: NativeStackNavigationProp<ProfileStackParamList, 'AccountScreen'>;
 }
 
 const AccountScreen = ({navigation}: IPageProps) => {
-  const user = useSelector((state: State) => state.user.current[0]);
+  const {current} = useSelector((state: RootState) => state.user);
 
   const handleOpenEditScreen = (
     key: string,
@@ -82,8 +71,8 @@ const AccountScreen = ({navigation}: IPageProps) => {
         <Image
           style={styles.avatar}
           source={
-            user.avatar
-              ? {uri: user.avatar}
+            current?.avatar
+              ? {uri: current?.avatar}
               : require('../../assets/imgs/Default.png')
           }
         />
@@ -91,13 +80,13 @@ const AccountScreen = ({navigation}: IPageProps) => {
         <TextComponent
           size={18}
           font={fontFamilies['inter-bold']}
-          text={user.fullName || 'Your Name'}
+          text={current?.fullName || 'Your Name'}
           color={colors['text-100']}
         />
         <SpaceComponent height={5} />
         <TextComponent
           size={14}
-          text={user.email}
+          text={current?.email || ''}
           color={colors['text-60']}
           font={fontFamilies['inter-medium']}
         />
@@ -135,14 +124,14 @@ const AccountScreen = ({navigation}: IPageProps) => {
             onPress={() =>
               handleOpenEditScreen(
                 'fullName',
-                user.fullName,
+                current?.fullName,
                 'default',
                 'Input your name',
               )
             }>
             <TextComponent text="Full name" styles={styles.labelText} />
             <TextComponent
-              text={user.fullName || 'Set now'}
+              text={current?.fullName || 'Set now'}
               styles={[styles.valueText, styles.labelText]}
             />
           </TouchableOpacity>
@@ -151,14 +140,14 @@ const AccountScreen = ({navigation}: IPageProps) => {
             onPress={() =>
               handleOpenEditScreen(
                 'phone',
-                user.phone,
+                current?.phone,
                 'numeric',
                 'Input your phone',
               )
             }>
             <TextComponent text="Phone" styles={styles.labelText} />
             <TextComponent
-              text={user.phone || 'Set now'}
+              text={current?.phone || 'Set now'}
               styles={[styles.valueText, styles.labelText]}
             />
           </TouchableOpacity>
@@ -167,14 +156,14 @@ const AccountScreen = ({navigation}: IPageProps) => {
             onPress={() =>
               handleOpenEditScreen(
                 'gender',
-                user.gender,
+                current?.gender,
                 'default',
                 'Choose your gender',
               )
             }>
             <TextComponent text="Gender" styles={styles.labelText} />
             <TextComponent
-              text={user.gender ? 'Male' : 'Female'}
+              text={current?.gender ? 'Male' : 'Female'}
               styles={[styles.valueText, styles.labelText]}
             />
           </TouchableOpacity>
@@ -183,14 +172,14 @@ const AccountScreen = ({navigation}: IPageProps) => {
             onPress={() =>
               handleOpenEditScreen(
                 'address',
-                user.address,
+                current?.address,
                 'default',
                 'Input your address',
               )
             }>
             <TextComponent text="Address" styles={styles.labelText} />
             <TextComponent
-              text={user.address || 'Set now'}
+              text={current?.address || 'Set now'}
               styles={[styles.valueText, styles.labelText]}
             />
           </TouchableOpacity>

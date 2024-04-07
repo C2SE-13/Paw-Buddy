@@ -1,3 +1,8 @@
+export interface IParams {
+  limit?: number;
+  page?: number;
+}
+
 export interface IUser {
   address: string | null;
   avatar: string | null;
@@ -30,4 +35,15 @@ export interface IPet {
   user_id: number;
   weight: number;
   photo: string | null;
+}
+
+export interface IPetServies {
+  name_service: string | null;
+  description: string | null;
+  price: number;
+  photo: string | null;
+  species: number;
+  note: string | null;
+  estimated_duration: number;
+  category_id: number;
 }

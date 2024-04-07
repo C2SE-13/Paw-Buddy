@@ -1,7 +1,8 @@
 import axios from '../config/axios';
 import {FormData as IPet} from '../screens/pet/AddPetProfileScreen.tsx';
+import {IParams} from '../utils/interface.ts';
 
-export const apiGetBreeds = (params: any) =>
+export const apiGetBreeds = (params?: IParams) =>
   axios({
     url: '/breed/',
     method: 'get',
@@ -16,4 +17,11 @@ export const apiCreatePet = (data: IPet) =>
     headers: {
       'Content-Type': 'multipart/form-data',
     },
+  });
+
+export const apiGetPetServices = (params?: IParams) =>
+  axios({
+    url: '/service/get-all-service',
+    method: 'get',
+    params,
   });

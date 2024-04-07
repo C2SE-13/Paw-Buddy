@@ -30,9 +30,9 @@ const HeaderProfile = (props: Props) => {
   useEffect(() => {
     current
       ? setDataUser({
-          avatar: current[0]?.avatar,
-          name: current[0]?.fullName,
-          id: current[0]?.id,
+          avatar: current.avatar,
+          name: current.fullName,
+          id: current.id,
         })
       : setDataUser({
           avatar: null,

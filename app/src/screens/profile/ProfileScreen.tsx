@@ -73,7 +73,7 @@ const ProfileScreen = ({navigation, useSelector}: IPageProps) => {
   const [petData, setPetData] = useState<IPet[]>([]);
 
   useEffect(() => {
-    current && setPetData([...current[0].petData]);
+    current && setPetData([...current.petData]);
   }, [current]);
 
   return (
