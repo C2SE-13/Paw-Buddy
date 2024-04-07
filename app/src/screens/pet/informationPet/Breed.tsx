@@ -1,7 +1,8 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable curly */
 /* eslint-disable react-native/no-inline-styles */
 import {View, FlatList, Image, TouchableOpacity} from 'react-native';
-import React, {memo, useEffect, useState} from 'react';
+import React, {memo, useCallback, useEffect, useState} from 'react';
 import {globalStyles} from '../../../styles/globalStyles';
 import {TextComponent} from '../../../components';
 import {colors} from '../../../constants/colors';
@@ -12,41 +13,43 @@ import {apiGetBreeds} from '../../../apis/pet';
 import Toast from 'react-native-toast-message';
 import {toastConfig} from '../../../utils/toast';
 import {ImagePickerResponse} from 'react-native-image-picker';
+import useUpdateStatusLoading from '../../../hooks/useUpdateStatusLoading';
 
 const Breed = ({setValue, setstatusButton}: Props) => {
-  const [dataBreeds, setDataBreeds] = useState<any[]>([
-    {
-      name: 'Custom',
-      image: require('../../../assets/imgs/EmptySpaceIllustrations.png'),
-    },
-  ]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [dataBreeds, setDataBreeds] = useState<any[]>([]);
+  const {updateStatusLoading} = useUpdateStatusLoading();
   const [active, setActive] = useState<{
-    name: string;
-    image: string | ImagePickerResponse;
+    name: string | null;
+    image: string | ImagePickerResponse | null;
   }>({
-    name: dataBreeds[0].name,
-    image: dataBreeds[0].image,
+    name: null,
+    image: null,
   });
 
-  useEffect(() => {
-    getBreeds();
-  }, []);
-
-  const getBreeds = async () => {
-    setIsLoading(true);
+  const getBreeds = useCallback(async () => {
+    updateStatusLoading(true);
     const {data, success, message}: any = await apiGetBreeds({
       limit: 9,
       page: 0,
     });
-    setIsLoading(false);
+    updateStatusLoading(false);
     if (success) {
-      setDataBreeds(prev => [...prev, ...data]);
+      setDataBreeds([
+        {
+          name: 'Custom',
+          image: require('../../../assets/imgs/EmptySpaceIllustrations.png'),
+        },
+        ...data,
+      ]);
     } else
       Toast.show(
         toastConfig({textMain: message, type: 'error', visibilityTime: 200}),
       );
-  };
+  }, []);
+
+  useEffect(() => {
+    getBreeds();
+  }, [getBreeds]);
 
   const handleSelect = (name: string, image: string | ImagePickerResponse) => {
     setValue('breed', name);
