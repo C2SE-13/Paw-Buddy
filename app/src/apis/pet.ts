@@ -25,3 +25,9 @@ export const apiGetPetServices = (params?: IParams) =>
     method: 'get',
     params,
   });
+
+export const apiGetServiceCategories = () =>
+  axios({
+    url: '/serviceCategory/all',
+    method: 'get',
+  });

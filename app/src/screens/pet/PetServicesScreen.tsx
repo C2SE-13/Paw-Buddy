@@ -1,23 +1,27 @@
 /* eslint-disable react-native/no-inline-styles */
-/* eslint-disable react/self-closing-comp */
-import {View, TouchableOpacity} from 'react-native';
+import {View, TouchableOpacity, FlatList} from 'react-native';
 import React from 'react';
 import {globalStyles} from '../../styles/globalStyles';
-import {HeaderTitle} from '../../components';
+import {HeaderTitle, PetSerciveComponent} from '../../components';
 import {colors} from '../../constants/colors';
 import {fontFamilies} from '../../constants/fontFamilies';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {MainStackParamList} from '../../navigators/MainNavigator';
 import {ChevronBack} from '../../assets/icons';
+import {RootState} from '../../redux/store';
+import withBaseComponent from '../../hocs/withBaseComponent';
 
 interface Props {
   navigation: NativeStackNavigationProp<
     MainStackParamList,
     'PetServicesScreen'
   >;
+  useSelector: any;
 }
 
-const PetServicesScreen = ({navigation}: Props) => {
+const PetServicesScreen = ({navigation, useSelector}: Props) => {
+  const {serviceCategories} = useSelector((state: RootState) => state.app);
+
   return (
     <View style={[globalStyles.container]}>
       <HeaderTitle
@@ -50,8 +54,31 @@ const PetServicesScreen = ({navigation}: Props) => {
           />
         }
       />
+      <View
+        style={[
+          globalStyles.center,
+          {paddingHorizontal: 31, paddingVertical: 12, flex: 1},
+        ]}>
+        <FlatList
+          showsVerticalScrollIndicator={false}
+          data={serviceCategories}
+          contentContainerStyle={{gap: 36}}
+          columnWrapperStyle={{gap: 32}}
+          keyExtractor={item => item.id}
+          numColumns={3}
+          renderItem={({item}) => (
+            <PetSerciveComponent
+              item={item}
+              size="large"
+              onPress={() =>
+                navigation.navigate('DetailServiceScreen', {id: item.id})
+              }
+            />
+          )}
+        />
+      </View>
     </View>
   );
 };
 
-export default PetServicesScreen;
+export default withBaseComponent(PetServicesScreen);

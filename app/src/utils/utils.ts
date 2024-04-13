@@ -1,9 +1,12 @@
 export function getRandomElements(arr: any[], n: number): any[] {
-  let result = [];
-  // Chọn ngẫu nhiên và đưa vào mảng kết quả
-  for (let i = 0; i < n; i++) {
+  const result = [];
+  const chosenIndices: any[] = [];
+  while (result.length < n) {
     let randomIndex = Math.floor(Math.random() * arr.length);
-    result.push(arr[randomIndex]);
+    if (!chosenIndices.includes(randomIndex)) {
+      result.push(arr[randomIndex]);
+      chosenIndices.push(randomIndex);
+    }
   }
   return result;
 }

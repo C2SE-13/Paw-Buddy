@@ -10,6 +10,7 @@ import ButtonComponent from './button/ButtonComponent';
 import HeaderProfile from './header/HeaderProfile';
 import HeaderTitle from './header/HeaderTitle';
 import HeaderPet from './header/HeaderPet';
+import PetSerciveComponent from './pet/PetSerciveComponent';
 
 export {
   InputComponent,
@@ -24,4 +25,5 @@ export {
   HeaderProfile,
   HeaderTitle,
   HeaderPet,
+  PetSerciveComponent,
 };

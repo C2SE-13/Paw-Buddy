@@ -37,11 +37,18 @@ export interface IPet {
   photo: string | null;
 }
 
+export interface IServieCategories {
+  id: number;
+  type_service: string | null;
+  image: string | null;
+}
+
 export interface IPetServies {
+  id: number;
   name_service: string | null;
   description: string | null;
   price: number;
-  photo: string | null;
+  photo: string;
   species: number;
   note: string | null;
   estimated_duration: number;

@@ -1,15 +1,15 @@
-import {IPetServies} from './../../utils/interface';
+import {IServieCategories} from './../../utils/interface';
 import {createSlice} from '@reduxjs/toolkit';
 import * as actions from './asyncActions';
 
 export interface AppState {
   isLoading: boolean;
-  petServices: IPetServies[];
+  serviceCategories: IServieCategories[];
 }
 
 const initialState: AppState = {
   isLoading: false,
-  petServices: [],
+  serviceCategories: [],
 };
 
 export const appSlice = createSlice({
@@ -22,11 +22,11 @@ export const appSlice = createSlice({
   },
   extraReducers: builder => {
     builder.addCase(actions.getPetServices.fulfilled, (state, action) => {
-      state.petServices = action.payload;
+      state.serviceCategories = action.payload;
     });
 
     builder.addCase(actions.getPetServices.rejected, (state, action) => {
-      state.petServices = [];
+      state.serviceCategories = [];
     });
   },
 });
