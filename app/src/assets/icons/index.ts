@@ -35,6 +35,9 @@ import ChevronRight from './chevronRight.svg';
 import ArrowRight from './arrow-right.svg';
 import AlertIcon from './Alert.svg';
 import ChevronBack from './Chevron-right.svg';
+import LeftIcon from './left.svg';
+import MoreIcon from './More.svg';
+import HidenIcon from './hiden.svg';
 
 export {
   AddIcon,
@@ -74,4 +77,7 @@ export {
   ArrowRight,
   AlertIcon,
   ChevronBack,
+  LeftIcon,
+  MoreIcon,
+  HidenIcon,
 };

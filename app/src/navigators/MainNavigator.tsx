@@ -8,7 +8,7 @@ export type MainStackParamList = {
   PetServicesScreen: undefined;
   AddPetProfileScreen: undefined;
   Main: undefined;
-  DetailServiceScreen: {id: number};
+  DetailServiceScreen: {id: number; name: string};
 };
 
 const MainNavigator = () => {

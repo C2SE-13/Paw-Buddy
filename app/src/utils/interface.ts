@@ -1,6 +1,7 @@
 export interface IParams {
   limit?: number;
   page?: number;
+  category_id?: number;
 }
 
 export interface IUser {
@@ -38,9 +39,9 @@ export interface IPet {
 }
 
 export interface IServieCategories {
-  id: number;
+  id?: number;
   type_service: string | null;
-  image: string | null;
+  image?: string | null;
 }
 
 export interface IPetServies {
@@ -53,4 +54,5 @@ export interface IPetServies {
   note: string | null;
   estimated_duration: number;
   category_id: number;
+  dataCategory: IServieCategories[];
 }

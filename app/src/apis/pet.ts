@@ -19,7 +19,7 @@ export const apiCreatePet = (data: IPet) =>
     },
   });
 
-export const apiGetPetServices = (params?: IParams) =>
+export const apiGetPetService = (params?: IParams) =>
   axios({
     url: '/service/get-all-service',
     method: 'get',

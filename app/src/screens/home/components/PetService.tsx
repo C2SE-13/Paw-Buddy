@@ -28,7 +28,10 @@ const PetService = ({useSelector}: {useSelector: any}) => {
               key={index}
               item={item}
               onPress={() =>
-                navigation.navigate('DetailServiceScreen', {id: item.id})
+                navigation.navigate('DetailServiceScreen', {
+                  id: item.id ?? 0,
+                  name: item.type_service ?? '',
+                })
               }
               size="small"
             />

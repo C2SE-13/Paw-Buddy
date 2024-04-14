@@ -71,7 +71,10 @@ const PetServicesScreen = ({navigation, useSelector}: Props) => {
               item={item}
               size="large"
               onPress={() =>
-                navigation.navigate('DetailServiceScreen', {id: item.id})
+                navigation.navigate('DetailServiceScreen', {
+                  id: item.id,
+                  name: item.type_service,
+                })
               }
             />
           )}
