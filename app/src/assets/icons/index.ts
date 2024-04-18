@@ -38,6 +38,7 @@ import ChevronBack from './Chevron-right.svg';
 import LeftIcon from './left.svg';
 import MoreIcon from './More.svg';
 import HidenIcon from './hiden.svg';
+import LocationIcon from './location.svg';
 
 export {
   AddIcon,
@@ -80,4 +81,5 @@ export {
   LeftIcon,
   MoreIcon,
   HidenIcon,
+  LocationIcon,
 };

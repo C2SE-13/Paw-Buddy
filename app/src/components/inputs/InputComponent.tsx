@@ -73,7 +73,7 @@ const InputComponent = (props: Props) => {
           style={[
             textStyles['medium-14'],
             {
-              color:colors['text-100'],
+              color: colors['text-100'],
               flex: 1,
             },
           ]}

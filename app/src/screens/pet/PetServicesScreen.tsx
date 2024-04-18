@@ -1,5 +1,5 @@
 /* eslint-disable react-native/no-inline-styles */
-import {View, TouchableOpacity, FlatList} from 'react-native';
+import {View, TouchableOpacity, FlatList, Alert} from 'react-native';
 import React from 'react';
 import {globalStyles} from '../../styles/globalStyles';
 import {HeaderTitle, PetSerciveComponent} from '../../components';
@@ -10,6 +10,7 @@ import {MainStackParamList} from '../../navigators/MainNavigator';
 import {ChevronBack} from '../../assets/icons';
 import {RootState} from '../../redux/store';
 import withBaseComponent from '../../hocs/withBaseComponent';
+import useCheckProfilePet from '../../hooks/useCheckProfilePet';
 
 interface Props {
   navigation: NativeStackNavigationProp<
@@ -21,6 +22,28 @@ interface Props {
 
 const PetServicesScreen = ({navigation, useSelector}: Props) => {
   const {serviceCategories} = useSelector((state: RootState) => state.app);
+  const {message, checkStatusPet} = useCheckProfilePet();
+
+  const handleNavigate = (id: number, nameService: string) => {
+    const check = checkStatusPet();
+    if (check) {
+      navigation.navigate('DetailServiceScreen', {
+        id: id,
+        name: nameService,
+      });
+    } else {
+      Alert.alert('Alert Title', message, [
+        {
+          text: 'Cancel',
+          style: 'cancel',
+        },
+        {
+          text: 'Create',
+          onPress: () => navigation.navigate('AddPetProfileScreen'),
+        },
+      ]);
+    }
+  };
 
   return (
     <View style={[globalStyles.container]}>
@@ -70,12 +93,7 @@ const PetServicesScreen = ({navigation, useSelector}: Props) => {
             <PetSerciveComponent
               item={item}
               size="large"
-              onPress={() =>
-                navigation.navigate('DetailServiceScreen', {
-                  id: item.id,
-                  name: item.type_service,
-                })
-              }
+              onPress={() => handleNavigate(item.id, item.type_service)}
             />
           )}
         />

@@ -1,5 +1,5 @@
 /* eslint-disable react-native/no-inline-styles */
-import {View} from 'react-native';
+import {Alert, View} from 'react-native';
 import React from 'react';
 import Category from './Category';
 import {PetSerciveComponent, RowComponent} from '../../../components';
@@ -9,11 +9,34 @@ import withBaseComponent from '../../../hocs/withBaseComponent';
 import {RootState} from '../../../redux/store';
 import {getRandomElements} from '../../../utils/utils';
 import {IServieCategories} from '../../../utils/interface';
+import useCheckProfilePet from '../../../hooks/useCheckProfilePet';
 
 const PetService = ({useSelector}: {useSelector: any}) => {
   const {serviceCategories} = useSelector((state: RootState) => state.app);
   const navigation: NavigationProp<MainStackParamList, 'PetServicesScreen'> =
     useNavigation();
+  const {checkStatusPet, message} = useCheckProfilePet();
+
+  const handleNavigate = (id: number, nameService: string) => {
+    const check = checkStatusPet();
+    if (check) {
+      navigation.navigate('DetailServiceScreen', {
+        id: id,
+        name: nameService,
+      });
+    } else {
+      Alert.alert('Alert Title', message, [
+        {
+          text: 'Cancel',
+          style: 'cancel',
+        },
+        {
+          text: 'Create',
+          onPress: () => navigation.navigate('AddPetProfileScreen'),
+        },
+      ]);
+    }
+  };
 
   return (
     <View style={{gap: 16}}>
@@ -27,12 +50,7 @@ const PetService = ({useSelector}: {useSelector: any}) => {
             <PetSerciveComponent
               key={index}
               item={item}
-              onPress={() =>
-                navigation.navigate('DetailServiceScreen', {
-                  id: item.id ?? 0,
-                  name: item.type_service ?? '',
-                })
-              }
+              onPress={() => handleNavigate(item.id, item.type_service)}
               size="small"
             />
           ),

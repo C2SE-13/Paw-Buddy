@@ -9,22 +9,21 @@ import {RootState} from '../../redux/store';
 import {globalStyles} from '../../styles/globalStyles';
 import {AlertIcon} from '../../assets/icons';
 import {colors} from '../../constants/colors';
-import {shadowStyle, shadowStyle2} from '../../styles/boxShadow';
 
 interface Props {
   useSelector: TypedUseSelectorHook<RootState>;
 }
 
 interface IPet {
-  name: string | null;
-  id: number | null;
+  name: string;
+  id: number;
 }
 
 const HeaderPet = ({useSelector}: Props) => {
   const {petActive} = useSelector(state => state.user);
   const [dataPet, setDataPet] = useState<IPet>({
-    name: null,
-    id: null,
+    name: '',
+    id: 0,
   });
 
   useEffect(() => {

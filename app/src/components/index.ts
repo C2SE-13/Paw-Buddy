@@ -4,12 +4,14 @@ import SpaceComponent from './common/SpaceComponent';
 import LoginWithComponent from './common/LoginWithComponent';
 import DrawerCustom from './common/DrawerCustom';
 import CircleComponent from './common/CircleComponent';
+import DarkDecoEllipses from './common/DarkDecoEllipses';
 import TextComponent from './text/TextComponent';
 import LinkComponent from './text/LinkComponent';
 import ButtonComponent from './button/ButtonComponent';
 import HeaderProfile from './header/HeaderProfile';
 import HeaderTitle from './header/HeaderTitle';
 import HeaderPet from './header/HeaderPet';
+import HeaderBookDate from './header/HeaderBookDate';
 import PetSerciveComponent from './pet/PetSerciveComponent';
 
 export {
@@ -26,4 +28,6 @@ export {
   HeaderTitle,
   HeaderPet,
   PetSerciveComponent,
+  HeaderBookDate,
+  DarkDecoEllipses,
 };

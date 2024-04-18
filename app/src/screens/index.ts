@@ -10,6 +10,7 @@ import ChatScreen from './chat/ChatScreen';
 import SplashScreen from './SplashScreen';
 import AddPetProfileScreen from './pet/AddPetProfileScreen';
 import PetServicesScreen from './pet/PetServicesScreen';
+import BookDateScreen from './pet/BookDateScreen';
 
 export {
   HomePageScreen,
@@ -24,4 +25,5 @@ export {
   SplashScreen,
   AddPetProfileScreen,
   PetServicesScreen,
+  BookDateScreen,
 };

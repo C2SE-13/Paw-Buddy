@@ -8,7 +8,6 @@ import {
   StyleSheet,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
-import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {MainStackParamList} from '../../navigators/MainNavigator';
 import {RouteProp} from '@react-navigation/native';
 import {apiGetPetService} from '../../apis';
@@ -26,9 +25,10 @@ import {LeftIcon} from '../../assets/icons';
 import {shadowStyle, shadowStyle2} from '../../styles/boxShadow';
 import HeaderCategory from './components/HeaderCategory';
 import {weeks} from './constants/renderCalendar';
+import CardServiceComponent from './components/CardServiceComponent';
 
 interface Props {
-  navigation: NativeStackScreenProps<MainStackParamList, 'DetailServiceScreen'>;
+  navigation: any;
   route: RouteProp<MainStackParamList, 'DetailServiceScreen'>;
 }
 
@@ -39,7 +39,7 @@ const DetailServiceScreen = ({route, navigation}: Props) => {
   const [showLocation, setShowLocation] = useState(true);
   const [availability, setAvailability] = useState(true);
   const [showServices, setShowServices] = useState(true);
-  const [chosenServices, setchosenServices] = useState<IPetServies[]>([]);
+  const [chosenServices, setchosenServices] = useState<IPetServies>({});
 
   useEffect(() => {
     const getItemDetail = async (id: number) => {
@@ -53,13 +53,15 @@ const DetailServiceScreen = ({route, navigation}: Props) => {
   }, [id]);
 
   const handleAddService = (item: IPetServies) => {
-    const check = chosenServices.includes(item);
-    if (check) {
-      const newArr = chosenServices.filter(i => i !== item);
-      setchosenServices(newArr);
-    } else {
-      setchosenServices(prev => [...prev, item]);
-    }
+    // const check = chosenServices.includes(item);
+    // if (check) {
+    //   const newArr = chosenServices.filter(i => i !== item);
+    //   setchosenServices(newArr);
+    // } else {
+    //   setchosenServices(item);
+    // }
+
+    setchosenServices(item);
   };
 
   return (
@@ -267,58 +269,12 @@ const DetailServiceScreen = ({route, navigation}: Props) => {
             {showServices && (
               <View style={{gap: 16}}>
                 {detail.map(item => (
-                  <TouchableOpacity
-                    onPress={() => handleAddService(item)}
+                  <CardServiceComponent
                     key={item.id}
-                    style={[
-                      shadowStyle,
-                      shadowStyle2,
-                      {
-                        padding: 16,
-                        backgroundColor: chosenServices.some(
-                          i => i.id === item.id,
-                        )
-                          ? colors['fill-green']
-                          : colors['background-white'],
-                        borderRadius: 14,
-                      },
-                    ]}>
-                    <RowComponent>
-                      <TextComponent
-                        title
-                        text={item.name_service ?? ''}
-                        flex={1}
-                        color={
-                          chosenServices.some(i => i.id === item.id)
-                            ? colors['background-white']
-                            : colors['grey-800']
-                        }
-                        size={14}
-                      />
-                      <RowComponent alignItems="flex-end">
-                        <TextComponent
-                          text="$"
-                          size={12}
-                          styles={{marginBottom: 3.5}}
-                          color={
-                            chosenServices.some(i => i.id === item.id)
-                              ? colors['background-white']
-                              : colors['grey-900']
-                          }
-                        />
-                        <TextComponent
-                          title
-                          text={item.price.toString() ?? ''}
-                          size={20}
-                          color={
-                            chosenServices.some(i => i.id === item.id)
-                              ? colors['background-white']
-                              : colors['grey-900']
-                          }
-                        />
-                      </RowComponent>
-                    </RowComponent>
-                  </TouchableOpacity>
+                    item={item}
+                    onPress={handleAddService}
+                    chosenServices={chosenServices}
+                  />
                 ))}
               </View>
             )}
@@ -358,8 +314,14 @@ const DetailServiceScreen = ({route, navigation}: Props) => {
       <View style={{padding: 24}}>
         <ButtonComponent
           text="Book a date"
-          type={chosenServices.length > 0 ? 'primary' : 'disabled'}
-          onPress={() => {}}
+          type={chosenServices ? 'primary' : 'disabled'}
+          onPress={() =>
+            navigation.navigate('BookDateScreen', {
+              chosenServices: chosenServices,
+              idService: id,
+              nameService: name,
+            })
+          }
           size="large"
         />
       </View>

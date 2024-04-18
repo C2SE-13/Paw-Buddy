@@ -14,6 +14,7 @@ import {IPet} from '../../../utils/interface';
 import {globalStyles} from '../../../styles/globalStyles';
 import {
   CircleComponent,
+  DarkDecoEllipses,
   RowComponent,
   TextComponent,
 } from '../../../components';
@@ -228,34 +229,7 @@ const CardPet = (props: ICardPetProps) => {
               right: 20,
             }}
           />
-          <CircleComponent
-            size={200}
-            styles={{
-              position: 'absolute',
-              right: -30,
-              backgroundColor: colors['background-white'],
-              opacity: 0.08,
-            }}>
-            <CircleComponent
-              size={160}
-              styles={{
-                backgroundColor: colors['background-white'],
-              }}>
-              <CircleComponent
-                size={130}
-                styles={{
-                  backgroundColor: colors['background-white'],
-                }}>
-                <View
-                  style={{
-                    width: 100,
-                    height: 100,
-                    borderRadius: 100,
-                  }}
-                />
-              </CircleComponent>
-            </CircleComponent>
-          </CircleComponent>
+          <DarkDecoEllipses right={-30} />
         </View>
       </Animated.View>
     </GestureDetector>

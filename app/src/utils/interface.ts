@@ -39,8 +39,8 @@ export interface IPet {
 }
 
 export interface IServieCategories {
-  id?: number;
-  type_service: string | null;
+  id: number;
+  type_service: string;
   image?: string | null;
 }
 
