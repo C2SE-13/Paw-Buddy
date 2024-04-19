@@ -1,6 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 import {ScrollView, View} from 'react-native';
-import React, {useEffect, useState} from 'react';
+import React, {SetStateAction, useEffect, useState} from 'react';
 import {
   ButtonComponent,
   HeaderBookDate,
@@ -17,6 +17,7 @@ import {apiGetPetService} from '../../apis';
 import CardServiceComponent from './components/CardServiceComponent';
 import {IPetServies} from '../../utils/interface';
 import {colors} from '../../constants/colors';
+import moment from 'moment';
 
 interface Props {
   navigation: any;
@@ -28,6 +29,9 @@ const BookDateScreen = ({route}: Props) => {
   const [dataService, setDataService] = useState<IPetServies[]>([]);
   const [chosen, setChosen] = useState(chosenServices ?? {});
   const [note, setNote] = useState('');
+  const [bookDate, setBookDate] = useState<SetStateAction<string>>(
+    moment().format(),
+  );
 
   useEffect(() => {
     const getItemDetail = async (id: number) => {
@@ -40,8 +44,6 @@ const BookDateScreen = ({route}: Props) => {
     getItemDetail(idService);
   }, [idService]);
 
-  console.log(note);
-
   return (
     <View style={[globalStyles.container]}>
       <HeaderBookDate />
@@ -51,7 +53,7 @@ const BookDateScreen = ({route}: Props) => {
           <CardService nameService={nameService} image={chosen.photo} />
         </View>
         <SpaceComponent height={20} />
-        <DateService />
+        <DateService date={bookDate} setBookDate={setBookDate} />
         <SpaceComponent height={20} />
         <View style={{paddingHorizontal: 24}}>
           <View

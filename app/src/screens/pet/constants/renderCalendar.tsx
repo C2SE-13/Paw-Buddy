@@ -17,7 +17,7 @@ export const weeks = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
 export const RenderCalendar = (
   dateCurrent?: Date | string | undefined,
-  currentDay?: string,
+  currentDay?: string | number,
   monthIndex?: number,
   currentYear?: number,
 ) => {

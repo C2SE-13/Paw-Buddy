@@ -1,14 +1,110 @@
+/* eslint-disable @typescript-eslint/no-shadow */
 /* eslint-disable react-native/no-inline-styles */
-import {FlatList, TouchableOpacity, View} from 'react-native';
-import React, {useState} from 'react';
+import {TouchableOpacity, View} from 'react-native';
+import React, {Dispatch, SetStateAction, useEffect, useState} from 'react';
 import {RowComponent, SpaceComponent, TextComponent} from '../../../components';
 import {colors} from '../../../constants/colors';
-import {RenderCalendar, weeks} from '../constants/renderCalendar';
+import {RenderCalendar, months, weeks} from '../constants/renderCalendar';
 import {globalStyles} from '../../../styles/globalStyles';
 import {fontFamilies} from '../../../constants/fontFamilies';
+import moment from 'moment';
 
-const DateService = () => {
-  const [dataCalendar, setDataCalendar] = useState(RenderCalendar());
+interface Props {
+  date: SetStateAction<string>;
+  setBookDate: Dispatch<SetStateAction<string>>;
+}
+
+const DateService = ({date, setBookDate}: Props) => {
+  const [monthIndex, setmonthIndex] = useState(
+    months.indexOf(moment(date.toString()).format('MMMM')),
+  );
+  const [currentYear, setCurrentYear] = useState(
+    +moment(date.toString()).format('YYYY'),
+  );
+  const [currentDay, setCurrentDay] = useState(
+    +moment(date.toString()).format('DD'),
+  );
+  const [dataCalendar, setDataCalendar] = useState(
+    RenderCalendar(date.toString(), currentDay, monthIndex, currentYear),
+  );
+  const [week, setWeek] = useState(moment(date.toString()).format('dddd'));
+
+  useEffect(() => {
+    setDataCalendar(
+      RenderCalendar(date.toString(), currentDay, monthIndex, currentYear),
+    );
+    setmonthIndex(months.indexOf(moment(date.toString()).format('MMMM')));
+    setCurrentYear(+moment(date.toString()).format('YYYY'));
+    setCurrentDay(+moment(date.toString()).format('DD'));
+    setWeek(moment(date.toString()).format('dddd'));
+  }, [currentDay, monthIndex, currentYear, date]);
+
+  const handlePrev = () => {
+    const value: number = +moment(date.toString()).format('M');
+    if (value === 1) {
+      const newDate = new Date(`${currentYear - 1}-12-${currentDay}`);
+      setBookDate(newDate.toISOString());
+    } else {
+      const newDate = new Date(
+        `${currentYear}-${
+          value - 1 > 9 ? value - 1 : `0${value - 1}`
+        }-${currentDay}`,
+      );
+      setBookDate(newDate.toISOString());
+    }
+  };
+
+  const handleNext = () => {
+    const value: number = +moment(date.toString()).format('M');
+    if (value === 12) {
+      const newDate = new Date(`${currentYear + 1}-01-${currentDay}`);
+      setBookDate(newDate.toISOString());
+    } else {
+      const newDate = new Date(
+        `${currentYear}-${
+          value + 1 > 9 ? value + 1 : `0${value + 1}`
+        }-${currentDay}`,
+      );
+      setBookDate(newDate.toISOString());
+    }
+  };
+
+  const handleSelectDate = (chosentDate: number, name: string) => {
+    const value: number = +moment(date.toString()).format('M');
+    if (name === 'inactive' && chosentDate >= 1 && chosentDate < 7) {
+      if (value === 12) {
+        const newDate = new Date(`${currentYear + 1}-01-${chosentDate}`);
+        setBookDate(newDate.toISOString());
+      } else {
+        const newDate = new Date(
+          `${currentYear}-${
+            value + 1 > 9 ? value + 1 : `0${value + 1}`
+          }-${chosentDate}`,
+        );
+        setBookDate(newDate.toISOString());
+      }
+    } else if (name === 'inactive' && chosentDate >= 20 && chosentDate <= 31) {
+      if (value === 1) {
+        const newDate = new Date(`${currentYear - 1}-12-${chosentDate}`);
+        setBookDate(newDate.toISOString());
+      } else {
+        const newDate = new Date(
+          `${currentYear}-${
+            value - 1 > 9 ? value - 1 : `0${value - 1}`
+          }-${chosentDate}`,
+        );
+        setBookDate(newDate.toISOString());
+      }
+    } else {
+      const newDate = new Date(
+        `${currentYear}-${
+          monthIndex + 1 > 9 ? monthIndex + 1 : `0${monthIndex + 1}`
+        }-${chosentDate}`,
+      );
+
+      setBookDate(newDate.toISOString());
+    }
+  };
 
   return (
     <View style={{paddingHorizontal: 24}}>
@@ -19,21 +115,22 @@ const DateService = () => {
           paddingBottom: 24,
         }}>
         <RowComponent>
-          <RowComponent gap={4} justify="flex-start" styles={{flex: 1}}>
+          <RowComponent gap={2} justify="flex-start" styles={{flex: 1}}>
             <TextComponent
-              text="Monday,"
-              size={24}
+              text={`${week},`}
+              size={15}
               title
               color={colors['grey-800']}
             />
             <TextComponent
-              text="13 March"
-              size={24}
+              text={`${currentDay} ${months[monthIndex]} ${currentYear}`}
+              size={15}
               color={colors['grey-800']}
             />
           </RowComponent>
-          <RowComponent gap={8}>
+          <RowComponent gap={6}>
             <TouchableOpacity
+              onPress={handlePrev}
               style={[
                 globalStyles.center,
                 {
@@ -51,6 +148,7 @@ const DateService = () => {
               />
             </TouchableOpacity>
             <TouchableOpacity
+              onPress={handleNext}
               style={[
                 globalStyles.center,
                 {
@@ -85,7 +183,16 @@ const DateService = () => {
                 <TextComponent
                   text={item}
                   size={12}
-                  color={colors['grey-500']}
+                  font={
+                    item === week.substring(0, 3)
+                      ? fontFamilies['inter-medium']
+                      : fontFamilies['inter-regular']
+                  }
+                  color={
+                    item === week.substring(0, 3)
+                      ? colors['blue-500']
+                      : colors['grey-500']
+                  }
                 />
               </View>
             ))}
@@ -93,6 +200,7 @@ const DateService = () => {
           <RowComponent justify="space-between" gap={8}>
             {dataCalendar.map((item, index) => (
               <TouchableOpacity
+                onPress={() => handleSelectDate(item.value, item.name)}
                 key={index}
                 style={[
                   globalStyles.center,
