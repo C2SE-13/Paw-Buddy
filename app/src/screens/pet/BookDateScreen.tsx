@@ -52,6 +52,7 @@ const BookDateScreen = ({route}: Props) => {
         </View>
         <SpaceComponent height={20} />
         <DateService />
+        <SpaceComponent height={20} />
         <View style={{paddingHorizontal: 24}}>
           <View
             style={{

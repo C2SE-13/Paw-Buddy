@@ -1,7 +1,7 @@
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import React from 'react';
 import {AccountScreen, EditProfileScreen, ProfileScreen} from '../screens';
-import { KeyboardType } from 'react-native';
+import {KeyboardType} from 'react-native';
 
 export type ProfileStackParamList = {
   ProfileScreen: undefined;

@@ -16,10 +16,10 @@ export const months = [
 export const weeks = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
 export const RenderCalendar = (
-  dateCurrent: Date | string | undefined,
-  currentDay: string,
-  monthIndex: number,
-  currentYear: number,
+  dateCurrent?: Date | string | undefined,
+  currentDay?: string,
+  monthIndex?: number,
+  currentYear?: number,
 ) => {
   let date: Date;
 
@@ -46,7 +46,7 @@ export const RenderCalendar = (
   }
 
   for (let i = 1; i <= lastDateofMonth; i++) {
-    let isToday = i === (+currentDay ?? date.getDate()) ? true : false;
+    let isToday = i === (currentDay ?? date.getDate()) ? true : false;
     data.push({
       name: isToday ? 'active' : 'day',
       value: i,

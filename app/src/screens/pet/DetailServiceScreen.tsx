@@ -39,7 +39,9 @@ const DetailServiceScreen = ({route, navigation}: Props) => {
   const [showLocation, setShowLocation] = useState(true);
   const [availability, setAvailability] = useState(true);
   const [showServices, setShowServices] = useState(true);
-  const [chosenServices, setchosenServices] = useState<IPetServies>({});
+  const [chosenServices, setchosenServices] = useState<IPetServies | null>(
+    null,
+  );
 
   useEffect(() => {
     const getItemDetail = async (id: number) => {
