@@ -1,6 +1,5 @@
-/* eslint-disable @typescript-eslint/no-shadow */
 /* eslint-disable react-native/no-inline-styles */
-import {TouchableOpacity, View} from 'react-native';
+import {Dimensions, FlatList, TouchableOpacity, View} from 'react-native';
 import React, {Dispatch, SetStateAction, useEffect, useState} from 'react';
 import {RowComponent, SpaceComponent, TextComponent} from '../../../components';
 import {colors} from '../../../constants/colors';
@@ -168,16 +167,19 @@ const DateService = ({date, setBookDate}: Props) => {
           </RowComponent>
         </RowComponent>
         <SpaceComponent height={4} />
-        <View style={{paddingBottom: 12}}>
-          <RowComponent justify="space-between">
-            {weeks.map((item, index) => (
+        <View style={[globalStyles.center, {paddingBottom: 12}]}>
+          <FlatList
+            columnWrapperStyle={{gap: 8}}
+            numColumns={weeks.length}
+            scrollEnabled={false}
+            data={weeks}
+            renderItem={({item}) => (
               <View
-                key={index}
                 style={[
                   globalStyles.center,
                   {
-                    width: 40,
-                    height: 40,
+                    width: Dimensions.get('window').width / 7 - 14,
+                    height: Dimensions.get('window').width / 7 - 14,
                   },
                 ]}>
                 <TextComponent
@@ -195,18 +197,22 @@ const DateService = ({date, setBookDate}: Props) => {
                   }
                 />
               </View>
-            ))}
-          </RowComponent>
-          <RowComponent justify="space-between" gap={8}>
-            {dataCalendar.map((item, index) => (
+            )}
+          />
+          <FlatList
+            columnWrapperStyle={{gap: 8}}
+            contentContainerStyle={{gap: 8}}
+            numColumns={weeks.length}
+            scrollEnabled={false}
+            data={dataCalendar}
+            renderItem={({item}) => (
               <TouchableOpacity
                 onPress={() => handleSelectDate(item.value, item.name)}
-                key={index}
                 style={[
                   globalStyles.center,
                   {
-                    width: 40,
-                    height: 40,
+                    width: Dimensions.get('window').width / 7 - 14,
+                    height: Dimensions.get('window').width / 7 - 14,
                     backgroundColor:
                       item.name === 'active'
                         ? colors['blue-100']
@@ -234,8 +240,8 @@ const DateService = ({date, setBookDate}: Props) => {
                   }
                 />
               </TouchableOpacity>
-            ))}
-          </RowComponent>
+            )}
+          />
         </View>
         <View>
           <TextComponent

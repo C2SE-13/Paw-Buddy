@@ -1,5 +1,5 @@
 /* eslint-disable react-native/no-inline-styles */
-import {View, TouchableOpacity, FlatList} from 'react-native';
+import {View, TouchableOpacity, FlatList, Dimensions} from 'react-native';
 import React, {
   Dispatch,
   ReactNode,
@@ -328,8 +328,8 @@ const CalendarCustom = ({
               style={[
                 globalStyles.center,
                 {
-                  width: 40,
-                  height: 40,
+                  width: Dimensions.get('window').width / 7 - 14,
+                  height: Dimensions.get('window').width / 7 - 14,
                 },
               ]}>
               <TextComponent text={item} size={12} color={colors['grey-500']} />
@@ -348,8 +348,8 @@ const CalendarCustom = ({
               style={[
                 globalStyles.center,
                 {
-                  width: 40,
-                  height: 40,
+                  width: Dimensions.get('window').width / 7 - 14,
+                  height: Dimensions.get('window').width / 7 - 14,
                   backgroundColor:
                     item.name === 'active'
                       ? colors['blue-100']
