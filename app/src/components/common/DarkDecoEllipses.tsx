@@ -9,16 +9,18 @@ interface Props {
   right?: number;
   bottom?: number;
   left?: number;
+  size?: number;
+  color?: string;
 }
 
-const DarkDecoEllipses = ({top, right, bottom, left}: Props) => {
+const DarkDecoEllipses = ({top, right, bottom, left, size, color}: Props) => {
   return (
     <CircleComponent
-      size={200}
+      size={size ?? 200}
       styles={[
         {
           position: 'absolute',
-          backgroundColor: colors['background-white'],
+          backgroundColor: color ?? colors['background-white'],
           opacity: 0.08,
           top,
           right,
@@ -27,14 +29,14 @@ const DarkDecoEllipses = ({top, right, bottom, left}: Props) => {
         },
       ]}>
       <CircleComponent
-        size={160}
+        size={size ? size - 40 : 160}
         styles={{
-          backgroundColor: colors['background-white'],
+          backgroundColor: color ?? colors['background-white'],
         }}>
         <CircleComponent
-          size={130}
+          size={size ? size - 70 : 130}
           styles={{
-            backgroundColor: colors['background-white'],
+            backgroundColor: color ?? colors['background-white'],
           }}>
           <View
             style={{

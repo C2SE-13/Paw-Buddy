@@ -169,7 +169,7 @@ const DateService = ({date, setBookDate}: Props) => {
         <SpaceComponent height={4} />
         <View style={[globalStyles.center, {paddingBottom: 12}]}>
           <FlatList
-            columnWrapperStyle={{gap: 8}}
+            columnWrapperStyle={{gap: 8, justifyContent: 'space-between'}}
             numColumns={weeks.length}
             scrollEnabled={false}
             data={weeks}
@@ -200,7 +200,7 @@ const DateService = ({date, setBookDate}: Props) => {
             )}
           />
           <FlatList
-            columnWrapperStyle={{gap: 8}}
+            columnWrapperStyle={{gap: 8, justifyContent: 'space-between'}}
             contentContainerStyle={{gap: 8}}
             numColumns={weeks.length}
             scrollEnabled={false}

@@ -9,7 +9,7 @@ import {colors} from '../../../constants/colors';
 interface Props {
   item: IPetServies;
   onPress: (item: IPetServies) => void;
-  chosenServices: IPetServies | null;
+  chosenServices: IPetServies[];
 }
 
 const CardServiceComponent = (props: Props) => {
@@ -23,10 +23,9 @@ const CardServiceComponent = (props: Props) => {
         shadowStyle2,
         {
           padding: 16,
-          backgroundColor:
-            chosenServices?.id === item.id
-              ? colors['fill-green']
-              : colors['background-white'],
+          backgroundColor: chosenServices.some(i => i.id === item.id)
+            ? colors['fill-green']
+            : colors['background-white'],
           borderRadius: 14,
         },
       ]}>
@@ -36,7 +35,7 @@ const CardServiceComponent = (props: Props) => {
           text={item.name_service ?? ''}
           flex={1}
           color={
-            chosenServices?.id === item.id
+            chosenServices.some(i => i.id === item.id)
               ? colors['background-white']
               : colors['grey-800']
           }
@@ -48,7 +47,7 @@ const CardServiceComponent = (props: Props) => {
             size={12}
             styles={{marginBottom: 3.5}}
             color={
-              chosenServices?.id === item.id
+              chosenServices.some(i => i.id === item.id)
                 ? colors['background-white']
                 : colors['grey-900']
             }
@@ -58,7 +57,7 @@ const CardServiceComponent = (props: Props) => {
             text={item.price.toString() ?? ''}
             size={20}
             color={
-              chosenServices?.id === item.id
+              chosenServices.some(i => i.id === item.id)
                 ? colors['background-white']
                 : colors['grey-900']
             }

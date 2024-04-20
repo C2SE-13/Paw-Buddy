@@ -13,9 +13,9 @@ export type MainStackParamList = {
   PetServicesScreen: undefined;
   AddPetProfileScreen: undefined;
   Main: undefined;
-  DetailServiceScreen: {id: number; name: string};
+  DetailServiceScreen: {id: number; name: string; image: string};
   BookDateScreen: {
-    chosenServices: IPetServies;
+    chosenServices: IPetServies[];
     idService: number;
     nameService: string;
   };

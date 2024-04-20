@@ -17,12 +17,13 @@ const PetService = ({useSelector}: {useSelector: any}) => {
     useNavigation();
   const {checkStatusPet, message} = useCheckProfilePet();
 
-  const handleNavigate = (id: number, nameService: string) => {
+  const handleNavigate = (id: number, nameService: string, image: string) => {
     const check = checkStatusPet();
     if (check) {
       navigation.navigate('DetailServiceScreen', {
         id: id,
         name: nameService,
+        image,
       });
     } else {
       Alert.alert('Alert Title', message, [
@@ -50,7 +51,9 @@ const PetService = ({useSelector}: {useSelector: any}) => {
             <PetSerciveComponent
               key={index}
               item={item}
-              onPress={() => handleNavigate(item.id, item.type_service)}
+              onPress={() =>
+                handleNavigate(item.id, item.type_service, item.image)
+              }
               size="small"
             />
           ),

@@ -27,7 +27,7 @@ interface Props {
 const BookDateScreen = ({route}: Props) => {
   const {chosenServices, idService, nameService} = route.params;
   const [dataService, setDataService] = useState<IPetServies[]>([]);
-  const [chosen, setChosen] = useState(chosenServices ?? {});
+  const [chosen, setChosen] = useState(chosenServices ?? []);
   const [note, setNote] = useState('');
   const [bookDate, setBookDate] = useState<SetStateAction<string>>(
     moment().format(),
@@ -44,13 +44,23 @@ const BookDateScreen = ({route}: Props) => {
     getItemDetail(idService);
   }, [idService]);
 
+  const handlechosenServices = (item: IPetServies) => {
+    const check = chosenServices.includes(item);
+    if (check) {
+      const newArr = chosenServices.filter(i => i !== item);
+      setChosen(newArr);
+    } else {
+      setChosen(prev => [...prev, item]);
+    }
+  };
+
   return (
     <View style={[globalStyles.container]}>
       <HeaderBookDate />
       <ScrollView style={{flex: 1}} showsVerticalScrollIndicator={false}>
         <SpaceComponent height={24} />
         <View style={{paddingHorizontal: 24}}>
-          <CardService nameService={nameService} image={chosen.photo} />
+          <CardService nameService={nameService} image={chosen[0].photo} />
         </View>
         <SpaceComponent height={20} />
         <DateService date={bookDate} setBookDate={setBookDate} />
@@ -75,7 +85,7 @@ const BookDateScreen = ({route}: Props) => {
                   key={item.id}
                   item={item}
                   chosenServices={chosen}
-                  onPress={setChosen}
+                  onPress={handlechosenServices}
                 />
               ))}
             </View>

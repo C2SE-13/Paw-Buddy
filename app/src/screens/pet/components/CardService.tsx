@@ -34,7 +34,7 @@ const CardService = ({nameService, image}: Props) => {
           borderColor: colors['grey-100'],
         },
       ]}>
-      <View style={{gap: 6, width: 188}}>
+      <View style={{gap: 6, width: 168}}>
         <TextComponent
           text={nameService}
           title
@@ -44,7 +44,7 @@ const CardService = ({nameService, image}: Props) => {
         <View style={{flexDirection: 'row', alignItems: 'center', gap: 6}}>
           <LocationIcon />
           <TextComponent
-            text="70 North Street London, UK"
+            text={`${process.env.ENV_Street}, ${process.env.ENV_City}, ${process.env.ENV_Country}`}
             size={14}
             color={colors['grey-100']}
           />

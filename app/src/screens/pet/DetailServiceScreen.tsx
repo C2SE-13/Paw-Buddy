@@ -6,6 +6,8 @@ import {
   ImageBackground,
   TouchableOpacity,
   StyleSheet,
+  FlatList,
+  Image,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {MainStackParamList} from '../../navigators/MainNavigator';
@@ -15,6 +17,7 @@ import {IPetServies} from '../../utils/interface';
 import {globalStyles} from '../../styles/globalStyles';
 import {
   ButtonComponent,
+  DarkDecoEllipses,
   HeaderTitle,
   RowComponent,
   TextComponent,
@@ -34,14 +37,12 @@ interface Props {
 
 const DetailServiceScreen = ({route, navigation}: Props) => {
   const [detail, setDetail] = useState<IPetServies[]>([]);
-  const {id, name} = route.params;
+  const {id, name, image} = route.params;
   const [showContact, setShowContact] = useState(true);
   const [showLocation, setShowLocation] = useState(true);
   const [availability, setAvailability] = useState(true);
   const [showServices, setShowServices] = useState(true);
-  const [chosenServices, setchosenServices] = useState<IPetServies | null>(
-    null,
-  );
+  const [chosenServices, setchosenServices] = useState<IPetServies[]>([]);
 
   useEffect(() => {
     const getItemDetail = async (id: number) => {
@@ -55,15 +56,15 @@ const DetailServiceScreen = ({route, navigation}: Props) => {
   }, [id]);
 
   const handleAddService = (item: IPetServies) => {
-    // const check = chosenServices.includes(item);
-    // if (check) {
-    //   const newArr = chosenServices.filter(i => i !== item);
-    //   setchosenServices(newArr);
-    // } else {
-    //   setchosenServices(item);
-    // }
+    const check = chosenServices.includes(item);
+    if (check) {
+      const newArr = chosenServices.filter(i => i !== item);
+      setchosenServices(newArr);
+    } else {
+      setchosenServices(prev => [...prev, item]);
+    }
 
-    setchosenServices(item);
+    // setchosenServices(item);
   };
 
   return (
@@ -90,15 +91,37 @@ const DetailServiceScreen = ({route, navigation}: Props) => {
                 right: 24,
                 left: 24,
                 bottom: -40,
+                overflow: 'hidden',
               },
             ]}>
-            <TextComponent
-              text="Paw Buddy"
-              title
-              color={colors['grey-800']}
-              size={20}
-            />
-            <TextComponent text={name} size={14} color="#808B9A" />
+            <RowComponent>
+              <View style={{flex: 1}}>
+                <TextComponent
+                  text="Paw Buddy"
+                  title
+                  color={colors['grey-800']}
+                  size={20}
+                />
+                <TextComponent text={name} size={14} color="#808B9A" />
+              </View>
+              <View style={{position: 'relative'}}>
+                <Image
+                  resizeMode="cover"
+                  style={{width: 30, height: 30, borderRadius: 1000}}
+                  source={
+                    image
+                      ? {uri: image}
+                      : require('../../assets/imgs/Activities.png')
+                  }
+                />
+                <DarkDecoEllipses
+                  size={126}
+                  top={-50}
+                  right={-45}
+                  color={colors['purple-500']}
+                />
+              </View>
+            </RowComponent>
           </View>
         </ImageBackground>
         <View style={{paddingTop: 40, paddingHorizontal: 24}}>
@@ -139,19 +162,19 @@ const DetailServiceScreen = ({route, navigation}: Props) => {
                     size={14}
                   />
                   <TextComponent
-                    text="079 1234 7777"
+                    text={`${process.env.ENV_Phone}`}
                     color={colors['grey-800']}
                     size={14}
                   />
                 </View>
                 <View style={{gap: 4}}>
                   <TextComponent
-                    text="Phone:"
+                    text="Email:"
                     color={colors['grey-700']}
                     size={14}
                   />
                   <TextComponent
-                    text="contactshinnyfur@gmail.com"
+                    text={`${process.env.ENV_Email}`}
                     color={colors['grey-800']}
                     size={14}
                   />
@@ -174,7 +197,7 @@ const DetailServiceScreen = ({route, navigation}: Props) => {
                     color={colors['grey-700']}
                   />
                   <TextComponent
-                    text="70 North Street"
+                    text={`${process.env.ENV_Street}`}
                     size={14}
                     color={colors['grey-800']}
                   />
@@ -186,7 +209,7 @@ const DetailServiceScreen = ({route, navigation}: Props) => {
                     color={colors['grey-700']}
                   />
                   <TextComponent
-                    text="London"
+                    text={`${process.env.ENV_City}`}
                     size={14}
                     color={colors['grey-800']}
                   />
@@ -198,7 +221,7 @@ const DetailServiceScreen = ({route, navigation}: Props) => {
                     color={colors['grey-700']}
                   />
                   <TextComponent
-                    text="United Kingdom"
+                    text={`${process.env.ENV_Country}`}
                     size={14}
                     color={colors['grey-800']}
                   />
@@ -214,10 +237,13 @@ const DetailServiceScreen = ({route, navigation}: Props) => {
             />
             {availability && (
               <View style={{gap: 16}}>
-                <RowComponent gap={8} justify="space-between">
-                  {weeks.map((item, index) => (
-                    <TouchableOpacity
-                      key={index}
+                <FlatList
+                  columnWrapperStyle={{gap: 8, justifyContent: 'space-between'}}
+                  scrollEnabled={false}
+                  numColumns={weeks.length}
+                  data={weeks}
+                  renderItem={({item}) => (
+                    <View
                       style={[
                         globalStyles.center,
                         {
@@ -243,9 +269,9 @@ const DetailServiceScreen = ({route, navigation}: Props) => {
                             : colors['blue-500']
                         }
                       />
-                    </TouchableOpacity>
-                  ))}
-                </RowComponent>
+                    </View>
+                  )}
+                />
                 <RowComponent justify="flex-start" gap={4}>
                   <TextComponent
                     text="Hours:"
@@ -286,6 +312,7 @@ const DetailServiceScreen = ({route, navigation}: Props) => {
       <HeaderTitle
         styles={{
           position: 'absolute',
+          backgroundColor: 'rgba(0,0,0,0.1)',
         }}
         text="View Contact"
         color={colors['background-white']}
@@ -316,7 +343,7 @@ const DetailServiceScreen = ({route, navigation}: Props) => {
       <View style={{padding: 24}}>
         <ButtonComponent
           text="Book a date"
-          type={chosenServices ? 'primary' : 'disabled'}
+          type={chosenServices.length > 0 ? 'primary' : 'disabled'}
           onPress={() =>
             navigation.navigate('BookDateScreen', {
               chosenServices: chosenServices,
