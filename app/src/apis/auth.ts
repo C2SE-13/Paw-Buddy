@@ -15,3 +15,10 @@ export const apiLogin = (data: loginProps) =>
     method: 'post',
     data,
   });
+
+export const apiRefreshToken = (data: any) =>
+  axios({
+    url: '/auth/refresh-token',
+    method: 'post',
+    data,
+  });

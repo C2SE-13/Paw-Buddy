@@ -12,3 +12,10 @@ export const apiUpdateCurrent = (data: any) =>
     method: 'put',
     data,
   });
+
+export const apiGetDoctors = (params?: any) =>
+  axios({
+    url: '/users/all',
+    method: 'get',
+    params,
+  });

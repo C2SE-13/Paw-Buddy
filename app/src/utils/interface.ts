@@ -56,3 +56,17 @@ export interface IPetServies {
   category_id: number;
   dataCategory: IServieCategories[];
 }
+
+export interface IDoctors {
+  id: number;
+  avatar: string;
+  fullName: string;
+  roleData: IRoles;
+  phone: string;
+  address: string;
+}
+
+export interface IRoles {
+  id: number;
+  name_role: string;
+}

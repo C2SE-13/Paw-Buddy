@@ -5,73 +5,88 @@ import {
   SafeAreaView,
   StyleSheet,
   TouchableOpacity,
+  FlatList,
 } from 'react-native';
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import Category from './Category';
 import {RowComponent, TextComponent} from '../../../components';
 import {globalStyles} from '../../../styles/globalStyles';
 import {fontFamilies} from '../../../constants/fontFamilies';
 import {colors} from '../../../constants/colors';
-
-const data = [
-  ...Array.from([...Array(10).keys()]).map((el, index) => ({
-    id: index,
-    name: `doctor-${index}`,
-    star: index,
-    view: index,
-    description: `desc-${index}`,
-    iamge: require('../../../assets/imgs/Default.png'),
-  })),
-];
+import {apiGetDoctors} from '../../../apis';
+import {IDoctors} from '../../../utils/interface';
 
 const Recommendation = () => {
+  const [dataDoctor, setDataDoctor] = useState<IDoctors[]>([]);
+
+  useEffect(() => {
+    const getDoctors = async () => {
+      const response: any = await apiGetDoctors({
+        limit: 10,
+        page: 0,
+        roleId: 2,
+      });
+      if (response.success) {
+        setDataDoctor(response.data);
+      }
+    };
+
+    getDoctors();
+  }, []);
+
   return (
     <SafeAreaView style={[globalStyles.container, {gap: 16, marginBottom: 12}]}>
       <Category text="Recommendation Doctor" onPress={() => {}} />
-      <View style={{gap: 16}}>
-        {data.map(item => (
-          <TouchableOpacity key={item.id}>
-            <RowComponent styles={{padding: 8}} gap={16}>
-              <Image
-                source={item.iamge}
-                style={{
-                  width: 110,
-                  height: 110,
-                  objectFit: 'cover',
-                  borderRadius: 12,
-                }}
-              />
-              <View style={{flex: 1, gap: 8}}>
-                <TextComponent
-                  text={item.name}
-                  title
-                  size={16}
-                  font={fontFamilies['inter-bold']}
-                  color={colors['text-100']}
+      {dataDoctor.length > 0 && (
+        <FlatList
+          keyExtractor={item => item.id.toString()}
+          scrollEnabled={false}
+          data={dataDoctor}
+          renderItem={({item}) => (
+            <TouchableOpacity>
+              <RowComponent styles={{padding: 8}} gap={16}>
+                <Image
+                  source={
+                    item.avatar
+                      ? {uri: item.avatar}
+                      : require('../../../assets/imgs/Activities.png')
+                  }
+                  style={{
+                    width: 110,
+                    height: 110,
+                    objectFit: 'cover',
+                    borderRadius: 12,
+                  }}
                 />
-                <RowComponent justify="flex-start" gap={8}>
-                  <TextComponent text="General" styles={styles.textLocal} />
-                  <TextComponent text="|" styles={styles.textLocal} />
+                <View style={{flex: 1, gap: 8}}>
                   <TextComponent
-                    text={item.description}
+                    text={item.fullName}
+                    title
+                    size={16}
+                    font={fontFamilies['inter-bold']}
+                    color={colors['text-100']}
+                  />
+                  <RowComponent justify="flex-start" gap={4}>
+                    <TextComponent
+                      text={item.roleData.name_role}
+                      styles={[styles.textLocal, {textTransform: 'capitalize'}]}
+                    />
+                    <TextComponent text="|" styles={styles.textLocal} />
+                    <TextComponent
+                      text={item.phone}
+                      styles={styles.textLocal}
+                    />
+                  </RowComponent>
+                  <TextComponent
+                    text={`Address: ${item.address}`}
                     styles={styles.textLocal}
                   />
-                </RowComponent>
-                <RowComponent justify="flex-start" gap={4}>
-                  <TextComponent
-                    text={item.star.toString()}
-                    styles={styles.textLocal}
-                  />
-                  <TextComponent
-                    text={`(${item.view} reviews)`}
-                    styles={styles.textLocal}
-                  />
-                </RowComponent>
-              </View>
-            </RowComponent>
-          </TouchableOpacity>
-        ))}
-      </View>
+                </View>
+              </RowComponent>
+            </TouchableOpacity>
+          )}
+        />
+      )}
     </SafeAreaView>
   );
 };
