@@ -33,6 +33,8 @@ const BookDateScreen = ({route}: Props) => {
     moment().format(),
   );
 
+  // console.log(route.params?.doctorId);
+
   useEffect(() => {
     const getItemDetail = async (id: number) => {
       const reponse: any = await apiGetPetService({category_id: id});

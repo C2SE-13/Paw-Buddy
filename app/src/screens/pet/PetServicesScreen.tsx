@@ -11,27 +11,36 @@ import {ChevronBack} from '../../assets/icons';
 import {RootState} from '../../redux/store';
 import withBaseComponent from '../../hocs/withBaseComponent';
 import useCheckProfilePet from '../../hooks/useCheckProfilePet';
+import {TypedUseSelectorHook} from 'react-redux';
+import {RouteProp} from '@react-navigation/native';
 
 interface Props {
   navigation: NativeStackNavigationProp<
     MainStackParamList,
     'PetServicesScreen'
   >;
-  useSelector: any;
+  useSelector: TypedUseSelectorHook<RootState>;
+  route: RouteProp<MainStackParamList, 'PetServicesScreen'>;
 }
 
-const PetServicesScreen = ({navigation, useSelector}: Props) => {
+const PetServicesScreen = ({navigation, useSelector, route}: Props) => {
   const {serviceCategories} = useSelector((state: RootState) => state.app);
   const {message, checkStatusPet} = useCheckProfilePet();
 
   const handleNavigate = (id: number, nameService: string, image: string) => {
     const check = checkStatusPet();
     if (check) {
-      navigation.navigate('DetailServiceScreen', {
+      const option = {
         id: id,
         name: nameService,
         image,
-      });
+      };
+
+      if (route.params.doctorId) {
+        option.doctorId = route.params.doctorId;
+      }
+
+      navigation.navigate('DetailServiceScreen', option);
     } else {
       Alert.alert('Alert Title', message, [
         {
@@ -88,7 +97,7 @@ const PetServicesScreen = ({navigation, useSelector}: Props) => {
           data={serviceCategories}
           contentContainerStyle={{gap: 36}}
           columnWrapperStyle={{gap: 32}}
-          keyExtractor={item => item.id}
+          keyExtractor={item => item.id.toString()}
           numColumns={3}
           renderItem={({item}) => (
             <PetSerciveComponent

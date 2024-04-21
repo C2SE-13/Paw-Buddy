@@ -11,14 +11,22 @@ import DetailServiceScreen from '../screens/pet/DetailServiceScreen';
 import {IPetServies} from '../utils/interface';
 
 export type MainStackParamList = {
-  PetServicesScreen: undefined;
+  PetServicesScreen: {
+    doctorId?: number;
+  };
   AddPetProfileScreen: undefined;
   Main: undefined;
-  DetailServiceScreen: {id: number; name: string; image: string};
+  DetailServiceScreen: {
+    id: number;
+    name: string;
+    image: string;
+    doctorId?: number;
+  };
   BookDateScreen: {
     chosenServices: IPetServies[];
     idService: number;
     nameService: string;
+    doctorId?: number;
   };
   DoctorDetailScreen: {
     id: number;

@@ -349,6 +349,7 @@ const DetailServiceScreen = ({route, navigation}: Props) => {
               chosenServices: chosenServices,
               idService: id,
               nameService: name,
+              doctorId: route.params?.doctorId,
             })
           }
           size="large"

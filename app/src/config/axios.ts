@@ -1,4 +1,3 @@
-/* eslint-disable dot-notation */
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {API_URL} from './env';
@@ -31,24 +30,22 @@ instance.interceptors.response.use(
   },
   async function (error) {
     const originalRequest = error.config;
-    if (error.response.status === 403) {
+    if (error.response.status === 403 && !originalRequest._retry) {
+      originalRequest._retry = true;
       const localStorageData = await AsyncStorage.getItem('persist:app/user');
       if (localStorageData && typeof localStorageData === 'string') {
         const refreshToken = JSON.parse(
           localStorageData,
         )?.refreshToken.replaceAll('"', '');
-        console.log(refreshToken);
         if (refreshToken) {
           const response: any = await apiRefreshToken({
             refresh_token: refreshToken,
           });
-          console.log(response);
           if (response.success) {
-            axios.defaults.headers.common[
-              'Authorization'
-            ] = `Bearer ${response.token}`;
+            axios.defaults.headers.Authorization = `Bearer ${response.token}`;
+          } else {
+            return error.response.data;
           }
-
           return instance(originalRequest);
         } else {
           return error.response.data;
