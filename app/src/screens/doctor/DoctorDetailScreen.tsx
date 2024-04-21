@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react-native/no-inline-styles */
 /* eslint-disable @typescript-eslint/no-shadow */
-import {Image, ScrollView, TouchableOpacity, View} from 'react-native';
+import {Alert, Image, ScrollView, TouchableOpacity, View} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {MainStackParamList} from '../../navigators/MainNavigator';
@@ -20,6 +20,7 @@ import {globalStyles} from '../../styles/globalStyles';
 import {colors} from '../../constants/colors';
 import {fontFamilies} from '../../constants/fontFamilies';
 import useUpdateStatusLoading from '../../hooks/useUpdateStatusLoading';
+import useCheckProfilePet from '../../hooks/useCheckProfilePet';
 
 interface Props {
   navigation: NativeStackNavigationProp<
@@ -33,6 +34,7 @@ const DoctorDetailScreen = ({navigation, route}: Props) => {
   const {id} = route.params;
   const [dataUser, setDataUser] = useState<IDoctors | null>(null);
   const {updateStatusLoading} = useUpdateStatusLoading();
+  const {message, checkStatusPet} = useCheckProfilePet();
 
   useEffect(() => {
     const getDetailDoctor = async (id: number) => {
@@ -46,6 +48,26 @@ const DoctorDetailScreen = ({navigation, route}: Props) => {
 
     getDetailDoctor(id);
   }, [id]);
+
+  const handleNavigate = (doctorId: number) => {
+    const check = checkStatusPet();
+    if (check) {
+      navigation.navigate('PetServicesScreen', {
+        doctorId,
+      });
+    } else {
+      Alert.alert('Alert Title', message, [
+        {
+          text: 'Cancel',
+          style: 'cancel',
+        },
+        {
+          text: 'Create',
+          onPress: () => navigation.navigate('AddPetProfileScreen'),
+        },
+      ]);
+    }
+  };
 
   return (
     <View style={[globalStyles.container]}>
@@ -194,11 +216,7 @@ const DoctorDetailScreen = ({navigation, route}: Props) => {
           text={'Make An Appointment'}
           type="primary"
           size="large"
-          onPress={() =>
-            navigation.navigate('PetServicesScreen', {
-              doctorId: id,
-            })
-          }
+          onPress={() => handleNavigate(id)}
         />
       </View>
     </View>
