@@ -19,3 +19,10 @@ export const apiGetDoctors = (params?: any) =>
     method: 'get',
     params,
   });
+
+export const apiGetDetailDoctors = (id: number, params?: any) =>
+  axios({
+    url: '/users/detail/' + id,
+    method: 'get',
+    params,
+  });

@@ -31,23 +31,29 @@ instance.interceptors.response.use(
   },
   async function (error) {
     const originalRequest = error.config;
-
     if (error.response.status === 403) {
       const localStorageData = await AsyncStorage.getItem('persist:app/user');
       if (localStorageData && typeof localStorageData === 'string') {
         const refreshToken = JSON.parse(
           localStorageData,
         )?.refreshToken.replaceAll('"', '');
-        const response: any = await apiRefreshToken({
-          refresh_token: refreshToken,
-        });
-        if (response.success) {
-          axios.defaults.headers.common[
-            'Authorization'
-          ] = `Bearer ${response.token}`;
+        console.log(refreshToken);
+        if (refreshToken) {
+          const response: any = await apiRefreshToken({
+            refresh_token: refreshToken,
+          });
+          console.log(response);
+          if (response.success) {
+            axios.defaults.headers.common[
+              'Authorization'
+            ] = `Bearer ${response.token}`;
+          }
+
+          return instance(originalRequest);
+        } else {
+          return error.response.data;
         }
       }
-      return instance(originalRequest);
     }
     return error.response.data;
   },
