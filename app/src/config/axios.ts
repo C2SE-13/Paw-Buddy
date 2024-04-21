@@ -35,17 +35,17 @@ instance.interceptors.response.use(
     if (error.response.status === 403) {
       const localStorageData = await AsyncStorage.getItem('persist:app/user');
       if (localStorageData && typeof localStorageData === 'string') {
-        const accessToken = JSON.parse(localStorageData)?.token.replaceAll(
-          '"',
-          '',
-        );
-        originalRequest._retry = true;
-        const access_token = await apiRefreshToken({
-          refresh_token: accessToken,
+        const refreshToken = JSON.parse(
+          localStorageData,
+        )?.refreshToken.replaceAll('"', '');
+        const response: any = await apiRefreshToken({
+          refresh_token: refreshToken,
         });
-        axios.defaults.headers.common[
-          'Authorization'
-        ] = `Bearer ${access_token}`;
+        if (response.success) {
+          axios.defaults.headers.common[
+            'Authorization'
+          ] = `Bearer ${response.token}`;
+        }
       }
       return instance(originalRequest);
     }

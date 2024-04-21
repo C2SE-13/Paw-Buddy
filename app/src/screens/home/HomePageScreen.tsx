@@ -1,16 +1,20 @@
 /* eslint-disable react-native/no-inline-styles */
 import {ScrollView, View} from 'react-native';
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import {globalStyles} from '../../styles/globalStyles';
 import {HeaderPet} from '../../components';
 import Banner from './components/Banner';
 import PetService from './components/PetService';
 import Recommendation from './components/Recommendation';
 import withBaseComponent from '../../hocs/withBaseComponent';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {MainStackParamList} from '../../navigators/MainNavigator';
 
-interface Props {}
+interface Props {
+  navigation: NativeStackNavigationProp<MainStackParamList, any>;
+}
 
-const HomePageScreen = ({}: Props) => {
+const HomePageScreen = ({navigation}: Props) => {
   return (
     <View style={[globalStyles.container]}>
       <HeaderPet />
@@ -20,7 +24,7 @@ const HomePageScreen = ({}: Props) => {
         contentContainerStyle={{gap: 24}}>
         <Banner />
         <PetService />
-        <Recommendation />
+        <Recommendation navigation={navigation} />
       </ScrollView>
     </View>
   );

@@ -7,16 +7,7 @@ import {
 import appSlice from './app/appSlice';
 import userSlice from './user/userSlice';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {
-  persistStore,
-  persistReducer,
-  FLUSH,
-  REHYDRATE,
-  PAUSE,
-  PERSIST,
-  PURGE,
-  REGISTER,
-} from 'redux-persist';
+import {persistStore, persistReducer} from 'redux-persist';
 
 const persistConfig = {
   key: 'app/user',
@@ -25,7 +16,7 @@ const persistConfig = {
 
 const userConfig = {
   ...persistConfig,
-  whitelist: ['isLoggedIn', 'token'],
+  whitelist: ['isLoggedIn', 'token', 'refreshToken'],
 };
 
 const rootReducer = combineReducers({

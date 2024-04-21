@@ -9,6 +9,7 @@ export interface UserState {
   current: IUser | null;
   petActive: IPet | null;
   isLoading: boolean;
+  refreshToken: string | null;
 }
 
 const initialState: UserState = {
@@ -17,6 +18,7 @@ const initialState: UserState = {
   current: null,
   petActive: null,
   isLoading: false,
+  refreshToken: null,
 };
 
 export const userSlice = createSlice({
@@ -26,11 +28,13 @@ export const userSlice = createSlice({
     login: (state, action) => {
       state.isLoggedIn = action.payload.isLoggedIn;
       state.token = action.payload.accessToken;
+      state.refreshToken = action.payload.refreshToken;
     },
     logout: state => {
       state.isLoggedIn = false;
       state.token = null;
       state.current = null;
+      state.refreshToken = null;
     },
     setPet: (state, action) => {
       state.petActive = action.payload.petActive;
@@ -52,6 +56,7 @@ export const userSlice = createSlice({
       state.isLoggedIn = false;
       state.token = null;
       state.current = null;
+      state.refreshToken = null;
     });
   },
 });

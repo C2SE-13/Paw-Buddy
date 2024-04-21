@@ -15,9 +15,21 @@ import {fontFamilies} from '../../../constants/fontFamilies';
 import {colors} from '../../../constants/colors';
 import {apiGetDoctors} from '../../../apis';
 import {IDoctors} from '../../../utils/interface';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {MainStackParamList} from '../../../navigators/MainNavigator';
+import {useSelector} from 'react-redux';
+import {RootState} from '../../../redux/store';
 
-const Recommendation = () => {
+interface Props {
+  navigation: NativeStackNavigationProp<
+    MainStackParamList,
+    'DoctorDetailScreen'
+  >;
+}
+
+const Recommendation = ({navigation}: Props) => {
   const [dataDoctor, setDataDoctor] = useState<IDoctors[]>([]);
+  const {token} = useSelector((state: RootState) => state.user);
 
   useEffect(() => {
     const getDoctors = async () => {
@@ -31,8 +43,8 @@ const Recommendation = () => {
       }
     };
 
-    getDoctors();
-  }, []);
+    token && getDoctors();
+  }, [token]);
 
   return (
     <SafeAreaView style={[globalStyles.container, {gap: 16, marginBottom: 12}]}>
@@ -43,7 +55,12 @@ const Recommendation = () => {
           scrollEnabled={false}
           data={dataDoctor}
           renderItem={({item}) => (
-            <TouchableOpacity>
+            <TouchableOpacity
+              onPress={() =>
+                navigation.navigate('DoctorDetailScreen', {
+                  id: item.id,
+                })
+              }>
               <RowComponent styles={{padding: 8}} gap={16}>
                 <Image
                   source={

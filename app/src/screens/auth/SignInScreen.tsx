@@ -88,7 +88,13 @@ const SignInScreen = ({navigation}: IPageProps) => {
           }),
         );
       }
-      dispatch(login({isLoggedIn: true, accessToken: response.accessToken}));
+      dispatch(
+        login({
+          isLoggedIn: true,
+          accessToken: response.accessToken,
+          refreshToken: response.refreshToken,
+        }),
+      );
       reset();
       Toast.show(
         toastConfig({textMain: response.message, visibilityTime: 2000}),
