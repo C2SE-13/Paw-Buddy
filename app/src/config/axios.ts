@@ -44,7 +44,7 @@ instance.interceptors.response.use(
           if (response.success) {
             axios.defaults.headers.Authorization = `Bearer ${response.token}`;
           } else {
-            return error.response.data;
+            return error;
           }
           return instance(originalRequest);
         } else {

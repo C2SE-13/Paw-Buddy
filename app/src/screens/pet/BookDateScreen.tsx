@@ -1,10 +1,11 @@
 /* eslint-disable react-native/no-inline-styles */
-import {ScrollView, View} from 'react-native';
+import {Image, ScrollView, View} from 'react-native';
 import React, {SetStateAction, useEffect, useState} from 'react';
 import {
   ButtonComponent,
   HeaderBookDate,
   InputComponent,
+  RowComponent,
   SpaceComponent,
   TextComponent,
 } from '../../components';
@@ -13,15 +14,29 @@ import CardService from './components/CardService';
 import {RouteProp} from '@react-navigation/native';
 import {MainStackParamList} from '../../navigators/MainNavigator';
 import DateService from './components/DateService';
-import {apiGetPetService} from '../../apis';
+import {
+  apiCreateBooking,
+  apiGetDetailDoctors,
+  apiGetPetService,
+} from '../../apis';
 import CardServiceComponent from './components/CardServiceComponent';
-import {IPetServies} from '../../utils/interface';
+import {IDoctors, IPetServies} from '../../utils/interface';
 import {colors} from '../../constants/colors';
 import moment from 'moment';
+import {useSelector} from 'react-redux';
+import {RootState} from '../../redux/store';
 
 interface Props {
   navigation: any;
   route: RouteProp<MainStackParamList, 'BookDateScreen'>;
+}
+
+export interface Booking {
+  service_id: number;
+  pet_id: number;
+  date: string;
+  start_time: string;
+  vet_id: number;
 }
 
 const BookDateScreen = ({route}: Props) => {
@@ -32,19 +47,73 @@ const BookDateScreen = ({route}: Props) => {
   const [bookDate, setBookDate] = useState<SetStateAction<string>>(
     moment().format(),
   );
-
-  // console.log(route.params?.doctorId);
+  const [dataDocotr, setDataDocotr] = useState<IDoctors | null>(null);
+  const [bookingOfDoctor, setBookingOfDoctor] = useState<
+    {service_id: number; start_time: string; date: string}[]
+  >([]);
+  const [totalTimeOfService, setTotalTimeOfService] = useState(0);
+  const [startTime, setStartTime] = useState<string>('');
+  const {petActive} = useSelector((state: RootState) => state.user);
 
   useEffect(() => {
     const getItemDetail = async (id: number) => {
-      const reponse: any = await apiGetPetService({category_id: id});
-      if (reponse.success) {
-        setDataService(reponse.data);
+      const response: any = await apiGetPetService({category_id: id});
+      if (response.success) {
+        setDataService(response.data);
       }
     };
 
     getItemDetail(idService);
   }, [idService]);
+
+  useEffect(() => {
+    const getInformationDoctor = async (id: number) => {
+      const response: any = await apiGetDetailDoctors(id);
+      if (response.success) {
+        setDataDocotr(response.userData);
+        setBookingOfDoctor(response.bookingData);
+      }
+    };
+    route.params.doctorId && getInformationDoctor(route.params?.doctorId);
+  }, [route.params?.doctorId]);
+
+  useEffect(() => {
+    dataService.length > 0 &&
+      setTotalTimeOfService(
+        dataService.reduce(
+          (accumulator, currentValue) =>
+            accumulator + currentValue.estimated_duration,
+          0,
+        ),
+      );
+  }, [dataService]);
+
+  useEffect(() => {
+    const check = bookingOfDoctor.length > 0;
+
+    if (check) {
+      const object =
+        bookingOfDoctor
+          .filter(item => item.service_id === idService)
+          .filter(item => {
+            const checkYear =
+              moment(bookDate.toString()).format('YYYY') ===
+              moment(item.date).format('YYYY');
+            const checkMonth =
+              moment(bookDate.toString()).format('MMMM') ===
+              moment(item.date).format('MMMM');
+            const checkDay =
+              moment(bookDate.toString()).format('DD') ===
+              moment(item.date).format('DD');
+            if (checkYear && checkMonth && checkDay) {
+              return item;
+            }
+          })
+          .map(item => item.start_time) || [];
+
+      // -----------------chua xong
+    }
+  }, [bookDate, bookingOfDoctor, idService]);
 
   const handlechosenServices = (item: IPetServies) => {
     const check = chosenServices.includes(item);
@@ -56,6 +125,18 @@ const BookDateScreen = ({route}: Props) => {
     }
   };
 
+  const handleConfirm = async () => {
+    const data: Booking = {
+      service_id: idService,
+      pet_id: petActive?.id ?? 0,
+      date: bookDate.toString(),
+      start_time: startTime,
+      vet_id: dataDocotr?.id ?? 0,
+    };
+
+    const response = await apiCreateBooking(data);
+  };
+
   return (
     <View style={[globalStyles.container]}>
       <HeaderBookDate />
@@ -65,7 +146,59 @@ const BookDateScreen = ({route}: Props) => {
           <CardService nameService={nameService} image={chosen[0].photo} />
         </View>
         <SpaceComponent height={20} />
-        <DateService date={bookDate} setBookDate={setBookDate} />
+        <View style={{paddingHorizontal: 24}}>
+          <View
+            style={{
+              gap: 16,
+              borderBottomWidth: 1,
+              paddingBottom: 20,
+              borderColor: colors['grey-150'],
+            }}>
+            <TextComponent
+              text="Information Doctor"
+              title
+              size={16}
+              color={colors['grey-800']}
+            />
+            <RowComponent gap={12}>
+              <Image
+                resizeMode="center"
+                style={{
+                  borderRadius: 10,
+                  width: 90,
+                  height: 90,
+                }}
+                source={
+                  dataDocotr
+                    ? {uri: dataDocotr.avatar}
+                    : require('../../assets/imgs/doctor.png')
+                }
+              />
+              <View style={{flex: 1, gap: 4}}>
+                <TextComponent
+                  text={dataDocotr?.fullName ?? ''}
+                  title
+                  size={16}
+                  color={colors['grey-900']}
+                />
+                <TextComponent
+                  text={`Phone: ${dataDocotr?.phone}`}
+                  title
+                  size={14}
+                  color={colors['grey-500']}
+                />
+              </View>
+            </RowComponent>
+          </View>
+        </View>
+        <SpaceComponent height={20} />
+        <DateService
+          date={bookDate}
+          setBookDate={setBookDate}
+          totalTimeOfService={totalTimeOfService}
+          startTime={startTime}
+          setStartTime={setStartTime}
+        />
         <SpaceComponent height={20} />
         <View style={{paddingHorizontal: 24}}>
           <View
@@ -122,7 +255,7 @@ const BookDateScreen = ({route}: Props) => {
           text="Confirm booking"
           type={'primary'}
           size="large"
-          onPress={() => {}}
+          onPress={handleConfirm}
         />
       </View>
     </View>

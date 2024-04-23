@@ -7,13 +7,29 @@ import {RenderCalendar, months, weeks} from '../constants/renderCalendar';
 import {globalStyles} from '../../../styles/globalStyles';
 import {fontFamilies} from '../../../constants/fontFamilies';
 import moment from 'moment';
+import {renderTime} from '../constants/renderTime';
 
 interface Props {
   date: SetStateAction<string>;
   setBookDate: Dispatch<SetStateAction<string>>;
+  totalTimeOfService: number;
+  startTime: SetStateAction<string>;
+  setStartTime: Dispatch<SetStateAction<string>>;
 }
 
-const DateService = ({date, setBookDate}: Props) => {
+interface Time {
+  buoi: string;
+  busy: boolean;
+  time: string;
+}
+
+const DateService = ({
+  date,
+  setBookDate,
+  totalTimeOfService,
+  startTime,
+  setStartTime,
+}: Props) => {
   const [monthIndex, setmonthIndex] = useState(
     months.indexOf(moment(date.toString()).format('MMMM')),
   );
@@ -27,6 +43,7 @@ const DateService = ({date, setBookDate}: Props) => {
     RenderCalendar(date.toString(), currentDay, monthIndex, currentYear),
   );
   const [week, setWeek] = useState(moment(date.toString()).format('dddd'));
+  const [time, setTime] = useState<Time[]>([]);
 
   useEffect(() => {
     setDataCalendar(
@@ -37,6 +54,19 @@ const DateService = ({date, setBookDate}: Props) => {
     setCurrentDay(+moment(date.toString()).format('DD'));
     setWeek(moment(date.toString()).format('dddd'));
   }, [currentDay, monthIndex, currentYear, date]);
+
+  useEffect(() => {
+    setTime(
+      renderTime(
+        currentYear,
+        monthIndex + 1,
+        currentDay,
+        0,
+        0,
+        totalTimeOfService,
+      ),
+    );
+  }, [currentDay, currentYear, monthIndex, startTime, totalTimeOfService]);
 
   const handlePrev = () => {
     const value: number = +moment(date.toString()).format('M');
@@ -243,12 +273,56 @@ const DateService = ({date, setBookDate}: Props) => {
             )}
           />
         </View>
-        <View>
+        <View style={{gap: 12}}>
           <TextComponent
             text="Availability"
             title
             size={16}
             color={colors['grey-800']}
+          />
+          <FlatList
+            scrollEnabled={false}
+            contentContainerStyle={{gap: 8}}
+            columnWrapperStyle={{gap: 8, justifyContent: 'space-between'}}
+            numColumns={3}
+            data={time}
+            renderItem={({item}) => (
+              <TouchableOpacity
+                onPress={() => setStartTime(item.time)}
+                disabled={item.busy}
+                style={{
+                  width: Dimensions.get('screen').width / 3 - 24,
+                  backgroundColor:
+                    startTime === item.time
+                      ? colors['primary-100']
+                      : item.busy
+                      ? colors['warning-100']
+                      : colors['primary-surface'],
+                  paddingVertical: 12,
+                  borderRadius: 14,
+                }}>
+                <RowComponent gap={2}>
+                  <TextComponent
+                    text={item.time}
+                    color={
+                      startTime === item.time
+                        ? colors['background-white']
+                        : colors['text-50']
+                    }
+                    size={14}
+                  />
+                  <TextComponent
+                    text={item.buoi}
+                    color={
+                      startTime === item.time
+                        ? colors['background-white']
+                        : colors['text-50']
+                    }
+                    size={14}
+                  />
+                </RowComponent>
+              </TouchableOpacity>
+            )}
           />
         </View>
       </View>
