@@ -26,7 +26,7 @@ interface Time {
 const DateService = ({
   date,
   setBookDate,
-  totalTimeOfService,
+  totalTimeOfService = 60,
   startTime,
   setStartTime,
 }: Props) => {
@@ -45,6 +45,8 @@ const DateService = ({
   const [week, setWeek] = useState(moment(date.toString()).format('dddd'));
   const [time, setTime] = useState<Time[]>([]);
 
+  console.log(dataCalendar);
+
   useEffect(() => {
     setDataCalendar(
       RenderCalendar(date.toString(), currentDay, monthIndex, currentYear),
@@ -56,16 +58,7 @@ const DateService = ({
   }, [currentDay, monthIndex, currentYear, date]);
 
   useEffect(() => {
-    setTime(
-      renderTime(
-        currentYear,
-        monthIndex + 1,
-        currentDay,
-        0,
-        0,
-        totalTimeOfService,
-      ),
-    );
+    setTime(renderTime(currentYear, monthIndex + 1, currentDay, 12, 30, 31));
   }, [currentDay, currentYear, monthIndex, startTime, totalTimeOfService]);
 
   const handlePrev = () => {
@@ -215,16 +208,8 @@ const DateService = ({
                 <TextComponent
                   text={item}
                   size={12}
-                  font={
-                    item === week.substring(0, 3)
-                      ? fontFamilies['inter-medium']
-                      : fontFamilies['inter-regular']
-                  }
-                  color={
-                    item === week.substring(0, 3)
-                      ? colors['blue-500']
-                      : colors['grey-500']
-                  }
+                  font={fontFamilies['inter-regular']}
+                  color={colors['grey-500']}
                 />
               </View>
             )}
@@ -237,24 +222,25 @@ const DateService = ({
             data={dataCalendar}
             renderItem={({item}) => (
               <TouchableOpacity
+                disabled={item.old}
                 onPress={() => handleSelectDate(item.value, item.name)}
                 style={[
                   globalStyles.center,
                   {
                     width: Dimensions.get('window').width / 7 - 14,
                     height: Dimensions.get('window').width / 7 - 14,
-                    backgroundColor:
-                      item.name === 'active'
-                        ? colors['blue-100']
-                        : item.name === 'inactive'
-                        ? colors['grey-100']
-                        : colors['background-white'],
+                    backgroundColor: item.old
+                      ? colors['grey-100']
+                      : item.name === 'active'
+                      ? colors['blue-100']
+                      : colors['background-white'],
                     borderRadius: 10,
                     borderWidth: 1,
-                    borderColor:
-                      item.name === 'active'
-                        ? colors['blue-300']
-                        : colors['grey-150'],
+                    borderColor: item.old
+                      ? colors['grey-150']
+                      : item.name === 'active'
+                      ? colors['blue-300']
+                      : colors['grey-150'],
                   },
                 ]}>
                 <TextComponent
@@ -262,10 +248,10 @@ const DateService = ({
                   size={16}
                   font={fontFamilies['inter-medium']}
                   color={
-                    item.name === 'active'
-                      ? colors['blue-500']
-                      : item.name === 'inactive'
+                    item.old
                       ? colors['grey-500']
+                      : item.name === 'active'
+                      ? colors['blue-500']
                       : colors['grey-700']
                   }
                 />

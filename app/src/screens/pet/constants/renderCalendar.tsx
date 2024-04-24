@@ -1,3 +1,5 @@
+import moment from 'moment';
+
 export const months = [
   'January',
   'February',
@@ -42,6 +44,17 @@ export const RenderCalendar = (
     data.push({
       name: 'inactive',
       value: lastDateofLastMonth - i + 1,
+      old:
+        currYear < +moment().format('YYYY')
+          ? true
+          : currMonth + 1 < +moment().format('M') &&
+            currYear === +moment().format('YYYY')
+          ? true
+          : currMonth + 1 === +moment().format('M') &&
+            lastDateofLastMonth - i > +moment().format('DD') &&
+            currYear === +moment().format('YYYY')
+          ? true
+          : false,
     });
   }
 
@@ -50,6 +63,17 @@ export const RenderCalendar = (
     data.push({
       name: isToday ? 'active' : 'day',
       value: i,
+      old:
+        currYear < +moment().format('YYYY')
+          ? true
+          : currMonth + 1 < +moment().format('M') &&
+            currYear === +moment().format('YYYY')
+          ? true
+          : i < +moment().format('DD') &&
+            currMonth + 1 === +moment().format('M') &&
+            currYear === +moment().format('YYYY')
+          ? true
+          : false,
     });
   }
 
@@ -57,6 +81,13 @@ export const RenderCalendar = (
     data.push({
       name: 'inactive',
       value: i - lastDayofMonth + 1,
+      old:
+        currYear < +moment().format('YYYY')
+          ? true
+          : currMonth + 1 < +moment().format('M') &&
+            currYear === +moment().format('YYYY')
+          ? true
+          : false,
     });
   }
 

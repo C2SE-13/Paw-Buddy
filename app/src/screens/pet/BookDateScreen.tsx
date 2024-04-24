@@ -1,6 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 import {Image, ScrollView, View} from 'react-native';
-import React, {SetStateAction, useEffect, useState} from 'react';
+import React, {Fragment, SetStateAction, useEffect, useState} from 'react';
 import {
   ButtonComponent,
   HeaderBookDate,
@@ -32,7 +32,7 @@ interface Props {
 }
 
 export interface Booking {
-  service_id: number;
+  service_id: string;
   pet_id: number;
   date: string;
   start_time: string;
@@ -40,9 +40,9 @@ export interface Booking {
 }
 
 const BookDateScreen = ({route}: Props) => {
-  const {chosenServices, idService, nameService} = route.params;
+  const {chosenServices, idService, nameService, doctorId} = route.params;
   const [dataService, setDataService] = useState<IPetServies[]>([]);
-  const [chosen, setChosen] = useState(chosenServices ?? []);
+  const [chosen, setChosen] = useState<IPetServies[]>([]);
   const [note, setNote] = useState('');
   const [bookDate, setBookDate] = useState<SetStateAction<string>>(
     moment().format(),
@@ -54,6 +54,10 @@ const BookDateScreen = ({route}: Props) => {
   const [totalTimeOfService, setTotalTimeOfService] = useState(0);
   const [startTime, setStartTime] = useState<string>('');
   const {petActive} = useSelector((state: RootState) => state.user);
+
+  useEffect(() => {
+    chosenServices.length > 0 && setChosen(chosenServices);
+  }, [chosenServices]);
 
   useEffect(() => {
     const getItemDetail = async (id: number) => {
@@ -74,8 +78,8 @@ const BookDateScreen = ({route}: Props) => {
         setBookingOfDoctor(response.bookingData);
       }
     };
-    route.params.doctorId && getInformationDoctor(route.params?.doctorId);
-  }, [route.params?.doctorId]);
+    doctorId !== 0 && getInformationDoctor(Number(doctorId));
+  }, [doctorId]);
 
   useEffect(() => {
     dataService.length > 0 &&
@@ -94,7 +98,7 @@ const BookDateScreen = ({route}: Props) => {
     if (check) {
       const object =
         bookingOfDoctor
-          .filter(item => item.service_id === idService)
+          .filter(item => item.service_id === idService) // sai
           .filter(item => {
             const checkYear =
               moment(bookDate.toString()).format('YYYY') ===
@@ -116,9 +120,9 @@ const BookDateScreen = ({route}: Props) => {
   }, [bookDate, bookingOfDoctor, idService]);
 
   const handlechosenServices = (item: IPetServies) => {
-    const check = chosenServices.includes(item);
+    const check = chosen.some(i => i.id === item.id);
     if (check) {
-      const newArr = chosenServices.filter(i => i !== item);
+      const newArr = chosen.filter(i => i.id !== item.id);
       setChosen(newArr);
     } else {
       setChosen(prev => [...prev, item]);
@@ -127,14 +131,15 @@ const BookDateScreen = ({route}: Props) => {
 
   const handleConfirm = async () => {
     const data: Booking = {
-      service_id: idService,
+      service_id: chosen.map(item => item.id).join(','),
       pet_id: petActive?.id ?? 0,
       date: bookDate.toString(),
       start_time: startTime,
       vet_id: dataDocotr?.id ?? 0,
     };
 
-    const response = await apiCreateBooking(data);
+    // const response = await apiCreateBooking(data);
+    // console.log(response);
   };
 
   return (
@@ -143,7 +148,7 @@ const BookDateScreen = ({route}: Props) => {
       <ScrollView style={{flex: 1}} showsVerticalScrollIndicator={false}>
         <SpaceComponent height={24} />
         <View style={{paddingHorizontal: 24}}>
-          <CardService nameService={nameService} image={chosen[0].photo} />
+          <CardService nameService={nameService} image={chosen[0]?.photo} />
         </View>
         <SpaceComponent height={20} />
         <View style={{paddingHorizontal: 24}}>
@@ -160,45 +165,59 @@ const BookDateScreen = ({route}: Props) => {
               size={16}
               color={colors['grey-800']}
             />
-            <RowComponent gap={12}>
-              <Image
-                resizeMode="center"
-                style={{
-                  borderRadius: 10,
-                  width: 90,
-                  height: 90,
-                }}
-                source={
-                  dataDocotr
-                    ? {uri: dataDocotr.avatar}
-                    : require('../../assets/imgs/doctor.png')
-                }
+            {doctorId !== 0 ? (
+              <RowComponent gap={12}>
+                <Image
+                  resizeMode="center"
+                  style={{
+                    borderRadius: 10,
+                    width: 90,
+                    height: 90,
+                  }}
+                  source={
+                    dataDocotr
+                      ? {uri: dataDocotr.avatar}
+                      : require('../../assets/imgs/doctor.png')
+                  }
+                />
+                <View style={{flex: 1, gap: 4}}>
+                  <TextComponent
+                    text={dataDocotr?.fullName ?? ''}
+                    title
+                    size={16}
+                    color={colors['grey-900']}
+                  />
+                  <TextComponent
+                    text={`Phone: ${dataDocotr?.phone}`}
+                    title
+                    size={14}
+                    color={colors['grey-500']}
+                  />
+                </View>
+              </RowComponent>
+            ) : (
+              <ButtonComponent
+                text="Select doctor"
+                size="large"
+                type="secondary"
+                onPress={() => {}}
+                textColor={colors['grey-500']}
               />
-              <View style={{flex: 1, gap: 4}}>
-                <TextComponent
-                  text={dataDocotr?.fullName ?? ''}
-                  title
-                  size={16}
-                  color={colors['grey-900']}
-                />
-                <TextComponent
-                  text={`Phone: ${dataDocotr?.phone}`}
-                  title
-                  size={14}
-                  color={colors['grey-500']}
-                />
-              </View>
-            </RowComponent>
+            )}
           </View>
         </View>
-        <SpaceComponent height={20} />
-        <DateService
-          date={bookDate}
-          setBookDate={setBookDate}
-          totalTimeOfService={totalTimeOfService}
-          startTime={startTime}
-          setStartTime={setStartTime}
-        />
+        {doctorId !== 0 && (
+          <Fragment>
+            <SpaceComponent height={20} />
+            <DateService
+              date={bookDate}
+              setBookDate={setBookDate}
+              totalTimeOfService={totalTimeOfService}
+              startTime={startTime}
+              setStartTime={setStartTime}
+            />
+          </Fragment>
+        )}
         <SpaceComponent height={20} />
         <View style={{paddingHorizontal: 24}}>
           <View
@@ -253,7 +272,11 @@ const BookDateScreen = ({route}: Props) => {
       <View style={{padding: 24}}>
         <ButtonComponent
           text="Confirm booking"
-          type={'primary'}
+          type={
+            bookDate && dataDocotr && chosen.length > 0 && startTime
+              ? 'primary'
+              : 'disabled'
+          }
           size="large"
           onPress={handleConfirm}
         />
