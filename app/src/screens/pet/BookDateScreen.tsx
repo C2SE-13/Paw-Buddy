@@ -1,6 +1,12 @@
 /* eslint-disable react-native/no-inline-styles */
-import {Image, ScrollView, View} from 'react-native';
-import React, {Fragment, SetStateAction, useEffect, useState} from 'react';
+import {Image, ScrollView, TouchableOpacity, View} from 'react-native';
+import React, {
+  Fragment,
+  SetStateAction,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import {
   ButtonComponent,
   HeaderBookDate,
@@ -25,6 +31,7 @@ import {colors} from '../../constants/colors';
 import moment from 'moment';
 import {useSelector} from 'react-redux';
 import {RootState} from '../../redux/store';
+import ActionSheet, {ActionSheetRef} from 'react-native-actions-sheet';
 
 interface Props {
   navigation: any;
@@ -57,6 +64,7 @@ const BookDateScreen = ({route}: Props) => {
     buoi: '',
   });
   const {petActive} = useSelector((state: RootState) => state.user);
+  const actionSheetRef = useRef<ActionSheetRef>(null);
 
   useEffect(() => {
     chosenServices.length > 0 && setChosen(chosenServices);
@@ -196,13 +204,27 @@ const BookDateScreen = ({route}: Props) => {
                     color={colors['grey-500']}
                   />
                 </View>
+                <TouchableOpacity
+                  onPress={() => actionSheetRef.current?.show()}
+                  style={{
+                    borderWidth: 1,
+                    padding: 6,
+                    borderRadius: 10,
+                    borderColor: colors['blue-500'],
+                  }}>
+                  <TextComponent
+                    text="Change"
+                    size={12}
+                    color={colors['blue-500']}
+                  />
+                </TouchableOpacity>
               </RowComponent>
             ) : (
               <ButtonComponent
                 text="Select doctor"
                 size="large"
                 type="secondary"
-                onPress={() => {}}
+                onPress={() => actionSheetRef.current?.show()}
                 textColor={colors['grey-500']}
               />
             )}
@@ -275,7 +297,10 @@ const BookDateScreen = ({route}: Props) => {
         <ButtonComponent
           text="Confirm booking"
           type={
-            bookDate && dataDocotr && chosen.length > 0 && startTime
+            bookDate &&
+            dataDocotr &&
+            chosen.length > 0 &&
+            startTime.time.length > 0
               ? 'primary'
               : 'disabled'
           }
@@ -283,6 +308,9 @@ const BookDateScreen = ({route}: Props) => {
           onPress={handleConfirm}
         />
       </View>
+      <ActionSheet ref={actionSheetRef}>
+        <View />
+      </ActionSheet>
     </View>
   );
 };
