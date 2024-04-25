@@ -279,7 +279,9 @@ const DetailServiceScreen = ({route, navigation}: Props) => {
                     color={colors['grey-700']}
                   />
                   <TextComponent
-                    text="10:00 - 20:00"
+                    text={`0${process.env.ENV_Open_Time ?? 8}:00 - ${
+                      process.env.ENV_Close_Time
+                    }:00`}
                     font={fontFamilies['inter-medium']}
                     size={14}
                     color={colors['grey-800']}

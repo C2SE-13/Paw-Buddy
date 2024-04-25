@@ -13,20 +13,21 @@ interface Props {
   date: SetStateAction<string>;
   setBookDate: Dispatch<SetStateAction<string>>;
   totalTimeOfService: number;
-  startTime: SetStateAction<string>;
-  setStartTime: Dispatch<SetStateAction<string>>;
+  startTime: {time: string; buoi: string};
+  setStartTime: Dispatch<SetStateAction<{time: string; buoi: string}>>;
 }
 
 interface Time {
   buoi: string;
   busy: boolean;
   time: string;
+  old: boolean;
 }
 
 const DateService = ({
   date,
   setBookDate,
-  totalTimeOfService = 60,
+  totalTimeOfService,
   startTime,
   setStartTime,
 }: Props) => {
@@ -45,8 +46,6 @@ const DateService = ({
   const [week, setWeek] = useState(moment(date.toString()).format('dddd'));
   const [time, setTime] = useState<Time[]>([]);
 
-  console.log(dataCalendar);
-
   useEffect(() => {
     setDataCalendar(
       RenderCalendar(date.toString(), currentDay, monthIndex, currentYear),
@@ -58,7 +57,16 @@ const DateService = ({
   }, [currentDay, monthIndex, currentYear, date]);
 
   useEffect(() => {
-    setTime(renderTime(currentYear, monthIndex + 1, currentDay, 12, 30, 31));
+    setTime(
+      renderTime(
+        currentYear,
+        monthIndex + 1,
+        currentDay,
+        0,
+        0,
+        totalTimeOfService,
+      ),
+    );
   }, [currentDay, currentYear, monthIndex, startTime, totalTimeOfService]);
 
   const handlePrev = () => {
@@ -127,6 +135,8 @@ const DateService = ({
       setBookDate(newDate.toISOString());
     }
   };
+
+  console.log(totalTimeOfService);
 
   return (
     <View style={{paddingHorizontal: 24}}>
@@ -259,56 +269,182 @@ const DateService = ({
             )}
           />
         </View>
-        <View style={{gap: 12}}>
+        <View style={{gap: 8}}>
           <TextComponent
             text="Availability"
             title
             size={16}
             color={colors['grey-800']}
           />
+          <RowComponent gap={4} justify="space-between">
+            <RowComponent gap={4}>
+              <TextComponent
+                text="Start time:"
+                title
+                size={13}
+                color={colors['grey-800']}
+              />
+              <TextComponent
+                text={`${
+                  startTime.time.length > 0 ? startTime.time : '00:00'
+                } ${startTime.time.length > 0 ? startTime.buoi : ''}`}
+                size={13}
+                color={
+                  startTime.time.length > 0
+                    ? colors['blue-500']
+                    : colors['grey-800']
+                }
+              />
+            </RowComponent>
+            <RowComponent gap={4}>
+              <TextComponent
+                text="Estimated time:"
+                title
+                size={13}
+                color={colors['grey-800']}
+              />
+              <TextComponent
+                text={`${
+                  startTime.time.length > 0
+                    ? Number(startTime.time.toString().split(':')[0]) +
+                      Math.floor(totalTimeOfService / 60)
+                    : '00'
+                }:${
+                  startTime.time.length > 0
+                    ? Number(startTime.time.toString().split(':')[1]) +
+                      (totalTimeOfService % 60)
+                    : '00'
+                } ${
+                  startTime.time.length < 0
+                    ? ''
+                    : Number(startTime.time.toString().split(':')[0]) +
+                        Math.floor(totalTimeOfService / 60) >
+                      12
+                    ? 'PM'
+                    : 'AM'
+                }`}
+                size={13}
+                color={
+                  startTime.time.length > 0
+                    ? colors['blue-500']
+                    : colors['grey-800']
+                }
+              />
+            </RowComponent>
+          </RowComponent>
+          <RowComponent
+            justify="space-between"
+            gap={12}
+            styles={{paddingBottom: 6}}>
+            <TextComponent
+              text="Note:"
+              title
+              size={12}
+              color={colors['grey-600']}
+            />
+            <RowComponent gap={4}>
+              <TextComponent
+                text="Overtime:"
+                size={12}
+                color={colors['grey-600']}
+              />
+              <View
+                style={{
+                  width: 12,
+                  height: 12,
+                  backgroundColor: colors['orange-100'],
+                }}
+              />
+            </RowComponent>
+            <RowComponent gap={4}>
+              <TextComponent
+                text="Been busy:"
+                size={12}
+                color={colors['grey-600']}
+              />
+              <View
+                style={{
+                  width: 12,
+                  height: 12,
+                  backgroundColor: colors['warning-100'],
+                }}
+              />
+            </RowComponent>
+            <RowComponent gap={4}>
+              <TextComponent
+                text="Selected:"
+                size={12}
+                color={colors['grey-600']}
+              />
+              <View
+                style={{
+                  width: 12,
+                  height: 12,
+                  backgroundColor: colors['blue-500'],
+                }}
+              />
+            </RowComponent>
+          </RowComponent>
           <FlatList
             scrollEnabled={false}
             contentContainerStyle={{gap: 8}}
             columnWrapperStyle={{gap: 8, justifyContent: 'space-between'}}
             numColumns={3}
             data={time}
-            renderItem={({item}) => (
-              <TouchableOpacity
-                onPress={() => setStartTime(item.time)}
-                disabled={item.busy}
-                style={{
-                  width: Dimensions.get('screen').width / 3 - 24,
-                  backgroundColor:
-                    startTime === item.time
+            renderItem={({item}) => {
+              const disabled = item.old ? true : item.busy ? true : false;
+              return (
+                <TouchableOpacity
+                  onPress={() =>
+                    setStartTime({
+                      time: item.time,
+                      buoi: item.buoi,
+                    })
+                  }
+                  disabled={disabled}
+                  style={{
+                    width: Dimensions.get('screen').width / 3 - 24,
+                    backgroundColor: item.old
+                      ? colors['orange-100']
+                      : startTime.time === item.time
                       ? colors['primary-100']
                       : item.busy
                       ? colors['warning-100']
                       : colors['primary-surface'],
-                  paddingVertical: 12,
-                  borderRadius: 14,
-                }}>
-                <RowComponent gap={2}>
-                  <TextComponent
-                    text={item.time}
-                    color={
-                      startTime === item.time
-                        ? colors['background-white']
-                        : colors['text-50']
-                    }
-                    size={14}
-                  />
-                  <TextComponent
-                    text={item.buoi}
-                    color={
-                      startTime === item.time
-                        ? colors['background-white']
-                        : colors['text-50']
-                    }
-                    size={14}
-                  />
-                </RowComponent>
-              </TouchableOpacity>
-            )}
+                    paddingVertical: 12,
+                    borderRadius: 14,
+                  }}>
+                  <RowComponent gap={2}>
+                    <TextComponent
+                      text={item.time}
+                      color={
+                        item.old
+                          ? colors['text-body']
+                          : startTime.time === item.time
+                          ? colors['background-white']
+                          : item.busy
+                          ? colors['grey-600']
+                          : colors['text-50']
+                      }
+                      size={14}
+                    />
+                    <TextComponent
+                      text={item.buoi}
+                      color={
+                        item.old
+                          ? colors['text-body']
+                          : startTime.time === item.time
+                          ? colors['background-white']
+                          : item.busy
+                          ? colors['grey-600']
+                          : colors['text-50']
+                      }
+                      size={14}
+                    />
+                  </RowComponent>
+                </TouchableOpacity>
+              );
+            }}
           />
         </View>
       </View>

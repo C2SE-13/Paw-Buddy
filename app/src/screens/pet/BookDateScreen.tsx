@@ -52,7 +52,10 @@ const BookDateScreen = ({route}: Props) => {
     {service_id: number; start_time: string; date: string}[]
   >([]);
   const [totalTimeOfService, setTotalTimeOfService] = useState(0);
-  const [startTime, setStartTime] = useState<string>('');
+  const [startTime, setStartTime] = useState<{time: string; buoi: string}>({
+    time: '',
+    buoi: '',
+  });
   const {petActive} = useSelector((state: RootState) => state.user);
 
   useEffect(() => {
@@ -82,15 +85,14 @@ const BookDateScreen = ({route}: Props) => {
   }, [doctorId]);
 
   useEffect(() => {
-    dataService.length > 0 &&
-      setTotalTimeOfService(
-        dataService.reduce(
-          (accumulator, currentValue) =>
-            accumulator + currentValue.estimated_duration,
-          0,
-        ),
-      );
-  }, [dataService]);
+    setTotalTimeOfService(
+      chosen.reduce(
+        (accumulator, currentValue) =>
+          accumulator + currentValue.estimated_duration,
+        0,
+      ),
+    );
+  }, [chosen]);
 
   useEffect(() => {
     const check = bookingOfDoctor.length > 0;
@@ -134,7 +136,7 @@ const BookDateScreen = ({route}: Props) => {
       service_id: chosen.map(item => item.id).join(','),
       pet_id: petActive?.id ?? 0,
       date: bookDate.toString(),
-      start_time: startTime,
+      start_time: startTime.time,
       vet_id: dataDocotr?.id ?? 0,
     };
 
