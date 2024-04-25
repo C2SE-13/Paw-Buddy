@@ -10,6 +10,6 @@ export const getCurrent = createAsyncThunk(
       return rejectWithValue(response);
     }
 
-    return response.data;
+    return response.data[0];
   },
 );

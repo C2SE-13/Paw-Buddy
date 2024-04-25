@@ -120,7 +120,7 @@ const DoctorDetailScreen = ({navigation, route}: Props) => {
               font={fontFamilies['inter-bold']}
               size={16}
             />
-            <RowComponent gap={8}>
+            <RowComponent gap={8} justify="flex-start">
               <TextComponent
                 text={dataUser?.roleData?.name_role ?? ''}
                 color={colors['text-80']}

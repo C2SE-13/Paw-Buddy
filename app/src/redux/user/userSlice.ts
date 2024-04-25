@@ -47,8 +47,8 @@ export const userSlice = createSlice({
 
     builder.addCase(actions.getCurrent.fulfilled, (state, action) => {
       state.isLoading = false;
-      state.current = action.payload.rows[0];
-      state.petActive = action.payload.rows[0].petData[0];
+      state.current = action.payload;
+      state.petActive = action.payload.petData[0];
     });
 
     builder.addCase(actions.getCurrent.rejected, (state, action) => {
