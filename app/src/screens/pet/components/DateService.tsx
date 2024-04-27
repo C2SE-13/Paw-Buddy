@@ -136,8 +136,6 @@ const DateService = ({
     }
   };
 
-  console.log(totalTimeOfService);
-
   return (
     <View style={{paddingHorizontal: 24}}>
       <View
@@ -305,15 +303,29 @@ const DateService = ({
               />
               <TextComponent
                 text={`${
-                  startTime.time.length > 0
-                    ? Number(startTime.time.toString().split(':')[0]) +
+                  startTime.time.length < 0
+                    ? '00'
+                    : Number(startTime.time.toString().split(':')[0]) +
+                        Math.floor(totalTimeOfService / 60) <
+                      10
+                    ? `0${
+                        Number(startTime.time.toString().split(':')[0]) +
+                        Math.floor(totalTimeOfService / 60)
+                      }`
+                    : Number(startTime.time.toString().split(':')[0]) +
                       Math.floor(totalTimeOfService / 60)
-                    : '00'
                 }:${
-                  startTime.time.length > 0
-                    ? Number(startTime.time.toString().split(':')[1]) +
+                  startTime.time.length < 0
+                    ? '00'
+                    : Number(startTime.time.toString().split(':')[1]) +
+                        (totalTimeOfService % 60) <
+                      10
+                    ? `0${
+                        Number(startTime.time.toString().split(':')[1]) +
+                        (totalTimeOfService % 60)
+                      }`
+                    : Number(startTime.time.toString().split(':')[1]) +
                       (totalTimeOfService % 60)
-                    : '00'
                 } ${
                   startTime.time.length < 0
                     ? ''
