@@ -8,13 +8,16 @@ import {globalStyles} from '../../../styles/globalStyles';
 import {fontFamilies} from '../../../constants/fontFamilies';
 import moment from 'moment';
 import {renderTime} from '../constants/renderTime';
+import {TimeBooking} from '../BookDateScreen';
 
 interface Props {
   date: SetStateAction<string>;
   setBookDate: Dispatch<SetStateAction<string>>;
   totalTimeOfService: number;
-  startTime: {time: string; buoi: string};
-  setStartTime: Dispatch<SetStateAction<{time: string; buoi: string}>>;
+  startTime: TimeBooking;
+  setStartTime: Dispatch<SetStateAction<TimeBooking>>;
+  endTime: TimeBooking;
+  setEndTime: Dispatch<SetStateAction<TimeBooking>>;
 }
 
 interface Time {
@@ -30,6 +33,8 @@ const DateService = ({
   totalTimeOfService,
   startTime,
   setStartTime,
+  endTime,
+  setEndTime,
 }: Props) => {
   const [monthIndex, setmonthIndex] = useState(
     months.indexOf(moment(date.toString()).format('MMMM')),
@@ -135,6 +140,43 @@ const DateService = ({
       setBookDate(newDate.toISOString());
     }
   };
+
+  useEffect(() => {
+    startTime.time.length > 0
+      ? setEndTime({
+          time: `${
+            Number(startTime.time.toString().split(':')[0]) +
+              Math.floor(totalTimeOfService / 60) <
+            10
+              ? `0${
+                  Number(startTime.time.toString().split(':')[0]) +
+                  Math.floor(totalTimeOfService / 60)
+                }`
+              : Number(startTime.time.toString().split(':')[0]) +
+                Math.floor(totalTimeOfService / 60)
+          }:${
+            Number(startTime.time.toString().split(':')[1]) +
+              (totalTimeOfService % 60) <
+            10
+              ? `0${
+                  Number(startTime.time.toString().split(':')[1]) +
+                  (totalTimeOfService % 60)
+                }`
+              : Number(startTime.time.toString().split(':')[1]) +
+                (totalTimeOfService % 60)
+          }`,
+          buoi:
+            Number(startTime.time.toString().split(':')[0]) +
+              Math.floor(totalTimeOfService / 60) >
+            12
+              ? 'PM'
+              : 'AM',
+        })
+      : setEndTime({
+          time: '00:00',
+          buoi: '',
+        });
+  }, [setEndTime, startTime, totalTimeOfService]);
 
   return (
     <View style={{paddingHorizontal: 24}}>
@@ -302,38 +344,8 @@ const DateService = ({
                 color={colors['grey-800']}
               />
               <TextComponent
-                text={`${
-                  startTime.time.length < 0
-                    ? '00'
-                    : Number(startTime.time.toString().split(':')[0]) +
-                        Math.floor(totalTimeOfService / 60) <
-                      10
-                    ? `0${
-                        Number(startTime.time.toString().split(':')[0]) +
-                        Math.floor(totalTimeOfService / 60)
-                      }`
-                    : Number(startTime.time.toString().split(':')[0]) +
-                      Math.floor(totalTimeOfService / 60)
-                }:${
-                  startTime.time.length < 0
-                    ? '00'
-                    : Number(startTime.time.toString().split(':')[1]) +
-                        (totalTimeOfService % 60) <
-                      10
-                    ? `0${
-                        Number(startTime.time.toString().split(':')[1]) +
-                        (totalTimeOfService % 60)
-                      }`
-                    : Number(startTime.time.toString().split(':')[1]) +
-                      (totalTimeOfService % 60)
-                } ${
-                  startTime.time.length < 0
-                    ? ''
-                    : Number(startTime.time.toString().split(':')[0]) +
-                        Math.floor(totalTimeOfService / 60) >
-                      12
-                    ? 'PM'
-                    : 'AM'
+                text={`${endTime.time.length < 0 ? '00' : endTime.time} ${
+                  startTime.time.length < 0 ? '' : endTime.buoi
                 }`}
                 size={13}
                 color={

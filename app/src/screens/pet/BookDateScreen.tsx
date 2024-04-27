@@ -1,7 +1,16 @@
+/* eslint-disable react/self-closing-comp */
 /* eslint-disable react-native/no-inline-styles */
-import {Image, ScrollView, TouchableOpacity, View} from 'react-native';
+import {
+  Alert,
+  FlatList,
+  Image,
+  ScrollView,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import React, {
   Fragment,
+  RefObject,
   SetStateAction,
   useEffect,
   useRef,
@@ -23,6 +32,7 @@ import DateService from './components/DateService';
 import {
   apiCreateBooking,
   apiGetDetailDoctors,
+  apiGetDoctors,
   apiGetPetService,
 } from '../../apis';
 import CardServiceComponent from './components/CardServiceComponent';
@@ -32,6 +42,10 @@ import moment from 'moment';
 import {useSelector} from 'react-redux';
 import {RootState} from '../../redux/store';
 import ActionSheet, {ActionSheetRef} from 'react-native-actions-sheet';
+import {fontFamilies} from '../../constants/fontFamilies';
+import Toast from 'react-native-toast-message';
+import {toastConfig} from '../../utils/toast';
+import useUpdateStatusLoading from '../../hooks/useUpdateStatusLoading';
 
 interface Props {
   navigation: any;
@@ -39,14 +53,20 @@ interface Props {
 }
 
 export interface Booking {
-  service_id: string;
+  service_ids: string;
   pet_id: number;
   date: string;
   start_time: string;
   vet_id: number;
+  end_time: string;
 }
 
-const BookDateScreen = ({route}: Props) => {
+export interface TimeBooking {
+  time: string;
+  buoi: string;
+}
+
+const BookDateScreen = ({route, navigation}: Props) => {
   const {chosenServices, idService, nameService, doctorId} = route.params;
   const [dataService, setDataService] = useState<IPetServies[]>([]);
   const [chosen, setChosen] = useState<IPetServies[]>([]);
@@ -59,12 +79,17 @@ const BookDateScreen = ({route}: Props) => {
     {service_id: number; start_time: string; date: string}[]
   >([]);
   const [totalTimeOfService, setTotalTimeOfService] = useState(0);
-  const [startTime, setStartTime] = useState<{time: string; buoi: string}>({
+  const [startTime, setStartTime] = useState<TimeBooking>({
     time: '',
     buoi: '',
   });
   const {petActive} = useSelector((state: RootState) => state.user);
   const actionSheetRef = useRef<ActionSheetRef>(null);
+  const [endTime, setEndTime] = useState<TimeBooking>({
+    time: '',
+    buoi: '',
+  });
+  const {updateStatusLoading} = useUpdateStatusLoading();
 
   useEffect(() => {
     chosenServices.length > 0 && setChosen(chosenServices);
@@ -141,15 +166,42 @@ const BookDateScreen = ({route}: Props) => {
 
   const handleConfirm = async () => {
     const data: Booking = {
-      service_id: chosen.map(item => item.id).join(','),
+      service_ids: chosen.map(item => item.id).join(','),
       pet_id: petActive?.id ?? 0,
       date: bookDate.toString(),
       start_time: startTime.time,
       vet_id: dataDocotr?.id ?? 0,
+      end_time: endTime.time,
     };
 
-    // const response = await apiCreateBooking(data);
-    // console.log(response);
+    return Alert.alert('Ask', 'Are you sure?', [
+      {
+        text: 'Cancel',
+        style: 'cancel',
+      },
+      {
+        text: 'Yes',
+        onPress: async () => {
+          updateStatusLoading(true);
+          const response: any = await apiCreateBooking(data);
+          updateStatusLoading(false);
+          if (response.success) {
+            Toast.show(
+              toastConfig({textMain: response.message, visibilityTime: 2000}),
+            );
+            navigation.navigate('Home');
+          } else {
+            Toast.show(
+              toastConfig({
+                textMain: response.message,
+                visibilityTime: 2000,
+                type: 'error',
+              }),
+            );
+          }
+        },
+      },
+    ]);
   };
 
   return (
@@ -175,7 +227,7 @@ const BookDateScreen = ({route}: Props) => {
               size={16}
               color={colors['grey-800']}
             />
-            {doctorId !== 0 ? (
+            {dataDocotr ? (
               <RowComponent gap={12}>
                 <Image
                   resizeMode="center"
@@ -230,7 +282,7 @@ const BookDateScreen = ({route}: Props) => {
             )}
           </View>
         </View>
-        {doctorId !== 0 && (
+        {dataDocotr && (
           <Fragment>
             <SpaceComponent height={20} />
             <DateService
@@ -239,6 +291,8 @@ const BookDateScreen = ({route}: Props) => {
               totalTimeOfService={totalTimeOfService}
               startTime={startTime}
               setStartTime={setStartTime}
+              endTime={endTime}
+              setEndTime={setEndTime}
             />
           </Fragment>
         )}
@@ -300,7 +354,8 @@ const BookDateScreen = ({route}: Props) => {
             bookDate &&
             dataDocotr &&
             chosen.length > 0 &&
-            startTime.time.length > 0
+            startTime.time.length > 0 &&
+            endTime.time.length > 0
               ? 'primary'
               : 'disabled'
           }
@@ -309,8 +364,115 @@ const BookDateScreen = ({route}: Props) => {
         />
       </View>
       <ActionSheet ref={actionSheetRef}>
-        <View />
+        <ViewSelectDoctor
+          actionSheetRef={actionSheetRef}
+          dataDocotr={dataDocotr}
+          setDataDocotr={setDataDocotr}
+        />
       </ActionSheet>
+    </View>
+  );
+};
+
+const ViewSelectDoctor = ({
+  dataDocotr,
+  setDataDocotr,
+  actionSheetRef,
+}: {
+  dataDocotr: IDoctors | null;
+  setDataDocotr: (item: IDoctors) => void;
+  actionSheetRef: RefObject<ActionSheetRef>;
+}) => {
+  const [dataDoctor, setDataDoctor] = useState<IDoctors[]>([]);
+  const {token} = useSelector((state: RootState) => state.user);
+
+  useEffect(() => {
+    const getDoctors = async () => {
+      const response: any = await apiGetDoctors({
+        limit: 10,
+        page: 0,
+        roleId: 2,
+      });
+      if (response.success) {
+        setDataDoctor(response.data);
+      }
+    };
+
+    token && getDoctors();
+  }, [token]);
+
+  const handleSelect = (item: IDoctors) => {
+    if (item.id !== dataDocotr?.id) {
+      Alert.alert('Ask', 'Do you want to select this doctor?', [
+        {
+          text: 'Cancel',
+          style: 'cancel',
+        },
+        {
+          text: 'Yes',
+          onPress: () => {
+            setDataDocotr(item);
+            actionSheetRef.current?.hide();
+          },
+        },
+      ]);
+    }
+  };
+
+  return (
+    <View
+      style={[
+        globalStyles['w-100'],
+        {
+          backgroundColor: colors['background-white'],
+          padding: 24,
+          borderTopRightRadius: 24,
+          borderTopLeftRadius: 24,
+        },
+      ]}>
+      <FlatList
+        data={dataDoctor}
+        keyExtractor={item => item.id.toString()}
+        contentContainerStyle={{gap: 8}}
+        renderItem={({item}) => (
+          <TouchableOpacity
+            onPress={() => handleSelect(item)}
+            style={{
+              borderWidth: 1,
+              padding: 4,
+              borderColor:
+                dataDocotr?.id === item.id
+                  ? colors['blue-500']
+                  : colors['grey-150'],
+              borderRadius: 10,
+              paddingHorizontal: 12,
+            }}>
+            <RowComponent gap={12} justify="flex-start">
+              <Image
+                style={{
+                  width: 42,
+                  height: 42,
+                }}
+                source={
+                  item
+                    ? {uri: item.avatar}
+                    : require('../../assets/imgs/doctor.png')
+                }
+              />
+              <TextComponent
+                text={item.fullName}
+                size={12}
+                color={colors['text-body']}
+                font={
+                  dataDocotr?.id === item.id
+                    ? fontFamilies['inter-semibold']
+                    : fontFamilies['inter-regular']
+                }
+              />
+            </RowComponent>
+          </TouchableOpacity>
+        )}
+      />
     </View>
   );
 };
