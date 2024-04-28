@@ -59,6 +59,7 @@ export interface Booking {
   start_time: string;
   vet_id: number;
   end_time: string;
+  note: string;
 }
 
 export interface TimeBooking {
@@ -172,6 +173,7 @@ const BookDateScreen = ({route, navigation}: Props) => {
       start_time: startTime.time,
       vet_id: dataDocotr?.id ?? 0,
       end_time: endTime.time,
+      note: note,
     };
 
     return Alert.alert('Ask', 'Are you sure?', [
