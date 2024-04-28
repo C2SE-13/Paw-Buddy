@@ -1,4 +1,4 @@
-/* eslint-disable react/self-closing-comp */
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react-native/no-inline-styles */
 import {
   Alert,
@@ -98,7 +98,9 @@ const BookDateScreen = ({route, navigation}: Props) => {
 
   useEffect(() => {
     const getItemDetail = async (id: number) => {
+      updateStatusLoading(true);
       const response: any = await apiGetPetService({category_id: id});
+      updateStatusLoading(false);
       if (response.success) {
         setDataService(response.data);
       }
@@ -109,7 +111,9 @@ const BookDateScreen = ({route, navigation}: Props) => {
 
   useEffect(() => {
     const getInformationDoctor = async (id: number) => {
+      updateStatusLoading(true);
       const response: any = await apiGetDetailDoctors(id);
+      updateStatusLoading(false);
       if (response.success) {
         setDataDocotr(response.userData);
         setBookingOfDoctor(response.bookingData);

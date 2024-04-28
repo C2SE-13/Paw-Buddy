@@ -7,3 +7,10 @@ export const apiCreateBooking = (data: Booking) =>
     method: 'post',
     data,
   });
+
+export const apiGetBookingUser = params =>
+  axios({
+    url: '/booking/detail',
+    method: 'get',
+    params,
+  });

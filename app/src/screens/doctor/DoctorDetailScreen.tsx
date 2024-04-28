@@ -126,6 +126,7 @@ const DoctorDetailScreen = ({navigation, route}: Props) => {
                 color={colors['text-80']}
                 font={fontFamilies['inter-medium']}
                 size={12}
+                styles={{textTransform: 'capitalize'}}
               />
               <TextComponent
                 text="|"
