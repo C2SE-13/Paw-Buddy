@@ -141,8 +141,12 @@ const CalendarScreen = () => {
 
     fakeData.forEach(event => {
       const dots: {key: string; color: string; selectedDotColor: string}[] = [];
-      if (event.spa) dots.push(spa);
-      if (event.med) dots.push(med);
+      if (event.spa) {
+        dots.push(spa);
+      }
+      if (event.med) {
+        dots.push(med);
+      }
 
       if (markedDates[event.dateString]) {
         markedDates[event.dateString] = {

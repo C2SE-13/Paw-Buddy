@@ -206,7 +206,7 @@ const BookDateScreen = ({route, navigation}: Props) => {
 
   return (
     <View style={[globalStyles.container]}>
-      <HeaderBookDate />
+      <HeaderBookDate title="Book a date" />
       <ScrollView style={{flex: 1}} showsVerticalScrollIndicator={false}>
         <SpaceComponent height={24} />
         <View style={{paddingHorizontal: 24}}>

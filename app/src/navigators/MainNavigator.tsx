@@ -9,6 +9,7 @@ import {
 } from '../screens';
 import DetailServiceScreen from '../screens/pet/DetailServiceScreen';
 import {IPetServies} from '../utils/interface';
+import HealthCardScreen from '../screens/pet/HealthCardScreen';
 
 export type MainStackParamList = {
   PetServicesScreen: {
@@ -31,6 +32,9 @@ export type MainStackParamList = {
   DoctorDetailScreen: {
     id: number;
   };
+  HealthCardScreen: {
+    petId: number;
+  };
 };
 
 const MainNavigator = () => {
@@ -50,6 +54,7 @@ const MainNavigator = () => {
       />
       <Stack.Screen name="BookDateScreen" component={BookDateScreen} />
       <Stack.Screen name="DoctorDetailScreen" component={DoctorDetailScreen} />
+      <Stack.Screen name="HealthCardScreen" component={HealthCardScreen} />
     </Stack.Navigator>
   );
 };

@@ -10,7 +10,12 @@ import {useSelector} from 'react-redux';
 import {RootState} from '../../redux/store';
 import {fontFamilies} from '../../constants/fontFamilies';
 
-const HeaderBookDate = () => {
+interface Props {
+  title: string;
+  subTitle?: string;
+}
+
+const HeaderBookDate = ({title, subTitle}: Props) => {
   const navigation = useNavigation();
   const {petActive} = useSelector((state: RootState) => state.user);
   return (
@@ -25,18 +30,34 @@ const HeaderBookDate = () => {
           borderBottomWidth: 1,
           borderColor: colors['grey-150'],
         }}>
-        <RowComponent styles={{flex: 1}} gap={8}>
+        <RowComponent styles={{flex: 1}} gap={8} justify="flex-start">
           <TouchableOpacity onPress={() => navigation.goBack()}>
             <BackIcon />
           </TouchableOpacity>
           <TextComponent text="|" color={colors['grey-150']} />
-          <TextComponent
-            title
-            text="Book a date"
-            flex={1}
-            color={colors['grey-800']}
-            size={16}
-          />
+          {subTitle ? (
+            <View style={{flex: 1}}>
+              <TextComponent
+                text={subTitle}
+                color={colors['grey-600']}
+                size={14}
+              />
+              <TextComponent
+                title
+                text={title}
+                color={colors['grey-800']}
+                size={16}
+              />
+            </View>
+          ) : (
+            <TextComponent
+              title
+              text={title}
+              flex={1}
+              color={colors['grey-800']}
+              size={16}
+            />
+          )}
         </RowComponent>
         <RowComponent
           gap={4}

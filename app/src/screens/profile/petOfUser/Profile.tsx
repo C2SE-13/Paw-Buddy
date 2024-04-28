@@ -30,12 +30,15 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
-import {AppDispatch} from '../../../redux/store';
+import {AppDispatch, RootState} from '../../../redux/store';
 import {setPet} from '../../../redux/user/userSlice';
 import withBaseComponent from '../../../hocs/withBaseComponent';
+import {NavigationProp} from '@react-navigation/native';
+import {MainStackParamList} from '../../../navigators/MainNavigator';
+import {useSelector} from 'react-redux';
 
 interface IPageProps {
-  navigation: any;
+  navigation: NavigationProp<MainStackParamList, 'HealthCardScreen'>;
   petData: IPet[];
   dispatch: AppDispatch;
 }
@@ -241,6 +244,7 @@ const Profile = ({navigation, dispatch, petData}: IPageProps) => {
   const MAXITEM = 3;
   const [currentIndex, setCurrentIndex] = useState(0);
   const animatedValue = useSharedValue(0);
+  const {petActive} = useSelector((state: RootState) => state.user);
 
   useEffect(() => {
     petData.length > 0 && dispatch(setPet({petActive: dataPet[currentIndex]}));
@@ -365,6 +369,11 @@ const Profile = ({navigation, dispatch, petData}: IPageProps) => {
             />
           </CardVertical>
           <CardVertical
+            onPress={() =>
+              navigation.navigate('HealthCardScreen', {
+                petId: petActive?.id ?? 0,
+              })
+            }
             styles={{
               position: 'relative',
               justifyContent: 'flex-end',

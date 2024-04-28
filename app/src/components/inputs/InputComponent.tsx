@@ -45,7 +45,6 @@ const InputComponent = (props: Props) => {
     styles,
     error,
   } = props;
-
   const [isShowPass, setIsShowPass] = useState(isPassword ?? false);
 
   return (
