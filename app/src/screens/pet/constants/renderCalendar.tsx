@@ -59,7 +59,7 @@ export const RenderCalendar = (
   }
 
   for (let i = 1; i <= lastDateofMonth; i++) {
-    let isToday = i === (currentDay ?? date.getDate()) ? true : false;
+    let isToday = i === (Number(currentDay) ?? date.getDate()) ? true : false;
     data.push({
       name: isToday ? 'active' : 'day',
       value: i,

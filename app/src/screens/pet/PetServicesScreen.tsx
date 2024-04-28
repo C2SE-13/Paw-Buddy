@@ -34,11 +34,8 @@ const PetServicesScreen = ({navigation, useSelector, route}: Props) => {
         id: id,
         name: nameService,
         image,
+        doctorId: route.params?.doctorId ? route.params.doctorId : 0,
       };
-
-      if (route.params.doctorId) {
-        option.doctorId = route.params.doctorId;
-      }
 
       navigation.navigate('DetailServiceScreen', option);
     } else {
