@@ -11,6 +11,7 @@ import SplashScreen from './SplashScreen';
 import AddPetProfileScreen from './pet/AddPetProfileScreen';
 import PetServicesScreen from './pet/PetServicesScreen';
 import BookDateScreen from './pet/BookDateScreen';
+import DetailBookingPetScreen from './pet/DetailBookingPetScreen';
 import DoctorDetailScreen from './doctor/DoctorDetailScreen';
 
 export {
@@ -28,4 +29,5 @@ export {
   PetServicesScreen,
   BookDateScreen,
   DoctorDetailScreen,
+  DetailBookingPetScreen,
 };

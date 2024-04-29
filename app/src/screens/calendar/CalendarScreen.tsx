@@ -19,6 +19,8 @@ import {apiGetBookingUser} from '../../apis';
 import {globalStyles} from '../../styles/globalStyles';
 import {useSelector} from 'react-redux';
 import {RootState} from '../../redux/store';
+import {NavigationProp} from '@react-navigation/native';
+import {MainStackParamList} from '../../navigators/MainNavigator';
 
 type MarkedDateEntry = {
   selected?: boolean;
@@ -27,6 +29,7 @@ type MarkedDateEntry = {
 };
 
 interface Events {
+  id: number;
   dataPet: {
     photo: string;
   };
@@ -40,7 +43,11 @@ interface Events {
   }[];
 }
 
-const CalendarScreen = () => {
+interface Props {
+  navigation: NavigationProp<MainStackParamList, 'DetailBookingPetScreen'>;
+}
+
+const CalendarScreen = ({navigation}: Props) => {
   const [selected, setSelected] = useState<string>(
     moment().format('YYYY-MM-DD'),
   );
@@ -168,6 +175,11 @@ const CalendarScreen = () => {
             data={data}
             renderItem={({item}) => (
               <TouchableOpacity
+                onPress={() =>
+                  navigation.navigate('DetailBookingPetScreen', {
+                    bookingId: item.id,
+                  })
+                }
                 style={[
                   shadowStyle,
                   shadowStyle2,

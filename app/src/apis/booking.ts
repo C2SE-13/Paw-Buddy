@@ -8,9 +8,15 @@ export const apiCreateBooking = (data: Booking) =>
     data,
   });
 
-export const apiGetBookingUser = params =>
+export const apiGetBookingUser = (params: any) =>
   axios({
     url: '/booking/detail',
     method: 'get',
     params,
+  });
+
+export const apiGetDetailBooking = (id: number) =>
+  axios({
+    url: '/booking/detail/' + id,
+    method: 'get',
   });

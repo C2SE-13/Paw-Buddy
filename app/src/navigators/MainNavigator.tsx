@@ -4,6 +4,7 @@ import DrawerNavigator from './DrawerNavigator';
 import {
   AddPetProfileScreen,
   BookDateScreen,
+  DetailBookingPetScreen,
   DoctorDetailScreen,
   PetServicesScreen,
 } from '../screens';
@@ -35,6 +36,9 @@ export type MainStackParamList = {
   HealthCardScreen: {
     petId: number;
   };
+  DetailBookingPetScreen: {
+    bookingId: number;
+  };
 };
 
 const MainNavigator = () => {
@@ -55,6 +59,10 @@ const MainNavigator = () => {
       <Stack.Screen name="BookDateScreen" component={BookDateScreen} />
       <Stack.Screen name="DoctorDetailScreen" component={DoctorDetailScreen} />
       <Stack.Screen name="HealthCardScreen" component={HealthCardScreen} />
+      <Stack.Screen
+        name="DetailBookingPetScreen"
+        component={DetailBookingPetScreen}
+      />
     </Stack.Navigator>
   );
 };
