@@ -2,6 +2,7 @@
 import {createSlice} from '@reduxjs/toolkit';
 import * as actions from './asyncActions';
 import {IPet, IUser} from '../../utils/interface';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export interface UserState {
   token: string | null;

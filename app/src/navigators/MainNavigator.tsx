@@ -11,6 +11,7 @@ import {
 import DetailServiceScreen from '../screens/pet/DetailServiceScreen';
 import {IPetServies} from '../utils/interface';
 import HealthCardScreen from '../screens/pet/HealthCardScreen';
+import PetInformationScreen from '../screens/pet/PetInformationScreen';
 
 export type MainStackParamList = {
   PetServicesScreen: {
@@ -39,6 +40,9 @@ export type MainStackParamList = {
   DetailBookingPetScreen: {
     bookingId: number;
   };
+  PetInformationScreen: {
+    petId: number;
+  };
 };
 
 const MainNavigator = () => {
@@ -62,6 +66,10 @@ const MainNavigator = () => {
       <Stack.Screen
         name="DetailBookingPetScreen"
         component={DetailBookingPetScreen}
+      />
+      <Stack.Screen
+        name="PetInformationScreen"
+        component={PetInformationScreen}
       />
     </Stack.Navigator>
   );

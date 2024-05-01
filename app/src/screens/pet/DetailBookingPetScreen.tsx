@@ -347,7 +347,7 @@ const DetailBookingPetScreen = ({route, navigation}: Props) => {
             <TextComponent
               color={colors['grey-600']}
               size={12}
-              text={`${data?.date}`}
+              text={`${data?.date.split('-').reverse().join('/')}`}
             />
           </RowComponent>
           <RowComponent gap={12} justify="space-between">

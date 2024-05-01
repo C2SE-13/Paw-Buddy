@@ -36,6 +36,7 @@ import withBaseComponent from '../../../hocs/withBaseComponent';
 import {NavigationProp} from '@react-navigation/native';
 import {MainStackParamList} from '../../../navigators/MainNavigator';
 import {useSelector} from 'react-redux';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 interface IPageProps {
   navigation: NavigationProp<MainStackParamList, 'HealthCardScreen'>;
@@ -254,6 +255,14 @@ const Profile = ({navigation, dispatch, petData}: IPageProps) => {
     petData.length > 0 && setDataPet([...petData]);
   }, [petData]);
 
+  // chưa xong
+  // Active pet đã chọn lần cuối
+  // useEffect(() => {
+  //   dataPet[currentIndex]
+  //     ? AsyncStorage.setItem('PetActive', JSON.stringify(dataPet[currentIndex]))
+  //     : AsyncStorage.removeItem('PetActive');
+  // }, [dataPet, currentIndex]);
+
   return (
     <ScrollView
       style={[globalStyles.container]}
@@ -293,7 +302,6 @@ const Profile = ({navigation, dispatch, petData}: IPageProps) => {
               if (index > currentIndex + MAXITEM || index < currentIndex) {
                 return null;
               }
-
               return (
                 <CardPet
                   key={item.id}
@@ -312,7 +320,13 @@ const Profile = ({navigation, dispatch, petData}: IPageProps) => {
           </View>
         </View>
         <RowComponent gap={16}>
-          <CardVertical styles={[{justifyContent: 'space-between'}]}>
+          <CardVertical
+            styles={[{justifyContent: 'space-between'}]}
+            onPress={() =>
+              navigation.navigate('PetInformationScreen', {
+                petId: petActive?.id ?? 0,
+              })
+            }>
             <View>
               <TextComponent
                 title
