@@ -39,6 +39,7 @@ import LeftIcon from './left.svg';
 import MoreIcon from './More.svg';
 import HidenIcon from './hiden.svg';
 import LocationIcon from './location.svg';
+import MessageAddIcon from './message-add.svg';
 
 export {
   AddIcon,
@@ -82,4 +83,5 @@ export {
   MoreIcon,
   HidenIcon,
   LocationIcon,
+  MessageAddIcon,
 };

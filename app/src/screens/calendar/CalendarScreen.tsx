@@ -137,7 +137,7 @@ const CalendarScreen = ({navigation}: Props) => {
       const response: any = await apiGetBookingUser({
         date: date,
         isUser: true,
-        status: 'pending', // chưa xong
+        statuses: 'pending,confirmed',
       });
       setIsLoading(false);
       if (response.success) {

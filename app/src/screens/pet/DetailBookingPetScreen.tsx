@@ -144,7 +144,7 @@ const DetailBookingPetScreen = ({route, navigation}: Props) => {
             }}>
             <TextComponent text="Gender" size={14} color={colors['grey-700']} />
             <TextComponent
-              text="Gender"
+              text={`${data?.dataPet.gender ? 'Male' : 'Female'}`}
               title
               size={14}
               color={colors['grey-800']}
