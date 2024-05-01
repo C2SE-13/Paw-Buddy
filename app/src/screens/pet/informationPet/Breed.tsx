@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unstable-nested-components */
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable curly */
 /* eslint-disable react-native/no-inline-styles */
@@ -7,6 +8,7 @@ import {
   Image,
   TouchableOpacity,
   Dimensions,
+  ActivityIndicator,
 } from 'react-native';
 import React, {memo, useCallback, useEffect, useState} from 'react';
 import {globalStyles} from '../../../styles/globalStyles';
@@ -19,11 +21,15 @@ import {apiGetBreeds} from '../../../apis/pet';
 import Toast from 'react-native-toast-message';
 import {toastConfig} from '../../../utils/toast';
 import {ImagePickerResponse} from 'react-native-image-picker';
-import useUpdateStatusLoading from '../../../hooks/useUpdateStatusLoading';
 
 const Breed = ({setValue, setstatusButton}: Props) => {
-  const [dataBreeds, setDataBreeds] = useState<any[]>([]);
-  const {updateStatusLoading} = useUpdateStatusLoading();
+  const [dataBreeds, setDataBreeds] = useState<
+    {
+      id: number;
+      name: string;
+      image: string;
+    }[]
+  >([]);
   const [active, setActive] = useState<{
     name: string | null;
     image: string | ImagePickerResponse | null;
@@ -31,14 +37,16 @@ const Breed = ({setValue, setstatusButton}: Props) => {
     name: null,
     image: null,
   });
+  const [page, setPage] = useState(1);
+  const [isLoading, setIsLoading] = useState(false);
 
   const getBreeds = useCallback(async () => {
-    updateStatusLoading(true);
+    setIsLoading(true);
     const {data, success, message}: any = await apiGetBreeds({
       limit: 9,
-      page: 0,
+      page: page,
     });
-    updateStatusLoading(false);
+    setIsLoading(false);
     if (success) {
       setDataBreeds([
         {
@@ -55,13 +63,29 @@ const Breed = ({setValue, setstatusButton}: Props) => {
 
   useEffect(() => {
     getBreeds();
-  }, [getBreeds]);
+  }, []);
 
   const handleSelect = (name: string, image: string | ImagePickerResponse) => {
     setValue('breed', name);
     setValue('photo', image);
     setActive({name, image});
     setstatusButton('primary');
+  };
+
+  const loadMore = async () => {
+    setIsLoading(true);
+    const {data, success, message}: any = await apiGetBreeds({
+      limit: 10,
+      page: page + 1,
+    });
+    setIsLoading(false);
+    if (success) {
+      setDataBreeds(prev => [...prev, ...data]);
+      setPage(prev => prev + 1);
+    } else
+      Toast.show(
+        toastConfig({textMain: message, type: 'error', visibilityTime: 200}),
+      );
   };
 
   return (
@@ -72,6 +96,23 @@ const Breed = ({setValue, setstatusButton}: Props) => {
         data={dataBreeds}
         columnWrapperStyle={{gap: 16}}
         numColumns={2}
+        ListFooterComponent={() => {
+          return isLoading ? (
+            <View style={{paddingVertical: 12}}>
+              <ActivityIndicator size="large" color={colors['primary-100']} />
+            </View>
+          ) : (
+            <TouchableOpacity
+              onPress={loadMore}
+              style={[globalStyles.center, {paddingVertical: 12}]}>
+              <TextComponent
+                text="Load More"
+                color={colors['blue-500']}
+                size={14}
+              />
+            </TouchableOpacity>
+          );
+        }}
         renderItem={({item}) => {
           return (
             <TouchableOpacity

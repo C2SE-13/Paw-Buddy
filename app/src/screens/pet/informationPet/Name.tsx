@@ -1,11 +1,11 @@
 /* eslint-disable react-native/no-inline-styles */
-import {ScrollView, View} from 'react-native';
+import {ScrollView, TouchableOpacity, View} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {Props} from '../constants/interface';
 import {globalStyles} from '../../../styles/globalStyles';
 import ImagePet from './ImagePet';
 import {Controller} from 'react-hook-form';
-import {InputComponent, TextComponent} from '../../../components';
+import {InputComponent, RowComponent, TextComponent} from '../../../components';
 import {colors} from '../../../constants/colors';
 import {fontFamilies} from '../../../constants/fontFamilies';
 import {launchImageLibrary} from 'react-native-image-picker';
@@ -25,23 +25,36 @@ const Name = ({
   const [imageLocal, setImageLocal] = useState(
     require('../../../assets/imgs/EmptySpaceIllustrations.png'),
   );
+  const [gender, setGender] = useState('');
 
   useEffect(() => {
     if (nameStep === 'Name') {
       setImageLocal(values.photo);
 
-      if (values.breed && values.name_pet && typeof values.photo !== 'number') {
+      if (
+        values.breed &&
+        values.name_pet &&
+        typeof values.photo !== 'number' &&
+        values.gender !== undefined
+      ) {
         setstatusButton('primary');
       } else {
         setstatusButton('disabled');
       }
     }
-  }, [nameStep, setstatusButton, values.breed, values.name_pet, values.photo]);
+  }, [
+    nameStep,
+    setstatusButton,
+    values.breed,
+    values.gender,
+    values.name_pet,
+    values.photo,
+  ]);
 
   useEffect(() => {
     const subscription = watch((value, {name}) => {
       if (name === 'breed' || name === 'name_pet') {
-        if (value?.breed && value?.name_pet) {
+        if (value?.breed && value?.name_pet && value.gender !== undefined) {
           setstatusButton('primary');
         } else {
           setstatusButton('disabled');
@@ -148,6 +161,76 @@ const Name = ({
               )}
               name="breed"
             />
+          </View>
+          <View
+            style={[
+              globalStyles.center,
+              {
+                gap: 16,
+              },
+            ]}>
+            <TextComponent
+              text="What’s your pet’s gender?"
+              color={colors['grey-800']}
+              font={fontFamilies['inter-medium']}
+              size={16}
+            />
+            <RowComponent gap={32}>
+              <TouchableOpacity
+                onPress={() => {
+                  setValue('gender', true);
+                  setGender('male');
+                }}
+                style={[
+                  globalStyles.center,
+                  {
+                    borderWidth: 1,
+                    width: 100,
+                    paddingVertical: 8,
+                    borderColor: colors['blue-500'],
+                    borderRadius: 14,
+                    backgroundColor:
+                      gender === 'male' ? colors['blue-500'] : 'transparent',
+                  },
+                ]}>
+                <TextComponent
+                  text="Male"
+                  size={14}
+                  color={
+                    gender === 'male'
+                      ? colors['background-white']
+                      : colors['blue-500']
+                  }
+                />
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => {
+                  setValue('gender', false);
+                  setGender('female');
+                }}
+                style={[
+                  globalStyles.center,
+                  {
+                    borderWidth: 1,
+                    width: 100,
+                    paddingVertical: 8,
+                    borderColor: colors['red-500'],
+                    borderRadius: 14,
+                    backgroundColor:
+                      gender === 'female' ? colors['red-500'] : 'transparent',
+                  },
+                ]}>
+                <TextComponent
+                  text="Female"
+                  size={14}
+                  color={
+                    gender === 'female'
+                      ? colors['background-white']
+                      : colors['red-500']
+                  }
+                />
+              </TouchableOpacity>
+            </RowComponent>
           </View>
         </View>
       </View>
