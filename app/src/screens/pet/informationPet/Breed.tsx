@@ -1,7 +1,13 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable curly */
 /* eslint-disable react-native/no-inline-styles */
-import {View, FlatList, Image, TouchableOpacity} from 'react-native';
+import {
+  View,
+  FlatList,
+  Image,
+  TouchableOpacity,
+  Dimensions,
+} from 'react-native';
 import React, {memo, useCallback, useEffect, useState} from 'react';
 import {globalStyles} from '../../../styles/globalStyles';
 import {TextComponent} from '../../../components';
@@ -59,19 +65,11 @@ const Breed = ({setValue, setstatusButton}: Props) => {
   };
 
   return (
-    <View
-      style={[
-        globalStyles.container,
-        globalStyles.center,
-        {
-          paddingHorizontal: 24,
-          paddingVertical: 12,
-        },
-      ]}>
+    <View style={[globalStyles.container, {paddingHorizontal: 12}]}>
       <FlatList
+        style={[globalStyles['w-100']]}
         showsVerticalScrollIndicator={false}
         data={dataBreeds}
-        contentContainerStyle={{gap: 16}}
         columnWrapperStyle={{gap: 16}}
         numColumns={2}
         renderItem={({item}) => {
@@ -83,15 +81,18 @@ const Breed = ({setValue, setstatusButton}: Props) => {
                 shadowStyle,
                 shadowStyle2,
                 {
-                  width: 155,
+                  width: Dimensions.get('screen').width / 2 - 32,
                   height: 155,
                   backgroundColor: colors['background-white'],
                   borderRadius: 14,
                   borderWidth: 1,
                   borderColor: colors['grey-150'],
-                  gap: 20,
+                  gap: 8,
                   justifyContent: 'flex-end',
-                  padding: 4,
+                  padding: 8,
+                  marginLeft: 6,
+                  marginTop: 12,
+                  marginBottom: 12,
                 },
                 active.name === item?.name &&
                   active.image === item?.image && {
@@ -115,8 +116,8 @@ const Breed = ({setValue, setstatusButton}: Props) => {
                     : item.image
                 }
                 style={{
-                  width: 87,
-                  height: 87,
+                  width: 98,
+                  height: 98,
                   objectFit: 'cover',
                   borderRadius: 4,
                 }}

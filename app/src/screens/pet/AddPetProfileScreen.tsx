@@ -184,7 +184,6 @@ const AddPetProfileScreen = ({navigation, dispatch}: Props) => {
         </View>
       </View>
       <Swiper
-        style={{}}
         onIndexChanged={step => setStepCurrent(step)}
         index={stepCurrent}
         showsPagination={false}

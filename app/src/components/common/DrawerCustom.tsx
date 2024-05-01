@@ -83,7 +83,7 @@ const YourPetsItem = (props: any) => {
       <TextComponent text="add New" color={colors['primary-100']} size={14} />
     </TouchableOpacity>
   ) : (
-    <TouchableOpacity style={[globalStyles.center, {gap: 8}]}>
+    <TouchableOpacity style={[globalStyles.center, {gap: 8, width: 60}]}>
       <Image
         source={{uri: item.image}}
         style={{
@@ -93,7 +93,12 @@ const YourPetsItem = (props: any) => {
           borderRadius: 100,
         }}
       />
-      <TextComponent text={item.name} color={colors['grey-200']} size={14} />
+      <TextComponent
+        text={item.name}
+        color={colors['grey-200']}
+        size={14}
+        numOfLine={1}
+      />
     </TouchableOpacity>
   );
 };
