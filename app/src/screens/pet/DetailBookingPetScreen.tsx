@@ -225,12 +225,39 @@ const DetailBookingPetScreen = ({route, navigation}: Props) => {
             borderBottomWidth: 1,
             borderColor: colors['grey-150'],
           }}>
-          <TextComponent
-            text="Veterinarian"
-            size={16}
-            title
-            color={colors['grey-800']}
-          />
+          <RowComponent justify="space-between">
+            <TextComponent
+              text="Veterinarian"
+              size={16}
+              title
+              color={colors['grey-800']}
+            />
+            <View
+              style={[
+                globalStyles.center,
+                {
+                  borderWidth: 1,
+                  width: 80,
+                  paddingVertical: 3,
+                  borderRadius: 4,
+                  borderColor:
+                    data?.status === 'confirmed'
+                      ? colors['green-500']
+                      : colors['yellow-500'],
+                },
+              ]}>
+              <TextComponent
+                text={`${data?.status}`}
+                styles={{textTransform: 'capitalize'}}
+                size={10}
+                color={
+                  data?.status === 'confirmed'
+                    ? colors['green-500']
+                    : colors['yellow-500']
+                }
+              />
+            </View>
+          </RowComponent>
           <RowComponent gap={12}>
             <Image
               resizeMode="cover"

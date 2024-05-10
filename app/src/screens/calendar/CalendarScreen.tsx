@@ -21,6 +21,7 @@ import {useSelector} from 'react-redux';
 import {RootState} from '../../redux/store';
 import {NavigationProp} from '@react-navigation/native';
 import {MainStackParamList} from '../../navigators/MainNavigator';
+import {RefreshIcon} from '../../assets/icons';
 
 type MarkedDateEntry = {
   selected?: boolean;
@@ -30,6 +31,7 @@ type MarkedDateEntry = {
 
 interface Events {
   id: number;
+  status: string;
   dataPet: {
     photo: string;
   };
@@ -131,20 +133,20 @@ const CalendarScreen = ({navigation}: Props) => {
     return markedDates;
   };
 
-  useEffect(() => {
-    const getBookingDate = async (date: string) => {
-      setIsLoading(true);
-      const response: any = await apiGetBookingUser({
-        date: date,
-        isUser: true,
-        statuses: 'pending,confirmed',
-      });
-      setIsLoading(false);
-      if (response.success) {
-        setData(response.data);
-      }
-    };
+  const getBookingDate = async (date: string) => {
+    setIsLoading(true);
+    const response: any = await apiGetBookingUser({
+      date: date,
+      isUser: true,
+      statuses: 'pending,confirmed',
+    });
+    setIsLoading(false);
+    if (response.success) {
+      setData(response.data);
+    }
+  };
 
+  useEffect(() => {
     getBookingDate(selected);
   }, [selected]);
 
@@ -158,13 +160,26 @@ const CalendarScreen = ({navigation}: Props) => {
         />
       </View>
       <View style={{padding: 12, paddingBottom: 24, flex: 1, gap: 16}}>
-        <TextComponent
-          text="Upcoming events"
-          size={16}
-          font={fontFamilies['inter-semibold']}
-          color={colors['grey-800']}
-          styles={{paddingLeft: 12}}
-        />
+        <RowComponent justify="space-between">
+          <TextComponent
+            text="Upcoming events"
+            size={16}
+            font={fontFamilies['inter-semibold']}
+            color={colors['grey-800']}
+            styles={{paddingLeft: 12}}
+          />
+          <TouchableOpacity
+            onPress={() => getBookingDate(selected)}
+            style={{
+              marginRight: 12,
+              borderWidth: 1,
+              borderRadius: 4,
+              padding: 2,
+              borderColor: colors['grey-500'],
+            }}>
+            <RefreshIcon />
+          </TouchableOpacity>
+        </RowComponent>
         {isLoading ? (
           <View style={[globalStyles.center, {flex: 1}]}>
             <ActivityIndicator size="large" color={colors['primary-100']} />
@@ -224,29 +239,56 @@ const CalendarScreen = ({navigation}: Props) => {
                         color={colors['grey-800']}
                       />
                     </RowComponent>
-                    <RowComponent justify="flex-start" gap={8}>
-                      <Image
-                        resizeMode="cover"
-                        style={{
-                          width: 24,
-                          height: 24,
-                        }}
-                        source={{
-                          uri: serviceCategories.find(
-                            i => i.id === item.services[0].category_id,
-                          )?.image,
-                        }}
-                      />
-                      <TextComponent
-                        text={
-                          serviceCategories.find(
-                            i => i.id === item.services[0].category_id,
-                          )?.type_service ?? ''
-                        }
-                        size={16}
-                        font={fontFamilies['inter-semibold']}
-                        color={colors['grey-800']}
-                      />
+                    <RowComponent justify="space-between">
+                      <RowComponent justify="flex-start" gap={8}>
+                        <Image
+                          resizeMode="cover"
+                          style={{
+                            width: 24,
+                            height: 24,
+                          }}
+                          source={{
+                            uri: serviceCategories.find(
+                              i => i.id === item.services[0].category_id,
+                            )?.image,
+                          }}
+                        />
+                        <TextComponent
+                          text={
+                            serviceCategories.find(
+                              i => i.id === item.services[0].category_id,
+                            )?.type_service ?? ''
+                          }
+                          size={16}
+                          font={fontFamilies['inter-semibold']}
+                          color={colors['grey-800']}
+                        />
+                      </RowComponent>
+                      <View
+                        style={[
+                          globalStyles.center,
+                          {
+                            borderWidth: 1,
+                            width: 80,
+                            paddingVertical: 3,
+                            borderRadius: 4,
+                            borderColor:
+                              item.status === 'confirmed'
+                                ? colors['green-500']
+                                : colors['yellow-500'],
+                          },
+                        ]}>
+                        <TextComponent
+                          text={item.status}
+                          styles={{textTransform: 'capitalize'}}
+                          size={10}
+                          color={
+                            item.status === 'confirmed'
+                              ? colors['green-500']
+                              : colors['yellow-500']
+                          }
+                        />
+                      </View>
                     </RowComponent>
                   </View>
                 </RowComponent>
