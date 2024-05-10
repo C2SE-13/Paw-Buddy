@@ -1,11 +1,5 @@
 /* eslint-disable react-native/no-inline-styles */
-import {
-  View,
-  ScrollView,
-  Image,
-  TouchableOpacity,
-  FlatList,
-} from 'react-native';
+import {View, ScrollView, Image, FlatList} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {NavigationProp, RouteProp} from '@react-navigation/native';
 import {MainStackParamList} from '../../navigators/MainNavigator';
@@ -20,7 +14,6 @@ import {
 } from '../../components';
 import {apiGetDetailBooking} from '../../apis';
 import {colors} from '../../constants/colors';
-import {ChatFocusedIcon} from '../../assets/icons';
 
 interface Props {
   route: RouteProp<MainStackParamList, 'DetailBookingPetScreen'>;
@@ -265,9 +258,6 @@ const DetailBookingPetScreen = ({route, navigation}: Props) => {
                 color={colors['grey-700']}
               />
             </View>
-            <TouchableOpacity>
-              <ChatFocusedIcon />
-            </TouchableOpacity>
           </RowComponent>
         </View>
         <SpaceComponent height={24} />

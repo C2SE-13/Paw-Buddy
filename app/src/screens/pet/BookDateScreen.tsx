@@ -190,6 +190,7 @@ const BookDateScreen = ({route, navigation}: Props) => {
         onPress: async () => {
           updateStatusLoading(true);
           const response: any = await apiCreateBooking(data);
+          console.log(response);
           updateStatusLoading(false);
           if (response.success) {
             Toast.show(
