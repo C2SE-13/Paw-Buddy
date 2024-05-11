@@ -69,7 +69,7 @@ export const renderTime = (
             month === +moment().format('M') &&
             date === +moment().format('DD') &&
             buoi === 'PM' &&
-            thoiGianHienTai.getHours() >= +moment().format('h') + 12
+            thoiGianHienTai.getHours() <= +moment().format('h') + 12
           ? true
           : false,
     });

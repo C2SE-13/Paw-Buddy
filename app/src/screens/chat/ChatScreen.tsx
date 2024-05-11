@@ -1,9 +1,14 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react-native/no-inline-styles */
-import {TouchableOpacity, View} from 'react-native';
+import {FlatList, Image, TouchableOpacity, View} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {globalStyles} from '../../styles/globalStyles';
-import {HeaderTitle, InputComponent, TextComponent} from '../../components';
+import {
+  HeaderTitle,
+  InputComponent,
+  RowComponent,
+  TextComponent,
+} from '../../components';
 import {MessageAddIcon, SearchProfileIcon} from '../../assets/icons';
 import {colors} from '../../constants/colors';
 import {NavigationProp} from '@react-navigation/native';
@@ -11,6 +16,9 @@ import {fontFamilies} from '../../constants/fontFamilies';
 import {apiGetConversations} from '../../apis';
 import useUpdateStatusLoading from '../../hooks/useUpdateStatusLoading';
 import {MainStackParamList} from '../../navigators/MainNavigator';
+import {useSelector} from 'react-redux';
+import {RootState} from '../../redux/store';
+import moment from 'moment';
 
 interface Props {
   navigation: NavigationProp<MainStackParamList, 'ChatBotScreen'>;
@@ -24,18 +32,19 @@ interface IConversations {
     email: string;
     profilePic: string;
   }[];
+  updatedAt: string;
 }
 
 const ChatScreen = ({navigation}: Props) => {
   const [search, setSearch] = useState('');
   const [data, setData] = useState<IConversations[]>([]);
   const {updateStatusLoading} = useUpdateStatusLoading();
+  const {current} = useSelector((state: RootState) => state.user);
 
   const getConversations = async () => {
     updateStatusLoading(true);
     const response: any = await apiGetConversations();
     updateStatusLoading(false);
-    console.log(response);
     if (response.success) {
       setData(response.data);
     }
@@ -95,9 +104,56 @@ const ChatScreen = ({navigation}: Props) => {
         />
       </View>
       {data.length > 0 ? (
-        <View>
-          <TextComponent text="x" />
-        </View>
+        <FlatList
+          contentContainerStyle={{
+            gap: 12,
+          }}
+          data={data}
+          renderItem={({item}) => {
+            const senderObj = item.participants.find(
+              el => el._id !== current?._id,
+            );
+            return (
+              <TouchableOpacity
+                onPress={() =>
+                  navigation.navigate('ChatUserScreen', {
+                    userId: senderObj?._id ?? '',
+                    name: senderObj?.fullName ?? '',
+                  })
+                }
+                style={{
+                  marginHorizontal: 24,
+                  borderWidth: 1,
+                  padding: 12,
+                  borderColor: colors['grey-150'],
+                  borderRadius: 12,
+                }}>
+                <RowComponent gap={12}>
+                  <Image
+                    source={{uri: senderObj?.profilePic}}
+                    style={{
+                      width: 50,
+                      height: 50,
+                      borderRadius: 100,
+                    }}
+                  />
+                  <TextComponent
+                    text={senderObj?.fullName ?? ''}
+                    size={14}
+                    title
+                    flex={1}
+                    color={colors['text-100']}
+                  />
+                  <TextComponent
+                    text={moment(item.updatedAt).format('hh:mm A') ?? ''}
+                    size={10}
+                    color={colors['text-body']}
+                  />
+                </RowComponent>
+              </TouchableOpacity>
+            );
+          }}
+        />
       ) : (
         <View style={[globalStyles.center, {flex: 1, padding: 24}]}>
           <TextComponent

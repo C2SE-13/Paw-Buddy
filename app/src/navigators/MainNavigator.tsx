@@ -11,6 +11,7 @@ import {
   PetInformationScreen,
   DetailServiceScreen,
   HealthCardScreen,
+  ChatUserScreen,
 } from '../screens';
 import {IPetServies} from '../utils/interface';
 
@@ -45,6 +46,10 @@ export type MainStackParamList = {
     petId: number;
   };
   ChatBotScreen: undefined;
+  ChatUserScreen: {
+    userId: string;
+    name: string;
+  };
 };
 
 const MainNavigator = () => {
@@ -74,6 +79,7 @@ const MainNavigator = () => {
         component={PetInformationScreen}
       />
       <Stack.Screen name="ChatBotScreen" component={ChatBotScreen} />
+      <Stack.Screen name="ChatUserScreen" component={ChatUserScreen} />
     </Stack.Navigator>
   );
 };

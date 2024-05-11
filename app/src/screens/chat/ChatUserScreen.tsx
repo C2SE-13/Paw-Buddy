@@ -1,31 +1,31 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react-native/no-inline-styles */
-import {Dimensions, FlatList, TouchableOpacity, View} from 'react-native';
-import React, {useEffect, useRef, useState} from 'react';
-import {globalStyles} from '../../styles/globalStyles';
+import {View, TouchableOpacity, Dimensions, FlatList} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {NavigationProp, RouteProp} from '@react-navigation/native';
+import {MainStackParamList} from '../../navigators/MainNavigator';
+import {colors} from '../../constants/colors';
+import {shadowStyle, shadowStyle2} from '../../styles/boxShadow';
 import {
   HeaderTitle,
   InputComponent,
   RowComponent,
   TextComponent,
 } from '../../components';
-import {colors} from '../../constants/colors';
-import {shadowStyle, shadowStyle2} from '../../styles/boxShadow';
+import {globalStyles} from '../../styles/globalStyles';
 import {ChevronBack} from '../../assets/icons';
-import {NavigationProp} from '@react-navigation/native';
-import {API_URL_2} from '../../config/env';
-import axios from 'axios';
+import Toast from 'react-native-toast-message';
+import {toastConfig} from '../../utils/toast';
+import {apiGetDetailMessages, apiSendMessage} from '../../apis';
 import {useSelector} from 'react-redux';
 import {RootState} from '../../redux/store';
 import moment from 'moment';
-import Toast from 'react-native-toast-message';
-import {toastConfig} from '../../utils/toast';
 
 interface Props {
-  navigation: NavigationProp<any, any>;
+  navigation: NavigationProp<MainStackParamList, any>;
+  route: RouteProp<MainStackParamList, 'ChatUserScreen'>;
 }
 
-interface IMessageChatBot {
+interface IMessageChat {
   _id: string;
   senderId: string;
   receiverId: string;
@@ -33,25 +33,22 @@ interface IMessageChatBot {
   createdAt: string;
 }
 
-const ChatBotScreen = ({navigation}: Props) => {
-  const [data, setData] = useState<IMessageChatBot[]>([]);
-  const {token, current} = useSelector((state: RootState) => state.user);
+const ChatUserScreen = ({navigation, route}: Props) => {
+  const {name, userId} = route.params;
   const [sendMess, setsendMess] = useState('');
+  const [data, setData] = useState<IMessageChat[]>([]);
+  const {current} = useSelector((state: RootState) => state.user);
 
-  const getMessageChat = async () => {
-    const response: any = await axios.get(API_URL_2 + 'chatbot', {
-      headers: {
-        Authorization: `Bear ${token}`,
-      },
-    });
-    setData(response.data.reverse());
+  const getMessageChat = async (id: string) => {
+    const response: any = await apiGetDetailMessages(id);
+    setData(response.reverse());
   };
 
   useEffect(() => {
-    getMessageChat();
-  }, []);
+    getMessageChat(userId);
+  }, [userId]);
 
-  const handleSendMess = async () => {
+  const handleSendMess = async (id: string) => {
     if (sendMess.length < 1) {
       return Toast.show(
         toastConfig({
@@ -61,36 +58,29 @@ const ChatBotScreen = ({navigation}: Props) => {
         }),
       );
     }
-    const response: any = await axios.post(
-      API_URL_2 + 'chatbot/chat',
-      {
-        message: sendMess,
-      },
-      {
-        headers: {
-          Authorization: `Bear ${token}`,
-        },
-      },
-    );
-    if (response.data.senderId || response.data.receiverId) {
+
+    const response: any = await apiSendMessage(id, {
+      message: sendMess,
+    });
+    if (response.receiverId || response.senderId) {
       setsendMess('');
-      getMessageChat();
+      getMessageChat(userId);
     } else {
       Toast.show(
         toastConfig({
-          textMain: response.data.response,
+          textMain: 'An error occurred, please try again!',
           visibilityTime: 2000,
           type: 'error',
         }),
       );
-      getMessageChat();
+      getMessageChat(userId);
     }
   };
 
   return (
     <View style={[globalStyles.container]}>
       <HeaderTitle
-        text="ChatBox"
+        text={name}
         color={colors['text-100']}
         styles={[
           shadowStyle,
@@ -104,17 +94,17 @@ const ChatBotScreen = ({navigation}: Props) => {
         ]}
         leftButton={
           <TouchableOpacity
-            onPress={() => navigation.goBack()}
             style={[
               globalStyles.center,
               {
                 width: 40,
                 height: 40,
                 borderWidth: 1,
-                borderRadius: 14,
-                borderColor: colors['grey-150'],
+                borderRadius: 10,
+                borderColor: colors['text-30'],
               },
-            ]}>
+            ]}
+            onPress={() => navigation.goBack()}>
             <ChevronBack />
           </TouchableOpacity>
         }
@@ -226,7 +216,7 @@ const ChatBotScreen = ({navigation}: Props) => {
           allowClear
         />
         <TouchableOpacity
-          onPress={handleSendMess}
+          onPress={() => handleSendMess(userId)}
           style={[
             globalStyles.center,
             {
@@ -243,4 +233,4 @@ const ChatBotScreen = ({navigation}: Props) => {
   );
 };
 
-export default ChatBotScreen;
+export default ChatUserScreen;

@@ -20,3 +20,9 @@ export const apiGetDetailBooking = (id: number) =>
     url: '/booking/detail/' + id,
     method: 'get',
   });
+
+export const apiCancelBooking = (id: number) =>
+  axios({
+    url: '/booking/cancel-booking/' + id,
+    method: 'delete',
+  });

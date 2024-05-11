@@ -1,5 +1,5 @@
 /* eslint-disable react-native/no-inline-styles */
-import {View, ScrollView, Image, FlatList} from 'react-native';
+import {View, ScrollView, Image, FlatList, Alert} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {NavigationProp, RouteProp} from '@react-navigation/native';
 import {MainStackParamList} from '../../navigators/MainNavigator';
@@ -12,8 +12,10 @@ import {
   SpaceComponent,
   TextComponent,
 } from '../../components';
-import {apiGetDetailBooking} from '../../apis';
+import {apiCancelBooking, apiGetDetailBooking} from '../../apis';
 import {colors} from '../../constants/colors';
+import Toast from 'react-native-toast-message';
+import {toastConfig} from '../../utils/toast';
 
 interface Props {
   route: RouteProp<MainStackParamList, 'DetailBookingPetScreen'>;
@@ -74,6 +76,52 @@ const DetailBookingPetScreen = ({route, navigation}: Props) => {
 
     bookingId && getDetailBooking(bookingId);
   }, [bookingId]);
+
+  const handleCancelBooking = async (id: number) => {
+    if (!id) {
+      return Toast.show(
+        toastConfig({
+          type: 'error',
+          textMain: 'An error occurred. Please try again!',
+          visibilityTime: 2000,
+        }),
+      );
+    } else {
+      return Alert.alert(
+        'Are you sure?',
+        'Do you want to cancel this serives?',
+        [
+          {
+            text: 'No',
+            style: 'cancel',
+          },
+          {
+            text: 'Yes',
+            onPress: async () => {
+              const response: any = await apiCancelBooking(id);
+              if (response.success) {
+                Toast.show(
+                  toastConfig({
+                    textMain: response.message,
+                    visibilityTime: 2000,
+                  }),
+                );
+                navigation.goBack();
+              } else {
+                Toast.show(
+                  toastConfig({
+                    type: 'error',
+                    textMain: response.message,
+                    visibilityTime: 2000,
+                  }),
+                );
+              }
+            },
+          },
+        ],
+      );
+    }
+  };
 
   return (
     <View style={[globalStyles.container]}>
@@ -442,14 +490,25 @@ const DetailBookingPetScreen = ({route, navigation}: Props) => {
         </View>
         <SpaceComponent height={12} />
       </ScrollView>
-      <View style={{padding: 24}}>
+      <RowComponent styles={{padding: 24}} gap={12}>
         <ButtonComponent
+          isFull={false}
+          type="primary"
+          size="large"
+          text="Cancel"
+          onPress={() => handleCancelBooking(bookingId)}
+          styles={{
+            backgroundColor: colors['fill-red'],
+          }}
+        />
+        <ButtonComponent
+          isFull={false}
           type="primary"
           size="large"
           text="Back"
           onPress={() => navigation.goBack()}
         />
-      </View>
+      </RowComponent>
     </View>
   );
 };
