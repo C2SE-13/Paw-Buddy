@@ -7,11 +7,12 @@ import {
   DetailBookingPetScreen,
   DoctorDetailScreen,
   PetServicesScreen,
+  ChatBotScreen,
+  PetInformationScreen,
+  DetailServiceScreen,
+  HealthCardScreen,
 } from '../screens';
-import DetailServiceScreen from '../screens/pet/DetailServiceScreen';
 import {IPetServies} from '../utils/interface';
-import HealthCardScreen from '../screens/pet/HealthCardScreen';
-import PetInformationScreen from '../screens/pet/PetInformationScreen';
 
 export type MainStackParamList = {
   PetServicesScreen: {
@@ -43,6 +44,7 @@ export type MainStackParamList = {
   PetInformationScreen: {
     petId: number;
   };
+  ChatBotScreen: undefined;
 };
 
 const MainNavigator = () => {
@@ -71,6 +73,7 @@ const MainNavigator = () => {
         name="PetInformationScreen"
         component={PetInformationScreen}
       />
+      <Stack.Screen name="ChatBotScreen" component={ChatBotScreen} />
     </Stack.Navigator>
   );
 };
