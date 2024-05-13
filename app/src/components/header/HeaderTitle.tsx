@@ -17,6 +17,7 @@ interface IProps {
   size?: number;
   font?: string;
   color?: string;
+  subColor?: string;
 }
 
 const HeaderTitle = ({
@@ -29,6 +30,7 @@ const HeaderTitle = ({
   color,
   subText,
   textStyles,
+  subColor,
 }: IProps) => {
   return (
     <RowComponent
@@ -49,7 +51,12 @@ const HeaderTitle = ({
           color={color ?? colors['grey-800']}
           styles={textStyles}
         />
-        {subText && <TextComponent text={subText} color={colors['grey-600']} />}
+        {subText && (
+          <TextComponent
+            text={subText}
+            color={subColor ?? colors['grey-600']}
+          />
+        )}
       </View>
       {rightButton && rightButton}
     </RowComponent>

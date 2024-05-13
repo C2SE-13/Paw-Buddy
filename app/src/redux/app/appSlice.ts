@@ -1,15 +1,20 @@
 import {IServieCategories} from './../../utils/interface';
 import {createSlice} from '@reduxjs/toolkit';
 import * as actions from './asyncActions';
+import {Socket} from 'socket.io-client';
 
 export interface AppState {
   isLoading: boolean;
   serviceCategories: IServieCategories[];
+  usersOnline: string[];
+  socket: Socket | null;
 }
 
 const initialState: AppState = {
   isLoading: false,
   serviceCategories: [],
+  usersOnline: [],
+  socket: null,
 };
 
 export const appSlice = createSlice({
@@ -18,6 +23,12 @@ export const appSlice = createSlice({
   reducers: {
     updateLoading: (state, action) => {
       state.isLoading = action.payload;
+    },
+    updateUsersOnline: (state, action) => {
+      state.usersOnline = action.payload;
+    },
+    updateSocket: (state, action) => {
+      state.socket = action.payload;
     },
   },
   extraReducers: builder => {
@@ -32,6 +43,7 @@ export const appSlice = createSlice({
 });
 
 // Action creators are generated for each case reducer function;
-export const {updateLoading} = appSlice.actions;
+export const {updateLoading, updateUsersOnline, updateSocket} =
+  appSlice.actions;
 
 export default appSlice.reducer;

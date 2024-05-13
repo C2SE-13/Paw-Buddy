@@ -38,6 +38,7 @@ const ChatUserScreen = ({navigation, route}: Props) => {
   const [sendMess, setsendMess] = useState('');
   const [data, setData] = useState<IMessageChat[]>([]);
   const {current} = useSelector((state: RootState) => state.user);
+  const {usersOnline, socket} = useSelector((state: RootState) => state.app);
 
   const getMessageChat = async (id: string) => {
     const response: any = await apiGetDetailMessages(id);
@@ -77,9 +78,28 @@ const ChatUserScreen = ({navigation, route}: Props) => {
     }
   };
 
+  useEffect(() => {
+    if (socket !== null) {
+      socket?.on('newMessage', newMessage => {
+        console.log(newMessage);
+        if (newMessage) {
+          getMessageChat(userId);
+        }
+      });
+    }
+  }, [socket, userId]);
+
   return (
     <View style={[globalStyles.container]}>
       <HeaderTitle
+        subText={`${
+          usersOnline.some(el => el === userId) ? 'Online' : ' Offline'
+        }`}
+        subColor={
+          usersOnline.some(el => el === userId)
+            ? colors['green-500']
+            : colors['grey-600']
+        }
         text={name}
         color={colors['text-100']}
         styles={[

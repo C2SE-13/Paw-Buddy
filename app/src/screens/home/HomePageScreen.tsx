@@ -1,6 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 import {ScrollView, View} from 'react-native';
-import React from 'react';
+import React, {useEffect} from 'react';
 import {globalStyles} from '../../styles/globalStyles';
 import {HeaderPet} from '../../components';
 import Banner from './components/Banner';
