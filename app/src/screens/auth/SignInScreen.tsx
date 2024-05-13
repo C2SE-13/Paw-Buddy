@@ -227,7 +227,7 @@ const SignInScreen = ({navigation}: IPageProps) => {
             type="text"
             text="Sign Up"
             onPress={() => {
-              reset();
+              !isRemember && reset();
               navigation.navigate('SignUp');
             }}
           />

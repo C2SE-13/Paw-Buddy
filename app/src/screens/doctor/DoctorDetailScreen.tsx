@@ -15,7 +15,7 @@ import {
   TextComponent,
 } from '../../components';
 import {IDoctors} from '../../utils/interface';
-import {ChatFocusedIcon, ChevronBack} from '../../assets/icons';
+import {ChevronBack} from '../../assets/icons';
 import {globalStyles} from '../../styles/globalStyles';
 import {colors} from '../../constants/colors';
 import {fontFamilies} from '../../constants/fontFamilies';
@@ -148,9 +148,6 @@ const DoctorDetailScreen = ({navigation, route}: Props) => {
               size={12}
             />
           </View>
-          <TouchableOpacity>
-            <ChatFocusedIcon />
-          </TouchableOpacity>
         </RowComponent>
         <SpaceComponent height={32} />
         <View style={{gap: 24}}>

@@ -7,7 +7,7 @@ export default function useCheckProfilePet() {
   const [message] = useState("Don't have any pets yet?");
 
   const checkStatusPet = () => {
-    if (petActive === undefined) {
+    if (petActive === null) {
       return false;
     } else {
       return true;

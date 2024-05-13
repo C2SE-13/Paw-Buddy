@@ -1,6 +1,7 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react-native/no-inline-styles */
 import {FlatList, Image, TouchableOpacity, View} from 'react-native';
-import React, {RefObject, useEffect, useRef, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {globalStyles} from '../../styles/globalStyles';
 import {
   HeaderTitle,
@@ -8,31 +9,50 @@ import {
   RowComponent,
   TextComponent,
 } from '../../components';
-import {
-  ChevronBack,
-  CloseIcon,
-  MessageAddIcon,
-  SearchProfileIcon,
-} from '../../assets/icons';
+import {MessageAddIcon, SearchProfileIcon} from '../../assets/icons';
 import {colors} from '../../constants/colors';
 import {NavigationProp} from '@react-navigation/native';
 import {fontFamilies} from '../../constants/fontFamilies';
-import ActionSheet, {ActionSheetRef} from 'react-native-actions-sheet';
-import {apiGetDoctors} from '../../apis';
-import {IDoctors} from '../../utils/interface';
+import {apiGetConversations} from '../../apis';
+import useUpdateStatusLoading from '../../hooks/useUpdateStatusLoading';
+import {MainStackParamList} from '../../navigators/MainNavigator';
+import {useSelector} from 'react-redux';
+import {RootState} from '../../redux/store';
+import moment from 'moment';
 
 interface Props {
-  navigation: NavigationProp<any, any>;
+  navigation: NavigationProp<MainStackParamList, 'ChatBotScreen'>;
 }
 
-interface ICreateMessage {
-  actionSheetRef: RefObject<ActionSheetRef>;
+interface IConversations {
+  _id: string;
+  participants: {
+    _id: string;
+    fullName: string;
+    email: string;
+    profilePic: string;
+  }[];
+  updatedAt: string;
 }
 
 const ChatScreen = ({navigation}: Props) => {
   const [search, setSearch] = useState('');
-  const [data, setData] = useState([]);
-  const actionSheetRef = useRef<ActionSheetRef>(null);
+  const [data, setData] = useState<IConversations[]>([]);
+  const {updateStatusLoading} = useUpdateStatusLoading();
+  const {current} = useSelector((state: RootState) => state.user);
+
+  const getConversations = async () => {
+    updateStatusLoading(true);
+    const response: any = await apiGetConversations();
+    updateStatusLoading(false);
+    if (response.success) {
+      setData(response.data);
+    }
+  };
+
+  useEffect(() => {
+    getConversations();
+  }, []);
 
   return (
     <View style={[globalStyles.container]}>
@@ -42,20 +62,12 @@ const ChatScreen = ({navigation}: Props) => {
         size={18}
         font={fontFamilies['inter-semibold']}
         leftButton={
-          <TouchableOpacity
-            style={[
-              globalStyles.center,
-              {
-                width: 40,
-                height: 40,
-                borderWidth: 1,
-                borderRadius: 10,
-                borderColor: colors['text-30'],
-              },
-            ]}
-            onPress={() => navigation.goBack()}>
-            <ChevronBack />
-          </TouchableOpacity>
+          <View
+            style={{
+              width: 40,
+              height: 40,
+            }}
+          />
         }
         rightButton={
           <TouchableOpacity
@@ -69,7 +81,7 @@ const ChatScreen = ({navigation}: Props) => {
                 borderColor: colors['text-30'],
               },
             ]}
-            onPress={() => actionSheetRef.current?.show()}>
+            onPress={() => navigation.navigate('ChatBotScreen')}>
             <MessageAddIcon />
           </TouchableOpacity>
         }
@@ -92,9 +104,56 @@ const ChatScreen = ({navigation}: Props) => {
         />
       </View>
       {data.length > 0 ? (
-        <View>
-          <TextComponent text="x" />
-        </View>
+        <FlatList
+          contentContainerStyle={{
+            gap: 12,
+          }}
+          data={data}
+          renderItem={({item}) => {
+            const senderObj = item.participants.find(
+              el => el._id !== current?._id,
+            );
+            return (
+              <TouchableOpacity
+                onPress={() =>
+                  navigation.navigate('ChatUserScreen', {
+                    userId: senderObj?._id ?? '',
+                    name: senderObj?.fullName ?? '',
+                  })
+                }
+                style={{
+                  marginHorizontal: 24,
+                  borderWidth: 1,
+                  padding: 12,
+                  borderColor: colors['grey-150'],
+                  borderRadius: 12,
+                }}>
+                <RowComponent gap={12}>
+                  <Image
+                    source={{uri: senderObj?.profilePic}}
+                    style={{
+                      width: 50,
+                      height: 50,
+                      borderRadius: 100,
+                    }}
+                  />
+                  <TextComponent
+                    text={senderObj?.fullName ?? ''}
+                    size={14}
+                    title
+                    flex={1}
+                    color={colors['text-100']}
+                  />
+                  <TextComponent
+                    text={moment(item.updatedAt).format('hh:mm A') ?? ''}
+                    size={10}
+                    color={colors['text-body']}
+                  />
+                </RowComponent>
+              </TouchableOpacity>
+            );
+          }}
+        />
       ) : (
         <View style={[globalStyles.center, {flex: 1, padding: 24}]}>
           <TextComponent
@@ -104,113 +163,8 @@ const ChatScreen = ({navigation}: Props) => {
           />
         </View>
       )}
-      <ActionSheet ref={actionSheetRef}>
-        <CreateNewMessage actionSheetRef={actionSheetRef} />
-      </ActionSheet>
     </View>
   );
 };
 
-const CreateNewMessage = ({actionSheetRef}: ICreateMessage) => {
-  const [searchDoctor, setSearchDoctor] = useState('');
-  const [dataDoctor, setDataDoctor] = useState<IDoctors[]>([]);
-
-  useEffect(() => {
-    const getDoctors = async () => {
-      const response: any = await apiGetDoctors({
-        limit: 10,
-        page: 0,
-        roleId: 2,
-      });
-      if (response.success) {
-        setDataDoctor(response.data);
-      }
-    };
-
-    getDoctors();
-  }, []);
-
-  return (
-    <View
-      style={{
-        backgroundColor: colors['background-white'],
-        borderTopRightRadius: 24,
-        borderTopLeftRadius: 24,
-      }}>
-      <HeaderTitle
-        text="Create New Message"
-        color={colors['text-100']}
-        size={18}
-        font={fontFamilies['inter-semibold']}
-        leftButton={
-          <TouchableOpacity
-            style={[
-              globalStyles.center,
-              {
-                width: 40,
-                height: 40,
-              },
-            ]}
-            onPress={() => actionSheetRef.current?.hide()}>
-            <CloseIcon />
-          </TouchableOpacity>
-        }
-        rightButton={
-          <View
-            style={{
-              width: 40,
-              height: 40,
-            }}
-          />
-        }
-      />
-      <View
-        style={{
-          padding: 24,
-        }}>
-        <InputComponent
-          value={searchDoctor}
-          onChange={setSearchDoctor}
-          placeholder="Search Doctor"
-          iconLeft={<SearchProfileIcon />}
-          styles={{
-            backgroundColor: colors['secondary-text'],
-            borderRadius: 100,
-            borderWidth: 0,
-          }}
-          allowClear
-        />
-      </View>
-      <FlatList
-        showsVerticalScrollIndicator={false}
-        style={{paddingHorizontal: 24, height: 400}}
-        contentContainerStyle={{gap: 8}}
-        data={dataDoctor}
-        renderItem={({item}) => (
-          <TouchableOpacity
-            style={{
-              padding: 10,
-              paddingBottom: 16,
-              borderBottomWidth: 1,
-              borderColor: colors['text-30'],
-            }}>
-            <RowComponent gap={12}>
-              <Image
-                source={{uri: item.avatar}}
-                style={{width: 54, height: 54, borderRadius: 100}}
-              />
-              <TextComponent
-                text={item.fullName}
-                color={colors['text-100']}
-                title
-                size={14}
-                flex={1}
-              />
-            </RowComponent>
-          </TouchableOpacity>
-        )}
-      />
-    </View>
-  );
-};
 export default ChatScreen;

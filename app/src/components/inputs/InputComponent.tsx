@@ -28,6 +28,7 @@ interface Props {
   numberOfLine?: number;
   styles?: StyleProp<ViewStyle>;
   error?: string;
+  isFull?: boolean;
 }
 
 const InputComponent = (props: Props) => {
@@ -44,11 +45,16 @@ const InputComponent = (props: Props) => {
     numberOfLine,
     styles,
     error,
+    isFull = true,
   } = props;
   const [isShowPass, setIsShowPass] = useState(isPassword ?? false);
 
   return (
-    <View style={[globalStyles['w-100'], {gap: error ? 5 : 0}]}>
+    <View
+      style={[
+        isFull && globalStyles['w-100'],
+        {gap: error ? 5 : 0, flex: isFull ? 0 : 1},
+      ]}>
       <View
         style={[
           globalStyles.input,

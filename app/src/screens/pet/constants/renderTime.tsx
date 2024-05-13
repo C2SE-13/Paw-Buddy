@@ -62,6 +62,12 @@ export const renderTime = (
           : year === +moment().format('YYYY') &&
             month === +moment().format('M') &&
             date === +moment().format('DD') &&
+            buoi === 'AM' &&
+            thoiGianHienTai.getHours() <= +moment().format('h')
+          ? true
+          : year === +moment().format('YYYY') &&
+            month === +moment().format('M') &&
+            date === +moment().format('DD') &&
             buoi === 'PM' &&
             thoiGianHienTai.getHours() <= +moment().format('h') + 12
           ? true

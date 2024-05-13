@@ -23,6 +23,7 @@ interface Props {
   textStyle?: StyleProp<TextStyle>;
   textFont?: string;
   onPress: () => void;
+  isFull?: boolean;
 }
 
 const ButtonComponent = (props: Props) => {
@@ -37,6 +38,7 @@ const ButtonComponent = (props: Props) => {
     textStyle,
     size,
     radius,
+    isFull = true,
   } = props;
 
   const buttonDefault: StyleProp<TextStyle> =
@@ -88,7 +90,13 @@ const ButtonComponent = (props: Props) => {
       : {color: colors['primary-100']};
 
   return (
-    <View style={[globalStyles['w-100']]}>
+    <View
+      style={[
+        isFull && globalStyles['w-100'],
+        {
+          flex: isFull ? 0 : 1,
+        },
+      ]}>
       <TouchableOpacity
         disabled={type === 'disabled' ? true : false}
         onPress={onPress}

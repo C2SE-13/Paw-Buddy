@@ -142,40 +142,39 @@ const DateService = ({
   };
 
   useEffect(() => {
-    startTime.time.length > 0
-      ? setEndTime({
-          time: `${
-            Number(startTime.time.toString().split(':')[0]) +
-              Math.floor(totalTimeOfService / 60) <
-            10
-              ? `0${
-                  Number(startTime.time.toString().split(':')[0]) +
-                  Math.floor(totalTimeOfService / 60)
-                }`
-              : Number(startTime.time.toString().split(':')[0]) +
-                Math.floor(totalTimeOfService / 60)
-          }:${
-            Number(startTime.time.toString().split(':')[1]) +
-              (totalTimeOfService % 60) <
-            10
-              ? `0${
-                  Number(startTime.time.toString().split(':')[1]) +
-                  (totalTimeOfService % 60)
-                }`
-              : Number(startTime.time.toString().split(':')[1]) +
-                (totalTimeOfService % 60)
-          }`,
-          buoi:
-            Number(startTime.time.toString().split(':')[0]) +
-              Math.floor(totalTimeOfService / 60) >
-            12
-              ? 'PM'
-              : 'AM',
-        })
-      : setEndTime({
-          time: '00:00',
-          buoi: '',
-        });
+    if (startTime.time.length > 0) {
+      const timeArray = startTime.time.toString().split(':');
+      const startHours = parseInt(timeArray[0], 10);
+      const startMinutes = parseInt(timeArray[1], 10);
+      const totalStartMinutes = startHours * 60 + startMinutes;
+
+      const totalMinutes = totalStartMinutes + totalTimeOfService;
+
+      const newHours = Math.floor(totalMinutes / 60);
+      const newMinutes = totalMinutes % 60;
+
+      const newTime =
+        (newHours < 10 ? '0' : '') +
+        newHours +
+        ':' +
+        (newMinutes < 10 ? '0' : '') +
+        newMinutes;
+
+      setEndTime({
+        time: newTime,
+        buoi:
+          Number(startTime.time.toString().split(':')[0]) +
+            Math.floor(totalTimeOfService / 60) >
+          12
+            ? 'PM'
+            : 'AM',
+      });
+    } else {
+      setEndTime({
+        time: '00:00',
+        buoi: '',
+      });
+    }
   }, [setEndTime, startTime, totalTimeOfService]);
 
   return (

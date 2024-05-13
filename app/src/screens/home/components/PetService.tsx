@@ -43,7 +43,11 @@ const PetService = ({useSelector}: {useSelector: any}) => {
     <View style={{gap: 16}}>
       <Category
         text="Services"
-        onPress={() => navigation.navigate('PetServicesScreen')}
+        onPress={() =>
+          navigation.navigate('PetServicesScreen', {
+            doctorId: 0,
+          })
+        }
       />
       <RowComponent alignItems="flex-start" gap={16} justify="space-between">
         {getRandomElements(serviceCategories, 4).map(

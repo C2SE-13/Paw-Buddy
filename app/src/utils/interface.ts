@@ -19,6 +19,7 @@ export interface IUser {
   roleData: any[];
   roleId: number;
   updatedAt: Date;
+  _id: string;
 }
 
 export interface IPet {

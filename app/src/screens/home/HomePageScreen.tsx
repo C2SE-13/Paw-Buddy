@@ -9,9 +9,11 @@ import Recommendation from './components/Recommendation';
 import withBaseComponent from '../../hocs/withBaseComponent';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {MainStackParamList} from '../../navigators/MainNavigator';
+import {RouteProp} from '@react-navigation/native';
 
 interface Props {
   navigation: NativeStackNavigationProp<MainStackParamList, any>;
+  route: RouteProp<any>;
 }
 
 const HomePageScreen = ({navigation}: Props) => {
