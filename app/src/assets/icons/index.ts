@@ -41,6 +41,7 @@ import HidenIcon from './hiden.svg';
 import LocationIcon from './location.svg';
 import MessageAddIcon from './message-add.svg';
 import RefreshIcon from './refresh.svg';
+import SendIcon from './send-svgrepo-com.svg';
 
 export {
   AddIcon,
@@ -86,4 +87,5 @@ export {
   LocationIcon,
   MessageAddIcon,
   RefreshIcon,
+  SendIcon,
 };

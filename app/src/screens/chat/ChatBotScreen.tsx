@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react-native/no-inline-styles */
 import {Dimensions, FlatList, TouchableOpacity, View} from 'react-native';
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {globalStyles} from '../../styles/globalStyles';
 import {
   HeaderTitle,
@@ -11,7 +11,7 @@ import {
 } from '../../components';
 import {colors} from '../../constants/colors';
 import {shadowStyle, shadowStyle2} from '../../styles/boxShadow';
-import {ChevronBack} from '../../assets/icons';
+import {ChevronBack, SendIcon} from '../../assets/icons';
 import {NavigationProp} from '@react-navigation/native';
 import {API_URL_2} from '../../config/env';
 import axios from 'axios';
@@ -233,10 +233,10 @@ const ChatBotScreen = ({navigation}: Props) => {
               backgroundColor: colors['primary-100'],
               width: 58,
               height: 58,
-              borderRadius: 100,
+              borderRadius: 16,
             },
           ]}>
-          <TextComponent text="Send" color={colors['text-10']} />
+          <SendIcon />
         </TouchableOpacity>
       </RowComponent>
     </View>

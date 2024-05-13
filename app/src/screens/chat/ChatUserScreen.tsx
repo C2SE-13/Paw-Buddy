@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react-native/no-inline-styles */
 import {View, TouchableOpacity, Dimensions, FlatList} from 'react-native';
 import React, {useEffect, useState} from 'react';
@@ -12,7 +13,7 @@ import {
   TextComponent,
 } from '../../components';
 import {globalStyles} from '../../styles/globalStyles';
-import {ChevronBack} from '../../assets/icons';
+import {ChevronBack, SendIcon} from '../../assets/icons';
 import Toast from 'react-native-toast-message';
 import {toastConfig} from '../../utils/toast';
 import {apiGetDetailMessages, apiSendMessage} from '../../apis';
@@ -81,7 +82,6 @@ const ChatUserScreen = ({navigation, route}: Props) => {
   useEffect(() => {
     if (socket !== null) {
       socket?.on('newMessage', newMessage => {
-        console.log(newMessage);
         if (newMessage) {
           getMessageChat(userId);
         }
@@ -243,10 +243,10 @@ const ChatUserScreen = ({navigation, route}: Props) => {
               backgroundColor: colors['primary-100'],
               width: 58,
               height: 58,
-              borderRadius: 100,
+              borderRadius: 16,
             },
           ]}>
-          <TextComponent text="Send" color={colors['text-10']} />
+          <SendIcon />
         </TouchableOpacity>
       </RowComponent>
     </View>
