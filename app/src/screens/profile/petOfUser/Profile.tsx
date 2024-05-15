@@ -36,10 +36,9 @@ import withBaseComponent from '../../../hocs/withBaseComponent';
 import {NavigationProp} from '@react-navigation/native';
 import {MainStackParamList} from '../../../navigators/MainNavigator';
 import {useSelector} from 'react-redux';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 interface IPageProps {
-  navigation: NavigationProp<MainStackParamList, 'HealthCardScreen'>;
+  navigation: NavigationProp<MainStackParamList, 'SharingProfilesScreen'>;
   petData: IPet[];
   dispatch: AppDispatch;
 }
@@ -322,11 +321,7 @@ const Profile = ({navigation, dispatch, petData}: IPageProps) => {
         <RowComponent gap={16}>
           <CardVertical
             styles={[{justifyContent: 'space-between'}]}
-            onPress={() =>
-              navigation.navigate('PetInformationScreen', {
-                petId: petActive?.id ?? 0,
-              })
-            }>
+            onPress={() => navigation.navigate('SharingProfilesScreen')}>
             <View>
               <TextComponent
                 title
