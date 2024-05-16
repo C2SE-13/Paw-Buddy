@@ -118,7 +118,7 @@ const Dates = ({getValues, nameStep, setstatusButton, setValue}: Props) => {
   );
 };
 
-const ButtonLocal = ({icon, name, value, onPress}: buttonLocalProps) => {
+export const ButtonLocal = ({icon, name, value, onPress}: buttonLocalProps) => {
   return (
     <TouchableOpacity
       onPress={onPress}

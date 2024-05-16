@@ -90,7 +90,7 @@ const ChatBotScreen = ({navigation}: Props) => {
   return (
     <View style={[globalStyles.container]}>
       <HeaderTitle
-        text="ChatBox"
+        text="ChatBot"
         color={colors['text-100']}
         styles={[
           shadowStyle,

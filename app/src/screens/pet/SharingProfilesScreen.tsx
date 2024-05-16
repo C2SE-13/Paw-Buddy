@@ -58,6 +58,7 @@ const SharingProfilesScreen = ({navigation}: IProps) => {
           style={{
             borderTopWidth: 1,
             borderColor: colors['grey-150'],
+            marginHorizontal: 11,
           }}
           showsVerticalScrollIndicator={false}
           data={current?.petData}
@@ -73,8 +74,8 @@ const SharingProfilesScreen = ({navigation}: IProps) => {
                 shadowStyle2,
                 {
                   marginVertical: 10,
-                  marginHorizontal: 12,
                   paddingVertical: 12,
+                  marginHorizontal: 1,
                   paddingHorizontal: 14,
                   backgroundColor: colors['background-white'],
                   borderRadius: 14,
