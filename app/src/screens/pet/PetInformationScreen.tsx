@@ -1,6 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 /* eslint-disable react-hooks/exhaustive-deps */
-import {View, Text, TouchableOpacity, ScrollView, Image} from 'react-native';
+import {View, TouchableOpacity, ScrollView, Image} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {NavigationProp, RouteProp} from '@react-navigation/native';
 import {MainStackParamList} from '../../navigators/MainNavigator';
@@ -15,7 +15,7 @@ import {
   SpaceComponent,
   TextComponent,
 } from '../../components';
-import {BackIcon, BrithdayIcon} from '../../assets/icons';
+import {BackIcon, BrithdayIcon, ScanQRIcon} from '../../assets/icons';
 import {colors} from '../../constants/colors';
 import {ButtonLocal} from './informationPet/Dates';
 
@@ -57,12 +57,24 @@ const PetInformationScreen = ({navigation, route}: IProps) => {
           </TouchableOpacity>
         }
         rightButton={
-          <View
-            style={{
-              width: 38,
-              height: 38,
-            }}
-          />
+          <TouchableOpacity
+            onPress={() =>
+              navigation.navigate('QRScreen', {
+                petId: data?.id ?? 0,
+              })
+            }
+            style={[
+              globalStyles.center,
+              {
+                width: 38,
+                height: 38,
+                borderWidth: 1,
+                borderRadius: 14,
+                borderColor: colors['grey-150'],
+              },
+            ]}>
+            <ScanQRIcon />
+          </TouchableOpacity>
         }
       />
       <ScrollView

@@ -13,6 +13,7 @@ import {
   HealthCardScreen,
   ChatUserScreen,
   SharingProfilesScreen,
+  QRScreen,
 } from '../screens';
 import {IPetServies} from '../utils/interface';
 
@@ -52,6 +53,9 @@ export type MainStackParamList = {
     name: string;
   };
   SharingProfilesScreen: undefined;
+  QRScreen: {
+    petId: number;
+  };
 };
 
 const MainNavigator = () => {
@@ -86,6 +90,7 @@ const MainNavigator = () => {
       />
       <Stack.Screen name="ChatBotScreen" component={ChatBotScreen} />
       <Stack.Screen name="ChatUserScreen" component={ChatUserScreen} />
+      <Stack.Screen name="QRScreen" component={QRScreen} />
     </Stack.Navigator>
   );
 };

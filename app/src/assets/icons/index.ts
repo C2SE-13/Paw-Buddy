@@ -44,6 +44,7 @@ import RefreshIcon from './refresh.svg';
 import SendIcon from './send-svgrepo-com.svg';
 import MaleIcon from './male.svg';
 import FemaleIcon from './female.svg';
+import ScanQRIcon from './scan-qr-code.svg';
 
 export {
   AddIcon,
@@ -92,4 +93,5 @@ export {
   SendIcon,
   MaleIcon,
   FemaleIcon,
+  ScanQRIcon,
 };
