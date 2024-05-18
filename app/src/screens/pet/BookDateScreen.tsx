@@ -67,6 +67,11 @@ export interface TimeBooking {
   buoi: string;
 }
 
+export interface IBusyOfDoc {
+  startTime: string;
+  date: string;
+  endTime: string;
+}
 const BookDateScreen = ({route, navigation}: Props) => {
   const {chosenServices, idService, nameService, doctorId} = route.params;
   const [dataService, setDataService] = useState<IPetServies[]>([]);
@@ -77,7 +82,13 @@ const BookDateScreen = ({route, navigation}: Props) => {
   );
   const [dataDocotr, setDataDocotr] = useState<IDoctors | null>(null);
   const [bookingOfDoctor, setBookingOfDoctor] = useState<
-    {service_id: number; start_time: string; date: string}[]
+    {
+      service_id: number[];
+      start_time: string;
+      date: string;
+      end_time: string;
+      status: string;
+    }[]
   >([]);
   const [totalTimeOfService, setTotalTimeOfService] = useState(0);
   const [startTime, setStartTime] = useState<TimeBooking>({
@@ -91,6 +102,7 @@ const BookDateScreen = ({route, navigation}: Props) => {
     buoi: '',
   });
   const {updateStatusLoading} = useUpdateStatusLoading();
+  const [busyOfDoc, setBusyOfDoc] = useState<IBusyOfDoc[]>([]);
 
   useEffect(() => {
     chosenServices.length > 0 && setChosen(chosenServices);
@@ -136,26 +148,31 @@ const BookDateScreen = ({route, navigation}: Props) => {
     const check = bookingOfDoctor.length > 0;
 
     if (check) {
-      const object =
-        bookingOfDoctor
-          .filter(item => item.service_id === idService) // sai
-          .filter(item => {
-            const checkYear =
-              moment(bookDate.toString()).format('YYYY') ===
-              moment(item.date).format('YYYY');
-            const checkMonth =
-              moment(bookDate.toString()).format('MMMM') ===
-              moment(item.date).format('MMMM');
-            const checkDay =
-              moment(bookDate.toString()).format('DD') ===
-              moment(item.date).format('DD');
-            if (checkYear && checkMonth && checkDay) {
-              return item;
-            }
-          })
-          .map(item => item.start_time) || [];
+      const object = bookingOfDoctor
+        .filter(
+          item => item.status === 'pending' || item.status === 'confirmed',
+        )
+        .filter(item => {
+          const checkYear =
+            moment(bookDate.toString()).format('YYYY') ===
+            moment(item.date).format('YYYY');
+          const checkMonth =
+            moment(bookDate.toString()).format('MMMM') ===
+            moment(item.date).format('MMMM');
+          const checkDay =
+            moment(bookDate.toString()).format('DD') ===
+            moment(item.date).format('DD');
+          if (checkYear && checkMonth && checkDay) {
+            return item;
+          }
+        })
+        .map(item => ({
+          startTime: item.start_time,
+          endTime: item.end_time,
+          date: item.date,
+        }));
 
-      // -----------------chua xong
+      setBusyOfDoc(object);
     }
   }, [bookDate, bookingOfDoctor, idService]);
 
@@ -300,6 +317,7 @@ const BookDateScreen = ({route, navigation}: Props) => {
               setStartTime={setStartTime}
               endTime={endTime}
               setEndTime={setEndTime}
+              busyOfDoc={busyOfDoc}
             />
           </Fragment>
         )}

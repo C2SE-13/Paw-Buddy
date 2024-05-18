@@ -9,6 +9,8 @@ import {RootState} from '../../redux/store';
 import {globalStyles} from '../../styles/globalStyles';
 import {AlertIcon} from '../../assets/icons';
 import {colors} from '../../constants/colors';
+import {NavigationProp, useNavigation} from '@react-navigation/native';
+import {MainStackParamList} from '../../navigators/MainNavigator';
 
 interface Props {
   useSelector: TypedUseSelectorHook<RootState>;
@@ -25,11 +27,12 @@ const HeaderPet = ({useSelector}: Props) => {
     name: '',
     id: 0,
   });
+  const navigation = useNavigation<NavigationProp<MainStackParamList>>();
 
   useEffect(() => {
     petActive &&
       setDataPet({
-        name: petActive.name_pet,
+        name: petActive.name_pet ?? '',
         id: petActive.id,
       });
   }, [petActive]);
@@ -56,6 +59,7 @@ const HeaderPet = ({useSelector}: Props) => {
         />
       </View>
       <TouchableOpacity
+        onPress={() => navigation.navigate('NotificationScreen')}
         style={[
           globalStyles.center,
           {

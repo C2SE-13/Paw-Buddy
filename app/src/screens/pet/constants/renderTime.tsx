@@ -1,18 +1,11 @@
 import moment from 'moment';
 
-export const renderTime = (
-  year: number,
-  month: number,
-  date: number,
-  hour: number,
-  minute: number,
-  thoiGianUocTinh: number,
-) => {
+export const renderTime = (year: number, month: number, date: number) => {
   let time = [];
   let openTime: number = Number(process.env.ENV_Open_Time) ?? 8;
   let closeTime: number = Number(process.env.ENV_Close_Time) ?? 18;
   let phut = 0;
-  let thoiGianBatDau = new Date(year, month, date, hour, minute);
+  let thoiGianBatDau = new Date(year, month, date, 0, 0);
 
   while (
     openTime < closeTime ||
@@ -31,14 +24,6 @@ export const renderTime = (
 
     let buoi = openTime < 12 ? 'AM' : 'PM';
     let busy = false;
-
-    if (
-      thoiGianHienTai >= thoiGianBatDau &&
-      thoiGianHienTai <
-        new Date(thoiGianBatDau.getTime() + thoiGianUocTinh * 60000)
-    ) {
-      busy = true;
-    }
 
     time.push({
       time: gioFormatted + ':' + phutFormatted,
@@ -83,3 +68,31 @@ export const renderTime = (
 
   return time;
 };
+
+export const checkBusy = (timeArr: any, busyArr: any) => {
+  let time = [...timeArr];
+  let busy = [...busyArr];
+
+  busy.forEach(busyPeriod => {
+    const startTime = convertToDate(busyPeriod.startTime);
+    const endTime = convertToDate(busyPeriod.endTime);
+
+    time.forEach(timeSlot => {
+      const timeNew = convertToDate(timeSlot.time);
+      if (timeNew >= startTime && timeNew <= endTime) {
+        timeSlot.busy = true;
+      }
+    });
+  });
+
+  return time;
+};
+
+function convertToDate(timeStr: string) {
+  const [hours, minutes] = timeStr.split(':');
+  const date = new Date();
+  date.setHours(parseInt(hours, 10));
+  date.setMinutes(parseInt(minutes, 10));
+  date.setSeconds(0);
+  return date;
+}

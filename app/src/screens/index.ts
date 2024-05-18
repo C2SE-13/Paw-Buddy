@@ -1,6 +1,7 @@
 import SignInScreen from './auth/SignInScreen';
 import SignUpScreen from './auth/SignUpScreen';
 import HomePageScreen from './home/HomePageScreen';
+import NotificationScreen from './home/NotificationScreen';
 import ProfileScreen from './profile/ProfileScreen';
 import AccountScreen from './profile/AccountScreen';
 import EditProfileScreen from './profile/EditProfileScreen';

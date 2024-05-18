@@ -7,8 +7,8 @@ import {RenderCalendar, months, weeks} from '../constants/renderCalendar';
 import {globalStyles} from '../../../styles/globalStyles';
 import {fontFamilies} from '../../../constants/fontFamilies';
 import moment from 'moment';
-import {renderTime} from '../constants/renderTime';
-import {TimeBooking} from '../BookDateScreen';
+import {renderTime, checkBusy} from '../constants/renderTime';
+import {IBusyOfDoc, TimeBooking} from '../BookDateScreen';
 
 interface Props {
   date: SetStateAction<string>;
@@ -18,6 +18,7 @@ interface Props {
   setStartTime: Dispatch<SetStateAction<TimeBooking>>;
   endTime: TimeBooking;
   setEndTime: Dispatch<SetStateAction<TimeBooking>>;
+  busyOfDoc: IBusyOfDoc[];
 }
 
 interface Time {
@@ -35,6 +36,7 @@ const DateService = ({
   setStartTime,
   endTime,
   setEndTime,
+  busyOfDoc,
 }: Props) => {
   const [monthIndex, setmonthIndex] = useState(
     months.indexOf(moment(date.toString()).format('MMMM')),
@@ -63,16 +65,9 @@ const DateService = ({
 
   useEffect(() => {
     setTime(
-      renderTime(
-        currentYear,
-        monthIndex + 1,
-        currentDay,
-        0,
-        0,
-        totalTimeOfService,
-      ),
+      checkBusy(renderTime(currentYear, monthIndex + 1, currentDay), busyOfDoc),
     );
-  }, [currentDay, currentYear, monthIndex, startTime, totalTimeOfService]);
+  }, [currentDay, currentYear, monthIndex, startTime, busyOfDoc]);
 
   const handlePrev = () => {
     const value: number = +moment(date.toString()).format('M');

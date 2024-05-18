@@ -16,6 +16,7 @@ import {
   QRScreen,
 } from '../screens';
 import {IPetServies} from '../utils/interface';
+import NotificationScreen from '../screens/home/NotificationScreen';
 
 export type MainStackParamList = {
   PetServicesScreen: {
@@ -56,6 +57,7 @@ export type MainStackParamList = {
   QRScreen: {
     petId: number;
   };
+  NotificationScreen: undefined;
 };
 
 const MainNavigator = () => {
@@ -91,6 +93,7 @@ const MainNavigator = () => {
       <Stack.Screen name="ChatBotScreen" component={ChatBotScreen} />
       <Stack.Screen name="ChatUserScreen" component={ChatUserScreen} />
       <Stack.Screen name="QRScreen" component={QRScreen} />
+      <Stack.Screen name="NotificationScreen" component={NotificationScreen} />
     </Stack.Navigator>
   );
 };
