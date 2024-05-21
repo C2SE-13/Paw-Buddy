@@ -184,7 +184,17 @@ const BookDateScreen = ({route, navigation}: Props) => {
       const newArr = chosen.filter(i => i.id !== item.id);
       setChosen(newArr);
     } else {
-      setChosen(prev => [...prev, item]);
+      const checkIsVancine = item.name_service?.includes('Vaccine');
+
+      if (checkIsVancine) {
+        const newArr = chosen.filter(
+          i => !i.name_service?.startsWith('Vaccine'),
+        );
+
+        setChosen([...newArr, item]);
+      } else {
+        setChosen(prev => [...prev, item]);
+      }
     }
   };
 

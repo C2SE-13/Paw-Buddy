@@ -61,7 +61,17 @@ const DetailServiceScreen = ({route, navigation}: Props) => {
       const newArr = chosenServices.filter(i => i !== item);
       setchosenServices(newArr);
     } else {
-      setchosenServices(prev => [...prev, item]);
+      const checkIsVancine = item.name_service?.includes('Vaccine');
+
+      if (checkIsVancine) {
+        const newArr = chosenServices.filter(
+          i => !i.name_service?.startsWith('Vaccine'),
+        );
+
+        setchosenServices([...newArr, item]);
+      } else {
+        setchosenServices(prev => [...prev, item]);
+      }
     }
 
     // setchosenServices(item);

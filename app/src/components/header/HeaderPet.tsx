@@ -23,7 +23,9 @@ interface IPet {
 }
 
 const HeaderPet = ({useSelector}: Props) => {
-  const {petActive, notificationData} = useSelector(state => state.user);
+  const {petActive, notificationData} = useSelector(
+    (state: RootState) => state.user,
+  );
   const [dataPet, setDataPet] = useState<IPet>({
     name: '',
     id: 0,
