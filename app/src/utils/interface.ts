@@ -71,3 +71,10 @@ export interface IRoles {
   id: number;
   name_role: string;
 }
+
+export interface INotification {
+  _id: string;
+  content: string;
+  createdAt: string;
+  is_read: boolean;
+}

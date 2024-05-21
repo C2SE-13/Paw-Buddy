@@ -8,6 +8,8 @@ export interface AppState {
   serviceCategories: IServieCategories[];
   usersOnline: string[];
   socket: Socket | null;
+  newNotification: boolean;
+  messNtofication: string;
 }
 
 const initialState: AppState = {
@@ -15,6 +17,8 @@ const initialState: AppState = {
   serviceCategories: [],
   usersOnline: [],
   socket: null,
+  newNotification: false,
+  messNtofication: '',
 };
 
 export const appSlice = createSlice({
@@ -30,6 +34,10 @@ export const appSlice = createSlice({
     updateSocket: (state, action) => {
       state.socket = action.payload;
     },
+    updateNotification: (state, action) => {
+      state.newNotification = action.payload.state;
+      state.messNtofication = action.payload.mess;
+    },
   },
   extraReducers: builder => {
     builder.addCase(actions.getPetServices.fulfilled, (state, action) => {
@@ -43,7 +51,11 @@ export const appSlice = createSlice({
 });
 
 // Action creators are generated for each case reducer function;
-export const {updateLoading, updateUsersOnline, updateSocket} =
-  appSlice.actions;
+export const {
+  updateLoading,
+  updateUsersOnline,
+  updateSocket,
+  updateNotification,
+} = appSlice.actions;
 
 export default appSlice.reducer;

@@ -1,15 +1,29 @@
-import moment from 'moment';
+const moment = require('moment');
 
-export const renderTime = (year: number, month: number, date: number) => {
+interface TimeSlot {
+  time: string;
+  buoi: string;
+  busy: boolean;
+  old: boolean;
+}
+
+export const renderTime = (
+  year: number,
+  month: number,
+  date: number,
+): TimeSlot[] => {
   let time = [];
-  let openTime: number = Number(process.env.ENV_Open_Time) ?? 8;
-  let closeTime: number = Number(process.env.ENV_Close_Time) ?? 18;
+  let openTime = Number(process.env.ENV_Open_Time) || 8;
+  let closeTime = Number(process.env.ENV_Close_Time) || 18;
   let phut = 0;
-  let thoiGianBatDau = new Date(year, month, date, 0, 0);
+  let thoiGianBatDau = new Date(year, month - 1, date, 0, 0); // month - 1 vì tháng trong JS bắt đầu từ 0
+
+  // Lấy thời gian hiện tại một lần để sử dụng nhiều lần
+  const currentMoment = moment();
 
   while (
     openTime < closeTime ||
-    (openTime === (Number(process.env.ENV_Close_Time) ?? 18) && phut === 0)
+    (openTime === (Number(process.env.ENV_Close_Time) || 18) && phut === 0)
   ) {
     let gioFormatted = openTime < 10 ? '0' + openTime : openTime;
     let phutFormatted = phut < 10 ? '0' + phut : phut;
@@ -25,38 +39,17 @@ export const renderTime = (year: number, month: number, date: number) => {
     let buoi = openTime < 12 ? 'AM' : 'PM';
     let busy = false;
 
+    // Tạo moment cho thời gian hiện tại trong vòng lặp
+    const loopMoment = moment(thoiGianHienTai);
+
+    // Điều kiện để xác định thời gian có cũ không
+    let old = loopMoment.isBefore(currentMoment);
+
     time.push({
       time: gioFormatted + ':' + phutFormatted,
       buoi,
       busy,
-      old:
-        year < +moment().format('YYYY')
-          ? true
-          : month < +moment().format('M') && year === +moment().format('YYYY')
-          ? true
-          : year === +moment().format('YYYY') &&
-            month === +moment().format('M') &&
-            date < +moment().format('DD')
-          ? true
-          : year === +moment().format('YYYY') &&
-            month === +moment().format('M') &&
-            date === +moment().format('DD') &&
-            buoi === 'AM' &&
-            buoi !== moment().format('A')
-          ? true
-          : year === +moment().format('YYYY') &&
-            month === +moment().format('M') &&
-            date === +moment().format('DD') &&
-            buoi === 'AM' &&
-            thoiGianHienTai.getHours() <= +moment().format('h')
-          ? true
-          : year === +moment().format('YYYY') &&
-            month === +moment().format('M') &&
-            date === +moment().format('DD') &&
-            buoi === 'PM' &&
-            thoiGianHienTai.getHours() <= +moment().format('h') + 12
-          ? true
-          : false,
+      old,
     });
 
     phut += 30;

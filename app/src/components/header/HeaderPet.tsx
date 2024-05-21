@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-shadow */
 /* eslint-disable react-native/no-inline-styles */
 import {TouchableOpacity, View} from 'react-native';
 import React, {useEffect, useState} from 'react';
@@ -22,12 +23,13 @@ interface IPet {
 }
 
 const HeaderPet = ({useSelector}: Props) => {
-  const {petActive} = useSelector(state => state.user);
+  const {petActive, notificationData} = useSelector(state => state.user);
   const [dataPet, setDataPet] = useState<IPet>({
     name: '',
     id: 0,
   });
   const navigation = useNavigation<NavigationProp<MainStackParamList>>();
+  const [checkNewNotification, setCheckNewNotification] = useState(false);
 
   useEffect(() => {
     petActive &&
@@ -36,6 +38,20 @@ const HeaderPet = ({useSelector}: Props) => {
         id: petActive.id,
       });
   }, [petActive]);
+
+  useEffect(() => {
+    const checkNewNotification = () => {
+      const check = notificationData.some(el => !el.is_read);
+
+      if (check) {
+        setCheckNewNotification(true);
+      } else {
+        setCheckNewNotification(false);
+      }
+    };
+
+    notificationData.length > 0 && checkNewNotification();
+  }, [notificationData]);
 
   return (
     <RowComponent
@@ -71,7 +87,7 @@ const HeaderPet = ({useSelector}: Props) => {
           },
         ]}>
         <AlertIcon />
-        {false && (
+        {checkNewNotification && (
           <View
             style={{
               position: 'absolute',

@@ -52,7 +52,7 @@ const AccountScreen = ({navigation}: IPageProps) => {
         }
         rightButton={
           <TouchableOpacity
-            onPress={() => console.log(1)}
+            onPress={() => console.log('')}
             style={styles.titleBtn}>
             <Image
               style={{
