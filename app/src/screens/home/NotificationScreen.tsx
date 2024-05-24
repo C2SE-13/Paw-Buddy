@@ -145,7 +145,7 @@ const NotificationScreen = ({navigation, dispatch}: IProps) => {
             />
             <View style={[{gap: 20, alignItems: 'flex-end'}]}>
               <TextComponent text={moment(item.createdAt).fromNow()} />
-              {!watched.status && (
+              {/* {!watched.status && (
                 <View
                   style={{
                     width: 8,
@@ -154,7 +154,7 @@ const NotificationScreen = ({navigation, dispatch}: IProps) => {
                     backgroundColor: colors['fill-red'],
                   }}
                 />
-              )}
+              )} */}
             </View>
           </RowComponent>
         )}

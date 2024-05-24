@@ -34,10 +34,6 @@ const AppRouters = ({dispatch, useSelector}: Props) => {
   );
 
   useEffect(() => {
-    dispatch(getPetServices());
-  }, [dispatch]);
-
-  useEffect(() => {
     const timeout = setTimeout(() => {
       setIsShowSplash(false);
     }, 1500);
@@ -55,8 +51,10 @@ const AppRouters = ({dispatch, useSelector}: Props) => {
       }, 2000);
     }
 
+    dispatch(getPetServices());
+
     return () => clearTimeout(timeout);
-  }, [dispatch, token]);
+  }, [token]);
 
   useEffect(() => {
     if (token) {

@@ -493,7 +493,7 @@ const DetailBookingPetScreen = ({route, navigation}: Props) => {
       <RowComponent styles={{padding: 24}} gap={12}>
         <ButtonComponent
           isFull={false}
-          type="primary"
+          type={data?.status === 'pending' ? 'primary' : 'disabled'}
           size="large"
           text="Cancel"
           onPress={() => handleCancelBooking(bookingId)}

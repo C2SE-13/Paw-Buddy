@@ -23,6 +23,6 @@ export const getNotification = createAsyncThunk(
       return rejectWithValue(response);
     }
 
-    return response.data.reverse();
+    return response.data;
   },
 );

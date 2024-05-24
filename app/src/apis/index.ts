@@ -4,3 +4,4 @@ export * from './pet';
 export * from './booking';
 export * from './chat';
 export * from './notification';
+export * from './medicalRecords';

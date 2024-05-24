@@ -36,7 +36,7 @@ instance.interceptors.response.use(
       if (localStorageData && typeof localStorageData === 'string') {
         const refreshToken = JSON.parse(
           localStorageData,
-        )?.refreshToken.replaceAll('"', '');
+        )?.refreshToken?.replaceAll('"', '');
         if (refreshToken) {
           const response: any = await apiRefreshToken({
             refresh_token: refreshToken,
