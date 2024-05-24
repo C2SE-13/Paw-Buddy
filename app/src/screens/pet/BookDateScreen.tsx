@@ -67,6 +67,11 @@ export interface TimeBooking {
   buoi: string;
 }
 
+export interface IBusyOfDoc {
+  startTime: string;
+  date: string;
+  endTime: string;
+}
 const BookDateScreen = ({route, navigation}: Props) => {
   const {chosenServices, idService, nameService, doctorId} = route.params;
   const [dataService, setDataService] = useState<IPetServies[]>([]);
@@ -75,9 +80,15 @@ const BookDateScreen = ({route, navigation}: Props) => {
   const [bookDate, setBookDate] = useState<SetStateAction<string>>(
     moment().format(),
   );
-  const [dataDocotr, setDataDocotr] = useState<IDoctors | null>(null);
+  const [dataDoctor, setDataDoctor] = useState<IDoctors | null>(null);
   const [bookingOfDoctor, setBookingOfDoctor] = useState<
-    {service_id: number; start_time: string; date: string}[]
+    {
+      service_id: number[];
+      start_time: string;
+      date: string;
+      end_time: string;
+      status: string;
+    }[]
   >([]);
   const [totalTimeOfService, setTotalTimeOfService] = useState(0);
   const [startTime, setStartTime] = useState<TimeBooking>({
@@ -91,6 +102,7 @@ const BookDateScreen = ({route, navigation}: Props) => {
     buoi: '',
   });
   const {updateStatusLoading} = useUpdateStatusLoading();
+  const [busyOfDoc, setBusyOfDoc] = useState<IBusyOfDoc[]>([]);
 
   useEffect(() => {
     chosenServices.length > 0 && setChosen(chosenServices);
@@ -109,16 +121,17 @@ const BookDateScreen = ({route, navigation}: Props) => {
     getItemDetail(idService);
   }, [idService]);
 
+  const getInformationDoctor = async (id: number) => {
+    updateStatusLoading(true);
+    const response: any = await apiGetDetailDoctors(id);
+    updateStatusLoading(false);
+    if (response.success) {
+      setDataDoctor(response.userData);
+      setBookingOfDoctor(response.bookingData);
+    }
+  };
+
   useEffect(() => {
-    const getInformationDoctor = async (id: number) => {
-      updateStatusLoading(true);
-      const response: any = await apiGetDetailDoctors(id);
-      updateStatusLoading(false);
-      if (response.success) {
-        setDataDocotr(response.userData);
-        setBookingOfDoctor(response.bookingData);
-      }
-    };
     doctorId !== 0 && getInformationDoctor(Number(doctorId));
   }, [doctorId]);
 
@@ -136,28 +149,34 @@ const BookDateScreen = ({route, navigation}: Props) => {
     const check = bookingOfDoctor.length > 0;
 
     if (check) {
-      const object =
-        bookingOfDoctor
-          .filter(item => item.service_id === idService) // sai
-          .filter(item => {
-            const checkYear =
-              moment(bookDate.toString()).format('YYYY') ===
-              moment(item.date).format('YYYY');
-            const checkMonth =
-              moment(bookDate.toString()).format('MMMM') ===
-              moment(item.date).format('MMMM');
-            const checkDay =
-              moment(bookDate.toString()).format('DD') ===
-              moment(item.date).format('DD');
-            if (checkYear && checkMonth && checkDay) {
-              return item;
-            }
-          })
-          .map(item => item.start_time) || [];
-
-      // -----------------chua xong
+      const object = bookingOfDoctor
+        .filter(
+          item => item.status === 'pending' || item.status === 'confirmed',
+        )
+        .filter(item => {
+          const checkYear =
+            moment(bookDate.toString()).format('YYYY') ===
+            moment(item.date).format('YYYY');
+          const checkMonth =
+            moment(bookDate.toString()).format('MMMM') ===
+            moment(item.date).format('MMMM');
+          const checkDay =
+            moment(bookDate.toString()).format('DD') ===
+            moment(item.date).format('DD');
+          if (checkYear && checkMonth && checkDay) {
+            return item;
+          }
+        })
+        .map(item => ({
+          startTime: item.start_time,
+          endTime: item.end_time,
+          date: item.date,
+        }));
+      setBusyOfDoc(object);
+    } else {
+      setBusyOfDoc([]);
     }
-  }, [bookDate, bookingOfDoctor, idService]);
+  }, [bookDate, bookingOfDoctor, idService, dataDoctor]);
 
   const handlechosenServices = (item: IPetServies) => {
     const check = chosen.some(i => i.id === item.id);
@@ -165,7 +184,17 @@ const BookDateScreen = ({route, navigation}: Props) => {
       const newArr = chosen.filter(i => i.id !== item.id);
       setChosen(newArr);
     } else {
-      setChosen(prev => [...prev, item]);
+      const checkIsVancine = item.name_service?.includes('Vaccine');
+
+      if (checkIsVancine) {
+        const newArr = chosen.filter(
+          i => !i.name_service?.startsWith('Vaccine'),
+        );
+
+        setChosen([...newArr, item]);
+      } else {
+        setChosen(prev => [...prev, item]);
+      }
     }
   };
 
@@ -175,7 +204,7 @@ const BookDateScreen = ({route, navigation}: Props) => {
       pet_id: petActive?.id ?? 0,
       date: bookDate.toString(),
       start_time: startTime.time,
-      vet_id: dataDocotr?.id ?? 0,
+      vet_id: dataDoctor?.id ?? 0,
       end_time: endTime.time,
       note: note,
     };
@@ -190,7 +219,6 @@ const BookDateScreen = ({route, navigation}: Props) => {
         onPress: async () => {
           updateStatusLoading(true);
           const response: any = await apiCreateBooking(data);
-          console.log(response);
           updateStatusLoading(false);
           if (response.success) {
             Toast.show(
@@ -234,7 +262,7 @@ const BookDateScreen = ({route, navigation}: Props) => {
               size={16}
               color={colors['grey-800']}
             />
-            {dataDocotr ? (
+            {dataDoctor ? (
               <RowComponent gap={12}>
                 <Image
                   resizeMode="center"
@@ -244,20 +272,20 @@ const BookDateScreen = ({route, navigation}: Props) => {
                     height: 90,
                   }}
                   source={
-                    dataDocotr
-                      ? {uri: dataDocotr.avatar}
+                    dataDoctor
+                      ? {uri: dataDoctor.avatar}
                       : require('../../assets/imgs/doctor.png')
                   }
                 />
                 <View style={{flex: 1, gap: 4}}>
                   <TextComponent
-                    text={dataDocotr?.fullName ?? ''}
+                    text={dataDoctor?.fullName ?? ''}
                     title
                     size={16}
                     color={colors['grey-900']}
                   />
                   <TextComponent
-                    text={`Phone: ${dataDocotr?.phone}`}
+                    text={`Phone: ${dataDoctor?.phone}`}
                     title
                     size={14}
                     color={colors['grey-500']}
@@ -289,7 +317,7 @@ const BookDateScreen = ({route, navigation}: Props) => {
             )}
           </View>
         </View>
-        {dataDocotr && (
+        {dataDoctor && (
           <Fragment>
             <SpaceComponent height={20} />
             <DateService
@@ -300,6 +328,7 @@ const BookDateScreen = ({route, navigation}: Props) => {
               setStartTime={setStartTime}
               endTime={endTime}
               setEndTime={setEndTime}
+              busyOfDoc={busyOfDoc}
             />
           </Fragment>
         )}
@@ -359,7 +388,7 @@ const BookDateScreen = ({route, navigation}: Props) => {
           text="Confirm booking"
           type={
             bookDate &&
-            dataDocotr &&
+            dataDoctor &&
             chosen.length > 0 &&
             startTime.time.length > 0 &&
             endTime.time.length > 0
@@ -373,8 +402,8 @@ const BookDateScreen = ({route, navigation}: Props) => {
       <ActionSheet ref={actionSheetRef}>
         <ViewSelectDoctor
           actionSheetRef={actionSheetRef}
-          dataDocotr={dataDocotr}
-          setDataDocotr={setDataDocotr}
+          dataDoctor={dataDoctor}
+          getInformationDoctor={getInformationDoctor}
         />
       </ActionSheet>
     </View>
@@ -382,15 +411,15 @@ const BookDateScreen = ({route, navigation}: Props) => {
 };
 
 const ViewSelectDoctor = ({
-  dataDocotr,
-  setDataDocotr,
+  dataDoctor,
+  getInformationDoctor,
   actionSheetRef,
 }: {
-  dataDocotr: IDoctors | null;
-  setDataDocotr: (item: IDoctors) => void;
+  dataDoctor: IDoctors | null;
+  getInformationDoctor: (id: number) => void;
   actionSheetRef: RefObject<ActionSheetRef>;
 }) => {
-  const [dataDoctor, setDataDoctor] = useState<IDoctors[]>([]);
+  const [dataDoctors, setDataDoctors] = useState<IDoctors[]>([]);
   const {token} = useSelector((state: RootState) => state.user);
 
   useEffect(() => {
@@ -401,7 +430,7 @@ const ViewSelectDoctor = ({
         roleId: 2,
       });
       if (response.success) {
-        setDataDoctor(response.data);
+        setDataDoctors(response.data);
       }
     };
 
@@ -409,7 +438,7 @@ const ViewSelectDoctor = ({
   }, [token]);
 
   const handleSelect = (item: IDoctors) => {
-    if (item.id !== dataDocotr?.id) {
+    if (item.id !== dataDoctor?.id) {
       Alert.alert('Ask', 'Do you want to select this doctor?', [
         {
           text: 'Cancel',
@@ -418,7 +447,7 @@ const ViewSelectDoctor = ({
         {
           text: 'Yes',
           onPress: () => {
-            setDataDocotr(item);
+            getInformationDoctor(item.id);
             actionSheetRef.current?.hide();
           },
         },
@@ -438,7 +467,7 @@ const ViewSelectDoctor = ({
         },
       ]}>
       <FlatList
-        data={dataDoctor}
+        data={dataDoctors}
         keyExtractor={item => item.id.toString()}
         contentContainerStyle={{gap: 8}}
         renderItem={({item}) => (
@@ -448,7 +477,7 @@ const ViewSelectDoctor = ({
               borderWidth: 1,
               padding: 4,
               borderColor:
-                dataDocotr?.id === item.id
+                dataDoctor?.id === item.id
                   ? colors['blue-500']
                   : colors['grey-150'],
               borderRadius: 10,
@@ -471,7 +500,7 @@ const ViewSelectDoctor = ({
                 size={12}
                 color={colors['text-body']}
                 font={
-                  dataDocotr?.id === item.id
+                  dataDoctor?.id === item.id
                     ? fontFamilies['inter-semibold']
                     : fontFamilies['inter-regular']
                 }

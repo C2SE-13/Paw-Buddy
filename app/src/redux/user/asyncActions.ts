@@ -13,3 +13,16 @@ export const getCurrent = createAsyncThunk(
     return response.data;
   },
 );
+
+export const getNotification = createAsyncThunk(
+  'user/notification',
+  async (data, {rejectWithValue}) => {
+    const response: any = await apis.apiGetNotification();
+
+    if (!response.success) {
+      return rejectWithValue(response);
+    }
+
+    return response.data;
+  },
+);

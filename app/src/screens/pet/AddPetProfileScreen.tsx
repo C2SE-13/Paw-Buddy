@@ -27,9 +27,10 @@ import {toastConfig} from '../../utils/toast';
 import {AppDispatch} from '../../redux/store';
 import withBaseComponent from '../../hocs/withBaseComponent';
 import {getCurrent} from '../../redux/user/asyncActions';
+import {NavigationProp} from '@react-navigation/native';
 
 interface Props {
-  navigation: any;
+  navigation: NavigationProp<any>;
   dispatch: AppDispatch;
 }
 

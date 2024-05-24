@@ -46,7 +46,10 @@ const ChatScreen = ({navigation}: Props) => {
     const response: any = await apiGetConversations();
     updateStatusLoading(false);
     if (response.success) {
-      setData(response.data);
+      const newArr = response.data.filter(
+        (item: IConversations) => item.participants.length >= 2,
+      );
+      setData(newArr);
     }
   };
 

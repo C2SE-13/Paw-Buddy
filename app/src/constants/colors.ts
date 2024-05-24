@@ -84,5 +84,5 @@ export const colors = {
   'red-900': '#973636',
   background: '#2A3240',
   yellow: '#F5BA41',
-  lightBackground: 'FAFAFA',
+  lightBackground: '#FAFAFA',
 };

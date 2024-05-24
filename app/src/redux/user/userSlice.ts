@@ -1,8 +1,8 @@
+import {INotification} from './../../utils/interface';
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import {createSlice} from '@reduxjs/toolkit';
 import * as actions from './asyncActions';
 import {IPet, IUser} from '../../utils/interface';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export interface UserState {
   token: string | null;
@@ -11,6 +11,7 @@ export interface UserState {
   petActive: IPet | null;
   isLoading: boolean;
   refreshToken: string | null;
+  notificationData: INotification[];
 }
 
 const initialState: UserState = {
@@ -20,6 +21,7 @@ const initialState: UserState = {
   petActive: null,
   isLoading: false,
   refreshToken: null,
+  notificationData: [],
 };
 
 export const userSlice = createSlice({
@@ -59,6 +61,14 @@ export const userSlice = createSlice({
       state.token = null;
       state.current = null;
       state.refreshToken = null;
+    });
+
+    builder.addCase(actions.getNotification.fulfilled, (state, action) => {
+      state.notificationData = action.payload;
+    });
+
+    builder.addCase(actions.getNotification.rejected, (state, action) => {
+      state.notificationData = [];
     });
   },
 });

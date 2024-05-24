@@ -42,6 +42,9 @@ import LocationIcon from './location.svg';
 import MessageAddIcon from './message-add.svg';
 import RefreshIcon from './refresh.svg';
 import SendIcon from './send-svgrepo-com.svg';
+import MaleIcon from './male.svg';
+import FemaleIcon from './female.svg';
+import ScanQRIcon from './scan-qr-code.svg';
 
 export {
   AddIcon,
@@ -88,4 +91,7 @@ export {
   MessageAddIcon,
   RefreshIcon,
   SendIcon,
+  MaleIcon,
+  FemaleIcon,
+  ScanQRIcon,
 };

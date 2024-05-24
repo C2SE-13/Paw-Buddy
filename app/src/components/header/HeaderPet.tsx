@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-shadow */
 /* eslint-disable react-native/no-inline-styles */
 import {TouchableOpacity, View} from 'react-native';
 import React, {useEffect, useState} from 'react';
@@ -9,6 +10,8 @@ import {RootState} from '../../redux/store';
 import {globalStyles} from '../../styles/globalStyles';
 import {AlertIcon} from '../../assets/icons';
 import {colors} from '../../constants/colors';
+import {NavigationProp, useNavigation} from '@react-navigation/native';
+import {MainStackParamList} from '../../navigators/MainNavigator';
 
 interface Props {
   useSelector: TypedUseSelectorHook<RootState>;
@@ -20,19 +23,37 @@ interface IPet {
 }
 
 const HeaderPet = ({useSelector}: Props) => {
-  const {petActive} = useSelector(state => state.user);
+  const {petActive, notificationData} = useSelector(
+    (state: RootState) => state.user,
+  );
   const [dataPet, setDataPet] = useState<IPet>({
     name: '',
     id: 0,
   });
+  const navigation = useNavigation<NavigationProp<MainStackParamList>>();
+  const [checkNewNotification, setCheckNewNotification] = useState(false);
 
   useEffect(() => {
     petActive &&
       setDataPet({
-        name: petActive.name_pet,
+        name: petActive.name_pet ?? '',
         id: petActive.id,
       });
   }, [petActive]);
+
+  useEffect(() => {
+    const checkNewNotification = () => {
+      const check = notificationData.some(el => !el.is_read);
+
+      if (check) {
+        setCheckNewNotification(true);
+      } else {
+        setCheckNewNotification(false);
+      }
+    };
+
+    notificationData.length > 0 && checkNewNotification();
+  }, [notificationData]);
 
   return (
     <RowComponent
@@ -56,6 +77,7 @@ const HeaderPet = ({useSelector}: Props) => {
         />
       </View>
       <TouchableOpacity
+        onPress={() => navigation.navigate('NotificationScreen')}
         style={[
           globalStyles.center,
           {
@@ -67,7 +89,7 @@ const HeaderPet = ({useSelector}: Props) => {
           },
         ]}>
         <AlertIcon />
-        {false && (
+        {checkNewNotification && (
           <View
             style={{
               position: 'absolute',
