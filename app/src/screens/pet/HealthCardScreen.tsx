@@ -56,6 +56,7 @@ interface IRecord {
   } | null;
   medicationsData: {
     medicineData: {
+      id: number;
       contraindication: string;
       guide: string;
       indication: string;
@@ -384,6 +385,7 @@ const HealthCardScreen = ({route}: Props) => {
                   <View style={{gap: 12}}>
                     {chosen.medicationsData.map(el => (
                       <View
+                        key={el.medicineData.id}
                         style={{
                           paddingVertical: 13,
                           paddingHorizontal: 16,
