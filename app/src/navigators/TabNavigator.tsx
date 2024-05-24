@@ -31,8 +31,6 @@ const TabNavigator = ({useSelector}: Props) => {
   const Tab = createBottomTabNavigator();
   const {current} = useSelector(state => state.user);
 
-  const [avatar, setAvatar] = useState(null);
-
   return (
     <Tab.Navigator
       screenOptions={({route}) => ({
@@ -80,11 +78,16 @@ const TabNavigator = ({useSelector}: Props) => {
                   color={focused ? colors['primary-100'] : 'transparent'}>
                   <Image
                     style={{
-                      width: 24,
-                      height: 24,
+                      width: 28,
+                      height: 28,
                       objectFit: 'cover',
+                      borderRadius: 52,
                     }}
-                    source={require('../assets/imgs/Default.png')}
+                    source={
+                      current
+                        ? {uri: current.avatar}
+                        : require('../assets/imgs/Default.png')
+                    }
                   />
                 </CircleComponent>
               );

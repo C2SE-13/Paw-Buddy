@@ -59,7 +59,7 @@ const HeaderProfile = (props: Props) => {
       <RowComponent justify="flex-start" gap={12} styles={{flex: 1}}>
         <Image
           source={avatarUser}
-          style={{width: 42, height: 42, objectFit: 'cover'}}
+          style={{width: 42, height: 42, objectFit: 'cover', borderRadius: 52}}
         />
         <View>
           <TextComponent text="Hello," size={14} />
